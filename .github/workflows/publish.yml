@@ -1,0 +1,17 @@
+name: Publish
+on:
+  push:
+    tags:
+      - '*'
+jobs:
+  publish:
+    name: Publish
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Trigger pkg.go.dev update
+        run: |
+          VERSION="${{ github.ref_name }}"
+          [[ ! "$VERSION" =~ ^v ]] && VERSION="v$VERSION"
+          curl -s "https://proxy.golang.org/github.com/emergentmethods/asknews-go-sdk/@v/${VERSION}.info"
