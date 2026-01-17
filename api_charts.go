@@ -103,7 +103,7 @@ func (a *ChartsAPIService) CreateChartsEndpointExecute(r ApiCreateChartsEndpoint
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
-					key = apiKey.Key
+					key = "Bearer " + apiKey.Key
 				}
 				localVarHeaderParams["Authorization"] = key
 			}

@@ -148,7 +148,7 @@ func (a *DistributionAPIService) DomainHitShareExecute(r ApiDomainHitShareReques
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
-					key = apiKey.Key
+					key = "Bearer " + apiKey.Key
 				}
 				localVarHeaderParams["Authorization"] = key
 			}
@@ -390,7 +390,7 @@ func (a *DistributionAPIService) FindDomainsExecute(r ApiFindDomainsRequest) (*P
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
-					key = apiKey.Key
+					key = "Bearer " + apiKey.Key
 				}
 				localVarHeaderParams["Authorization"] = key
 			}
@@ -599,7 +599,7 @@ func (a *DistributionAPIService) GetArticleHitsExecute(r ApiGetArticleHitsReques
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
-					key = apiKey.Key
+					key = "Bearer " + apiKey.Key
 				}
 				localVarHeaderParams["Authorization"] = key
 			}
@@ -781,7 +781,7 @@ func (a *DistributionAPIService) GetDomainExecute(r ApiGetDomainRequest) (*ReadD
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
-					key = apiKey.Key
+					key = "Bearer " + apiKey.Key
 				}
 				localVarHeaderParams["Authorization"] = key
 			}
@@ -1013,7 +1013,7 @@ func (a *DistributionAPIService) GetDomainQueriesExecute(r ApiGetDomainQueriesRe
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
-					key = apiKey.Key
+					key = "Bearer " + apiKey.Key
 				}
 				localVarHeaderParams["Authorization"] = key
 			}
@@ -1242,7 +1242,7 @@ func (a *DistributionAPIService) TopNArticlesByHitsExecute(r ApiTopNArticlesByHi
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
-					key = apiKey.Key
+					key = "Bearer " + apiKey.Key
 				}
 				localVarHeaderParams["Authorization"] = key
 			}
@@ -1464,7 +1464,7 @@ func (a *DistributionAPIService) TopNArticlesForDomainExecute(r ApiTopNArticlesF
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
-					key = apiKey.Key
+					key = "Bearer " + apiKey.Key
 				}
 				localVarHeaderParams["Authorization"] = key
 			}
@@ -1693,7 +1693,7 @@ func (a *DistributionAPIService) TopNDomainsByHitsExecute(r ApiTopNDomainsByHits
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
-					key = apiKey.Key
+					key = "Bearer " + apiKey.Key
 				}
 				localVarHeaderParams["Authorization"] = key
 			}
@@ -1886,7 +1886,7 @@ func (a *DistributionAPIService) UpdateDomainExecute(r ApiUpdateDomainRequest) (
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
-					key = apiKey.Key
+					key = "Bearer " + apiKey.Key
 				}
 				localVarHeaderParams["Authorization"] = key
 			}

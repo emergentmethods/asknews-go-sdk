@@ -170,7 +170,7 @@ func (a *WebsearchAPIService) LiveWebSearchExecute(r ApiLiveWebSearchRequest) (*
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
-					key = apiKey.Key
+					key = "Bearer " + apiKey.Key
 				}
 				localVarHeaderParams["Authorization"] = key
 			}

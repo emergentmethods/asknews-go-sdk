@@ -104,7 +104,7 @@ func (a *AlertsAPIService) CreateAlertExecute(r ApiCreateAlertRequest) (*AlertRe
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
-					key = apiKey.Key
+					key = "Bearer " + apiKey.Key
 				}
 				localVarHeaderParams["Authorization"] = key
 			}
@@ -229,7 +229,7 @@ func (a *AlertsAPIService) DeleteAlertExecute(r ApiDeleteAlertRequest) (*http.Re
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
-					key = apiKey.Key
+					key = "Bearer " + apiKey.Key
 				}
 				localVarHeaderParams["Authorization"] = key
 			}
@@ -357,7 +357,7 @@ func (a *AlertsAPIService) GetAlertExecute(r ApiGetAlertRequest) (*AlertResponse
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
-					key = apiKey.Key
+					key = "Bearer " + apiKey.Key
 				}
 				localVarHeaderParams["Authorization"] = key
 			}
@@ -553,7 +553,7 @@ func (a *AlertsAPIService) GetAlertLogsExecute(r ApiGetAlertLogsRequest) (*Pagin
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
-					key = apiKey.Key
+					key = "Bearer " + apiKey.Key
 				}
 				localVarHeaderParams["Authorization"] = key
 			}
@@ -715,7 +715,7 @@ func (a *AlertsAPIService) GetAlertsExecute(r ApiGetAlertsRequest) (*PaginatedRe
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
-					key = apiKey.Key
+					key = "Bearer " + apiKey.Key
 				}
 				localVarHeaderParams["Authorization"] = key
 			}
@@ -917,7 +917,7 @@ func (a *AlertsAPIService) GetAllAlertLogsExecute(r ApiGetAllAlertLogsRequest) (
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
-					key = apiKey.Key
+					key = "Bearer " + apiKey.Key
 				}
 				localVarHeaderParams["Authorization"] = key
 			}
@@ -1055,7 +1055,7 @@ func (a *AlertsAPIService) PutAlertExecute(r ApiPutAlertRequest) (*AlertResponse
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
-					key = apiKey.Key
+					key = "Bearer " + apiKey.Key
 				}
 				localVarHeaderParams["Authorization"] = key
 			}
@@ -1192,7 +1192,7 @@ func (a *AlertsAPIService) RunAlertExecute(r ApiRunAlertRequest) (*AlertResponse
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
-					key = apiKey.Key
+					key = "Bearer " + apiKey.Key
 				}
 				localVarHeaderParams["Authorization"] = key
 			}

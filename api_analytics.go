@@ -140,7 +140,7 @@ func (a *AnalyticsAPIService) GetAssetSentimentExecute(r ApiGetAssetSentimentReq
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
-					key = apiKey.Key
+					key = "Bearer " + apiKey.Key
 				}
 				localVarHeaderParams["Authorization"] = key
 			}

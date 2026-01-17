@@ -95,7 +95,7 @@ func (a *NewslettersAPIService) DeleteNewsletterExecute(r ApiDeleteNewsletterReq
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
-					key = apiKey.Key
+					key = "Bearer " + apiKey.Key
 				}
 				localVarHeaderParams["Authorization"] = key
 			}
@@ -215,7 +215,7 @@ func (a *NewslettersAPIService) DeleteNewsletterContactExecute(r ApiDeleteNewsle
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
-					key = apiKey.Key
+					key = "Bearer " + apiKey.Key
 				}
 				localVarHeaderParams["Authorization"] = key
 			}
@@ -333,7 +333,7 @@ func (a *NewslettersAPIService) GetNewsletterExecute(r ApiGetNewsletterRequest) 
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
-					key = apiKey.Key
+					key = "Bearer " + apiKey.Key
 				}
 				localVarHeaderParams["Authorization"] = key
 			}
@@ -464,7 +464,7 @@ func (a *NewslettersAPIService) GetNewsletterContactExecute(r ApiGetNewsletterCo
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
-					key = apiKey.Key
+					key = "Bearer " + apiKey.Key
 				}
 				localVarHeaderParams["Authorization"] = key
 			}
@@ -591,7 +591,7 @@ func (a *NewslettersAPIService) GetNewsletterContactsExecute(r ApiGetNewsletterC
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
-					key = apiKey.Key
+					key = "Bearer " + apiKey.Key
 				}
 				localVarHeaderParams["Authorization"] = key
 			}
@@ -714,7 +714,7 @@ func (a *NewslettersAPIService) GetNewslettersExecute(r ApiGetNewslettersRequest
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
-					key = apiKey.Key
+					key = "Bearer " + apiKey.Key
 				}
 				localVarHeaderParams["Authorization"] = key
 			}
@@ -876,7 +876,7 @@ func (a *NewslettersAPIService) GetPublicNewslettersExecute(r ApiGetPublicNewsle
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
-					key = apiKey.Key
+					key = "Bearer " + apiKey.Key
 				}
 				localVarHeaderParams["Authorization"] = key
 			}
@@ -1018,7 +1018,7 @@ func (a *NewslettersAPIService) PatchNewsletterContactExecute(r ApiPatchNewslett
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
-					key = apiKey.Key
+					key = "Bearer " + apiKey.Key
 				}
 				localVarHeaderParams["Authorization"] = key
 			}
@@ -1152,7 +1152,7 @@ func (a *NewslettersAPIService) PostNewsletterExecute(r ApiPostNewsletterRequest
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
-					key = apiKey.Key
+					key = "Bearer " + apiKey.Key
 				}
 				localVarHeaderParams["Authorization"] = key
 			}
@@ -1290,7 +1290,7 @@ func (a *NewslettersAPIService) PostNewsletterContactsExecute(r ApiPostNewslette
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
-					key = apiKey.Key
+					key = "Bearer " + apiKey.Key
 				}
 				localVarHeaderParams["Authorization"] = key
 			}
@@ -1428,7 +1428,7 @@ func (a *NewslettersAPIService) PutNewsletterExecute(r ApiPutNewsletterRequest) 
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
-					key = apiKey.Key
+					key = "Bearer " + apiKey.Key
 				}
 				localVarHeaderParams["Authorization"] = key
 			}
@@ -1553,7 +1553,7 @@ func (a *NewslettersAPIService) UnsubscribeNewsletterExecute(r ApiUnsubscribeNew
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
-					key = apiKey.Key
+					key = "Bearer " + apiKey.Key
 				}
 				localVarHeaderParams["Authorization"] = key
 			}

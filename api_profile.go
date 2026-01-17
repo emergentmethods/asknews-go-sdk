@@ -92,7 +92,7 @@ func (a *ProfileAPIService) GetUserProfileExecute(r ApiGetUserProfileRequest) (*
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
-					key = apiKey.Key
+					key = "Bearer " + apiKey.Key
 				}
 				localVarHeaderParams["Authorization"] = key
 			}

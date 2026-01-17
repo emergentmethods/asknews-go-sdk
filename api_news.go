@@ -99,7 +99,7 @@ func (a *NewsAPIService) GetArticleExecute(r ApiGetArticleRequest) (*SearchRespo
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
-					key = apiKey.Key
+					key = "Bearer " + apiKey.Key
 				}
 				localVarHeaderParams["Authorization"] = key
 			}
@@ -298,7 +298,7 @@ func (a *NewsAPIService) GetArticlesExecute(r ApiGetArticlesRequest) ([]SearchRe
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
-					key = apiKey.Key
+					key = "Bearer " + apiKey.Key
 				}
 				localVarHeaderParams["Authorization"] = key
 			}
@@ -769,7 +769,7 @@ func (a *NewsAPIService) GetIndexCountsExecute(r ApiGetIndexCountsRequest) ([]In
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
-					key = apiKey.Key
+					key = "Bearer " + apiKey.Key
 				}
 				localVarHeaderParams["Authorization"] = key
 			}
@@ -1011,7 +1011,7 @@ func (a *NewsAPIService) GetSourcesReportExecute(r ApiGetSourcesReportRequest) (
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
-					key = apiKey.Key
+					key = "Bearer " + apiKey.Key
 				}
 				localVarHeaderParams["Authorization"] = key
 			}
@@ -1696,7 +1696,7 @@ func (a *NewsAPIService) SearchNewsExecute(r ApiSearchNewsRequest) (*SearchRespo
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
-					key = apiKey.Key
+					key = "Bearer " + apiKey.Key
 				}
 				localVarHeaderParams["Authorization"] = key
 			}

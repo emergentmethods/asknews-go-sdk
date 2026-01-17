@@ -371,7 +371,7 @@ func (a *StoriesAPIService) GetStoriesExecute(r ApiGetStoriesRequest) (*StoriesR
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
-					key = apiKey.Key
+					key = "Bearer " + apiKey.Key
 				}
 				localVarHeaderParams["Authorization"] = key
 			}
@@ -631,7 +631,7 @@ func (a *StoriesAPIService) GetStoryExecute(r ApiGetStoryRequest) (*StoryRespons
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
-					key = apiKey.Key
+					key = "Bearer " + apiKey.Key
 				}
 				localVarHeaderParams["Authorization"] = key
 			}

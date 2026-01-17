@@ -109,7 +109,7 @@ func (a *AutofilterAPIService) AutofilterExecute(r ApiAutofilterRequest) (*Filte
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
-					key = apiKey.Key
+					key = "Bearer " + apiKey.Key
 				}
 				localVarHeaderParams["Authorization"] = key
 			}

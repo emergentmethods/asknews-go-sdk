@@ -102,7 +102,7 @@ func (a *ChatAPIService) DeepNewsExecute(r ApiDeepNewsRequest) (*CreateDeepNewsR
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
-					key = apiKey.Key
+					key = "Bearer " + apiKey.Key
 				}
 				localVarHeaderParams["Authorization"] = key
 			}
@@ -299,7 +299,7 @@ func (a *ChatAPIService) GetChatCompletionsExecute(r ApiGetChatCompletionsReques
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
-					key = apiKey.Key
+					key = "Bearer " + apiKey.Key
 				}
 				localVarHeaderParams["Authorization"] = key
 			}
@@ -495,7 +495,7 @@ func (a *ChatAPIService) GetHeadlineQuestionsExecute(r ApiGetHeadlineQuestionsRe
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
-					key = apiKey.Key
+					key = "Bearer " + apiKey.Key
 				}
 				localVarHeaderParams["Authorization"] = key
 			}
@@ -618,7 +618,7 @@ func (a *ChatAPIService) ListChatModelsExecute(r ApiListChatModelsRequest) (*Lis
 				if apiKey.Prefix != "" {
 					key = apiKey.Prefix + " " + apiKey.Key
 				} else {
-					key = apiKey.Key
+					key = "Bearer " + apiKey.Key
 				}
 				localVarHeaderParams["Authorization"] = key
 			}
