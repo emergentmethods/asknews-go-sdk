@@ -4,7 +4,7 @@ info:
   title: AskNews API
   version: 0.24.27
 servers:
-- url: https://api.asknews.dev
+- url: https://api.asknews.app
 paths:
   /v1/news/search:
     get:

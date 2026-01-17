@@ -89,11 +89,11 @@ type Configuration struct {
 func NewConfiguration() *Configuration {
 	cfg := &Configuration{
 		DefaultHeader:    make(map[string]string),
-		UserAgent:        "asknews-sdk-go-0.4.6",
+		UserAgent:        "asknews-sdk-go-0.4.7",
 		Debug:            false,
 		Servers:          ServerConfigurations{
 			{
-				URL: "https://api.asknews.dev",
+				URL: "https://api.asknews.app",
 				Description: "No description provided",
 			},
 		},
