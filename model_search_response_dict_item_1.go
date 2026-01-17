@@ -84,7 +84,7 @@ func NewSearchResponseDictItem1(articleUrl string, articleId string, classificat
 	this.MarkdownCitation = &markdownCitation
 	var provocative string = "unknown"
 	this.Provocative = &provocative
-	var reportingVoice ReportingVoice1 = Unknown
+	var reportingVoice ReportingVoice1
 	this.ReportingVoice = &reportingVoice
 	this.AsStringKey = asStringKey
 	return &this
@@ -99,7 +99,7 @@ func NewSearchResponseDictItem1WithDefaults() *SearchResponseDictItem1 {
 	this.MarkdownCitation = &markdownCitation
 	var provocative string = "unknown"
 	this.Provocative = &provocative
-	var reportingVoice ReportingVoice1 = Unknown
+	var reportingVoice ReportingVoice1
 	this.ReportingVoice = &reportingVoice
 	return &this
 }

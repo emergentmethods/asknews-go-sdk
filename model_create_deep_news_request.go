@@ -85,7 +85,7 @@ func NewCreateDeepNewsRequest(messages []CreateDeepNewsRequestMessage) *CreateDe
 	this.SearchDepth = &searchDepth
 	var maxDepth int32 = 4
 	this.MaxDepth = &maxDepth
-	var sources Sources1 = asknews
+	var sources Sources1
 	this.Sources = &sources
 	var returnSources bool = true
 	this.ReturnSources = &returnSources
@@ -131,7 +131,7 @@ func NewCreateDeepNewsRequestWithDefaults() *CreateDeepNewsRequest {
 	this.SearchDepth = &searchDepth
 	var maxDepth int32 = 4
 	this.MaxDepth = &maxDepth
-	var sources Sources1 = asknews
+	var sources Sources1
 	this.Sources = &sources
 	var returnSources bool = true
 	this.ReturnSources = &returnSources

@@ -83,7 +83,7 @@ func NewArticle(articleUrl string, articleId string, classification Classificati
 	this.MarkdownCitation = &markdownCitation
 	var provocative string = "unknown"
 	this.Provocative = &provocative
-	var reportingVoice ReportingVoice1 = Unknown
+	var reportingVoice ReportingVoice1
 	this.ReportingVoice = &reportingVoice
 	return &this
 }
@@ -97,7 +97,7 @@ func NewArticleWithDefaults() *Article {
 	this.MarkdownCitation = &markdownCitation
 	var provocative string = "unknown"
 	this.Provocative = &provocative
-	var reportingVoice ReportingVoice1 = Unknown
+	var reportingVoice ReportingVoice1
 	this.ReportingVoice = &reportingVoice
 	return &this
 }

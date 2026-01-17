@@ -234,7 +234,7 @@ func (a *StoriesAPIService) GetStoriesExecute(r ApiGetStoriesRequest) (*StoriesR
 			parameterAddToHeaderOrQuery(localVarQueryParams, "categories", t, "form", "multi")
 		}
 	} else {
-		var defaultValue []string = []
+		var defaultValue []string = []string{}
 		r.categories = &defaultValue
 	}
 	if r.uuids != nil {
@@ -248,7 +248,7 @@ func (a *StoriesAPIService) GetStoriesExecute(r ApiGetStoriesRequest) (*StoriesR
 			parameterAddToHeaderOrQuery(localVarQueryParams, "uuids", t, "form", "multi")
 		}
 	} else {
-		var defaultValue []*string = []
+		var defaultValue []*string = []*string{}
 		r.uuids = &defaultValue
 	}
 	if r.startTimestamp != nil {
@@ -269,7 +269,7 @@ func (a *StoriesAPIService) GetStoriesExecute(r ApiGetStoriesRequest) (*StoriesR
 	if r.offset != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "offset", r.offset, "form", "")
 	} else {
-		var defaultValue Offset1 = 0
+		var defaultValue Offset1
 		r.offset = &defaultValue
 	}
 	if r.limit != nil {
@@ -313,7 +313,7 @@ func (a *StoriesAPIService) GetStoriesExecute(r ApiGetStoriesRequest) (*StoriesR
 			parameterAddToHeaderOrQuery(localVarQueryParams, "obj_type", t, "form", "multi")
 		}
 	} else {
-		var defaultValue []string = ["story"]
+		var defaultValue []string = []string{}
 		r.objType = &defaultValue
 	}
 	if r.reddit != nil {

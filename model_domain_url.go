@@ -18,7 +18,7 @@ import (
 
 // DomainUrl filter by domain url of interest. This can be a single domain or a list of domains. For example, 'npr.org' or ['nature.com', 'npr.org']
 type DomainUrl struct {
-	ArrayOf*string *[]*string
+	ArrayOfString *[]*string
 	String *string
 }
 
@@ -30,17 +30,17 @@ func (dst *DomainUrl) UnmarshalJSON(data []byte) error {
 		return nil
 	}
 
-	// try to unmarshal JSON data into ArrayOf*string
-	err = json.Unmarshal(data, &dst.ArrayOf*string);
+	// try to unmarshal JSON data into ArrayOfString
+	err = json.Unmarshal(data, &dst.ArrayOfString);
 	if err == nil {
-		jsonArrayOf*string, _ := json.Marshal(dst.ArrayOf*string)
-		if string(jsonArrayOf*string) == "{}" { // empty struct
-			dst.ArrayOf*string = nil
+		jsonArrayOfString, _ := json.Marshal(dst.ArrayOfString)
+		if string(jsonArrayOfString) == "{}" { // empty struct
+			dst.ArrayOfString = nil
 		} else {
-			return nil // data stored in dst.ArrayOf*string, return on the first match
+			return nil // data stored in dst.ArrayOfString, return on the first match
 		}
 	} else {
-		dst.ArrayOf*string = nil
+		dst.ArrayOfString = nil
 	}
 
 	// try to unmarshal JSON data into String
@@ -61,8 +61,8 @@ func (dst *DomainUrl) UnmarshalJSON(data []byte) error {
 
 // Marshal data from the first non-nil pointers in the struct to JSON
 func (src DomainUrl) MarshalJSON() ([]byte, error) {
-	if src.ArrayOf*string != nil {
-		return json.Marshal(&src.ArrayOf*string)
+	if src.ArrayOfString != nil {
+		return json.Marshal(&src.ArrayOfString)
 	}
 
 	if src.String != nil {

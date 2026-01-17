@@ -1480,7 +1480,7 @@ func (a *NewsAPIService) SearchNewsExecute(r ApiSearchNewsRequest) (*SearchRespo
 	if r.offset != nil {
 		parameterAddToHeaderOrQuery(localVarQueryParams, "offset", r.offset, "form", "")
 	} else {
-		var defaultValue Offset = 0
+		var defaultValue Offset
 		r.offset = &defaultValue
 	}
 	if r.categories != nil {
