@@ -47,7 +47,7 @@ type SearchResponseDictItem1 struct {
 	GeoCoordinates map[string]GeoCoordinate1 `json:"geo_coordinates,omitempty"`
 	Continent NullableString `json:"continent,omitempty"`
 	Assets NullableAssets1 `json:"assets,omitempty"`
-	SocialEmbeds []string `json:"social_embeds,omitempty"`
+	SocialEmbeds interface{} `json:"social_embeds,omitempty"`
 	Bias NullableString `json:"bias,omitempty"`
 	Authors []Author1 `json:"authors,omitempty"`
 	FullText NullableString `json:"full_text,omitempty"`
@@ -843,9 +843,9 @@ func (o *SearchResponseDictItem1) UnsetAssets() {
 }
 
 // GetSocialEmbeds returns the SocialEmbeds field value if set, zero value otherwise (both if not set or set to explicit null).
-func (o *SearchResponseDictItem1) GetSocialEmbeds() []string {
+func (o *SearchResponseDictItem1) GetSocialEmbeds() interface{} {
 	if o == nil {
-		var ret []string
+		var ret interface{}
 		return ret
 	}
 	return o.SocialEmbeds
@@ -854,7 +854,7 @@ func (o *SearchResponseDictItem1) GetSocialEmbeds() []string {
 // GetSocialEmbedsOk returns a tuple with the SocialEmbeds field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 // NOTE: If the value is an explicit nil, `nil, true` will be returned
-func (o *SearchResponseDictItem1) GetSocialEmbedsOk() ([]string, bool) {
+func (o *SearchResponseDictItem1) GetSocialEmbedsOk() (interface{}, bool) {
 	if o == nil || IsNil(o.SocialEmbeds) {
 		return nil, false
 	}

@@ -47,7 +47,7 @@ type Article struct {
 	GeoCoordinates map[string]GeoCoordinate `json:"geo_coordinates,omitempty"`
 	Continent NullableString `json:"continent,omitempty"`
 	Assets NullableAssets `json:"assets,omitempty"`
-	SocialEmbeds []string `json:"social_embeds,omitempty"`
+	SocialEmbeds interface{} `json:"social_embeds,omitempty"`
 	Bias NullableString `json:"bias,omitempty"`
 	Authors []Author `json:"authors,omitempty"`
 	FullText NullableString `json:"full_text,omitempty"`
@@ -841,9 +841,9 @@ func (o *Article) UnsetAssets() {
 }
 
 // GetSocialEmbeds returns the SocialEmbeds field value if set, zero value otherwise (both if not set or set to explicit null).
-func (o *Article) GetSocialEmbeds() []string {
+func (o *Article) GetSocialEmbeds() interface{} {
 	if o == nil {
-		var ret []string
+		var ret interface{}
 		return ret
 	}
 	return o.SocialEmbeds
@@ -852,7 +852,7 @@ func (o *Article) GetSocialEmbeds() []string {
 // GetSocialEmbedsOk returns a tuple with the SocialEmbeds field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 // NOTE: If the value is an explicit nil, `nil, true` will be returned
-func (o *Article) GetSocialEmbedsOk() ([]string, bool) {
+func (o *Article) GetSocialEmbedsOk() (interface{}, bool) {
 	if o == nil || IsNil(o.SocialEmbeds) {
 		return nil, false
 	}
