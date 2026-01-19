@@ -2,7 +2,7 @@ openapi: 3.1.0
 info:
   description: "AskNews API [![status](https://status.asknews.app/api/badge/2/status?style=for-the-badge)](https://status.asknews.app/status/prod)"
   title: AskNews API
-  version: 0.24.27
+  version: 0.24.28
 servers:
 - url: https://api.asknews.app
 paths:
@@ -3996,6 +3996,101 @@ paths:
       summary: Get the top N articles by hits for domain
       tags:
       - distribution
+  /v1/distribution/articles/top_n_for_domain_timeseries:
+    get:
+      description: Get the top N domain articles by hits with daily breakdown.
+      operationId: top_n_articles_for_domain_timeseries
+      parameters:
+      - description: Domain name to filter by
+        explode: true
+        in: query
+        name: domain_name
+        required: true
+        schema:
+          description: Domain name to filter by
+          title: Domain Name
+          type: string
+        style: form
+      - description: Number of top domain articles to return per day
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 10
+          description: Number of top domain articles to return per day
+          maximum: 1000
+          minimum: 1
+          title: Limit
+          type: integer
+        style: form
+      - description: Start date to filter by (timestamp in seconds since epoch)
+        explode: true
+        in: query
+        name: start_date
+        required: false
+        schema:
+          nullable: true
+          type: integer
+        style: form
+      - description: End date to filter by (timestamp in seconds since epoch)
+        explode: true
+        in: query
+        name: end_date
+        required: false
+        schema:
+          nullable: true
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TopNArticlesTimeseriesResponse'
+          description: A list of top domain articles with their hit counts grouped
+            by day
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorModel'
+          description: Unprocessable Entity
+        "405":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/abc__APIErrorModel__77'
+          description: Method Not Allowed
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/abc__APIErrorModel__78'
+          description: Forbidden
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/abc__APIErrorModel__79'
+          description: Unauthorized
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/abc__APIErrorModel__80'
+          description: Bad Request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/asknews_api__errors__APIErrorModel'
+          description: Internal Server Error
+      security:
+      - APIKey: []
+      summary: Get the top N articles by hits for domain with daily breakdown
+      tags:
+      - distribution
   /v1/distribution/articles/top_n:
     get:
       description: Get the top N articles by hits.
@@ -4060,25 +4155,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__77'
+                $ref: '#/components/schemas/abc__APIErrorModel__81'
           description: Method Not Allowed
         "403":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__78'
+                $ref: '#/components/schemas/abc__APIErrorModel__82'
           description: Forbidden
         "401":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__79'
+                $ref: '#/components/schemas/abc__APIErrorModel__83'
           description: Unauthorized
         "400":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__80'
+                $ref: '#/components/schemas/abc__APIErrorModel__84'
           description: Bad Request
         "500":
           content:
@@ -4154,25 +4249,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__81'
+                $ref: '#/components/schemas/abc__APIErrorModel__85'
           description: Method Not Allowed
         "403":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__82'
+                $ref: '#/components/schemas/abc__APIErrorModel__86'
           description: Forbidden
         "401":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__83'
+                $ref: '#/components/schemas/abc__APIErrorModel__87'
           description: Unauthorized
         "400":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__84'
+                $ref: '#/components/schemas/abc__APIErrorModel__88'
           description: Bad Request
         "500":
           content:
@@ -4247,25 +4342,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__85'
+                $ref: '#/components/schemas/abc__APIErrorModel__89'
           description: Method Not Allowed
         "403":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__86'
+                $ref: '#/components/schemas/abc__APIErrorModel__90'
           description: Forbidden
         "401":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__87'
+                $ref: '#/components/schemas/abc__APIErrorModel__91'
           description: Unauthorized
         "400":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__88'
+                $ref: '#/components/schemas/abc__APIErrorModel__92'
           description: Bad Request
         "500":
           content:
@@ -4328,25 +4423,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__89'
+                $ref: '#/components/schemas/abc__APIErrorModel__93'
           description: Method Not Allowed
         "403":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__90'
+                $ref: '#/components/schemas/abc__APIErrorModel__94'
           description: Forbidden
         "401":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__91'
+                $ref: '#/components/schemas/abc__APIErrorModel__95'
           description: Unauthorized
         "400":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__92'
+                $ref: '#/components/schemas/abc__APIErrorModel__96'
           description: Bad Request
         "500":
           content:
@@ -4477,25 +4572,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__93'
+                $ref: '#/components/schemas/abc__APIErrorModel__97'
           description: Method Not Allowed
         "403":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__94'
+                $ref: '#/components/schemas/abc__APIErrorModel__98'
           description: Forbidden
         "401":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__95'
+                $ref: '#/components/schemas/abc__APIErrorModel__99'
           description: Unauthorized
         "400":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__96'
+                $ref: '#/components/schemas/abc__APIErrorModel__100'
           description: Bad Request
         "500":
           content:
@@ -16283,6 +16378,86 @@ components:
       - data
       - total_count
       title: TopNArticlesForDomainResponse
+    TopNArticlesTimeseriesDayItem:
+      example:
+        total_count: 6
+        day: day
+        articles:
+        - article_id: article_id
+          article_url: article_url
+          hit_count: 0
+        - article_id: article_id
+          article_url: article_url
+          hit_count: 0
+      properties:
+        day:
+          title: Day
+          type: string
+        articles:
+          items:
+            $ref: '#/components/schemas/TopNArticlesTimeseriesItem'
+          type: array
+        total_count:
+          title: Total Count
+          type: integer
+      required:
+      - articles
+      - day
+      - total_count
+      title: TopNArticlesTimeseriesDayItem
+    TopNArticlesTimeseriesItem:
+      example:
+        article_id: article_id
+        article_url: article_url
+        hit_count: 0
+      properties:
+        article_url:
+          title: Article Url
+          type: string
+        article_id:
+          nullable: true
+          type: string
+        hit_count:
+          title: Hit Count
+          type: integer
+      required:
+      - article_url
+      - hit_count
+      title: TopNArticlesTimeseriesItem
+    TopNArticlesTimeseriesResponse:
+      example:
+        data:
+        - total_count: 6
+          day: day
+          articles:
+          - article_id: article_id
+            article_url: article_url
+            hit_count: 0
+          - article_id: article_id
+            article_url: article_url
+            hit_count: 0
+        - total_count: 6
+          day: day
+          articles:
+          - article_id: article_id
+            article_url: article_url
+            hit_count: 0
+          - article_id: article_id
+            article_url: article_url
+            hit_count: 0
+        total_count: 1
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/TopNArticlesTimeseriesDayItem'
+          type: array
+        total_count:
+          title: Total Count
+          type: integer
+      required:
+      - data
+      - total_count
+      title: TopNArticlesTimeseriesResponse
     TopNDomainsByHitsItem:
       example:
         domain: domain
@@ -17101,6 +17276,21 @@ components:
       - code
       - detail
       title: APIErrorModel
+    abc__APIErrorModel__100:
+      example:
+        code: 7
+        detail: detail
+      properties:
+        code:
+          title: Code
+          type: integer
+        detail:
+          title: Detail
+          type: string
+      required:
+      - code
+      - detail
+      title: APIErrorModel
     abc__APIErrorModel__11:
       example:
         code: 4
@@ -17118,7 +17308,7 @@ components:
       title: APIErrorModel
     abc__APIErrorModel__12:
       example:
-        code: 7
+        code: 5
         detail: detail
       properties:
         code:
@@ -18499,6 +18689,51 @@ components:
     abc__APIErrorModel__96:
       example:
         code: 5
+        detail: detail
+      properties:
+        code:
+          title: Code
+          type: integer
+        detail:
+          title: Detail
+          type: string
+      required:
+      - code
+      - detail
+      title: APIErrorModel
+    abc__APIErrorModel__97:
+      example:
+        code: 0
+        detail: detail
+      properties:
+        code:
+          title: Code
+          type: integer
+        detail:
+          title: Detail
+          type: string
+      required:
+      - code
+      - detail
+      title: APIErrorModel
+    abc__APIErrorModel__98:
+      example:
+        code: 6
+        detail: detail
+      properties:
+        code:
+          title: Code
+          type: integer
+        detail:
+          title: Detail
+          type: string
+      required:
+      - code
+      - detail
+      title: APIErrorModel
+    abc__APIErrorModel__99:
+      example:
+        code: 1
         detail: detail
       properties:
         code:

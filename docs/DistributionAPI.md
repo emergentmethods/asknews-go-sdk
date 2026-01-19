@@ -11,6 +11,7 @@ Method | HTTP request | Description
 [**GetDomainQueries**](DistributionAPI.md#GetDomainQueries) | **Get** /v1/distribution/articles/domain_queries | Get queries that surfaced domain articles
 [**TopNArticlesByHits**](DistributionAPI.md#TopNArticlesByHits) | **Get** /v1/distribution/articles/top_n | Get the top N articles by hits
 [**TopNArticlesForDomain**](DistributionAPI.md#TopNArticlesForDomain) | **Get** /v1/distribution/articles/top_n_for_domain | Get the top N articles by hits for domain
+[**TopNArticlesForDomainTimeseries**](DistributionAPI.md#TopNArticlesForDomainTimeseries) | **Get** /v1/distribution/articles/top_n_for_domain_timeseries | Get the top N articles by hits for domain with daily breakdown
 [**TopNDomainsByHits**](DistributionAPI.md#TopNDomainsByHits) | **Get** /v1/distribution/domains/top_n | Get the top N domains by hits
 [**UpdateDomain**](DistributionAPI.md#UpdateDomain) | **Put** /v1/distribution/domains/{name} | Update an existing domain
 
@@ -503,6 +504,78 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**TopNArticlesForDomainResponse**](TopNArticlesForDomainResponse.md)
+
+### Authorization
+
+[APIKey](../README.md#APIKey)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## TopNArticlesForDomainTimeseries
+
+> TopNArticlesTimeseriesResponse TopNArticlesForDomainTimeseries(ctx).DomainName(domainName).Limit(limit).StartDate(startDate).EndDate(endDate).Execute()
+
+Get the top N articles by hits for domain with daily breakdown
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/emergentmethods/asknews-go-sdk"
+)
+
+func main() {
+	domainName := "domainName_example" // string | Domain name to filter by
+	limit := int32(56) // int32 | Number of top domain articles to return per day (optional) (default to 10)
+	startDate := int32(56) // int32 | Start date to filter by (timestamp in seconds since epoch) (optional)
+	endDate := int32(56) // int32 | End date to filter by (timestamp in seconds since epoch) (optional)
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.DistributionAPI.TopNArticlesForDomainTimeseries(context.Background()).DomainName(domainName).Limit(limit).StartDate(startDate).EndDate(endDate).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `DistributionAPI.TopNArticlesForDomainTimeseries``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `TopNArticlesForDomainTimeseries`: TopNArticlesTimeseriesResponse
+	fmt.Fprintf(os.Stdout, "Response from `DistributionAPI.TopNArticlesForDomainTimeseries`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiTopNArticlesForDomainTimeseriesRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **domainName** | **string** | Domain name to filter by | 
+ **limit** | **int32** | Number of top domain articles to return per day | [default to 10]
+ **startDate** | **int32** | Start date to filter by (timestamp in seconds since epoch) | 
+ **endDate** | **int32** | End date to filter by (timestamp in seconds since epoch) | 
+
+### Return type
+
+[**TopNArticlesTimeseriesResponse**](TopNArticlesTimeseriesResponse.md)
 
 ### Authorization
 
