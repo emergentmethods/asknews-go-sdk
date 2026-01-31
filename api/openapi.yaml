@@ -2,7 +2,7 @@ openapi: 3.1.0
 info:
   description: "AskNews API [![status](https://status.asknews.app/api/badge/2/status?style=for-the-badge)](https://status.asknews.app/status/prod)"
   title: AskNews API
-  version: 0.24.28
+  version: 0.24.22
 servers:
 - url: https://api.asknews.app
 paths:
@@ -461,25 +461,57 @@ paths:
         schema:
           items:
             enum:
-            - en
-            - de
-            - es
-            - fr
-            - it
-            - pt
-            - ru
+            - sq
             - ar
-            - tr
+            - az
+            - ca
             - zh
-            - jp
-            - ko
-            - sv
-            - nl
-            - "no"
+            - hr
+            - cs
             - da
-            - uk
-            - pl
+            - nl
+            - en
+            - eo
+            - fi
+            - fr
+            - gl
+            - de
+            - el
+            - he
             - hi
+            - hu
+            - is
+            - id
+            - ia
+            - it
+            - ja
+            - kk
+            - km
+            - ko
+            - ky
+            - ms
+            - mt
+            - mhr
+            - mn
+            - "no"
+            - or
+            - pl
+            - pt
+            - pa
+            - ro
+            - ru
+            - sr
+            - sk
+            - sl
+            - es
+            - sv
+            - ta
+            - te
+            - th
+            - tr
+            - uk
+            - vi
+            - unknown
             type: string
           nullable: true
           type: array
@@ -1226,25 +1258,57 @@ paths:
         schema:
           items:
             enum:
-            - en
-            - de
-            - es
-            - fr
-            - it
-            - pt
-            - ru
+            - sq
             - ar
-            - tr
+            - az
+            - ca
             - zh
-            - jp
-            - ko
-            - sv
-            - nl
-            - "no"
+            - hr
+            - cs
             - da
-            - uk
-            - pl
+            - nl
+            - en
+            - eo
+            - fi
+            - fr
+            - gl
+            - de
+            - el
+            - he
             - hi
+            - hu
+            - is
+            - id
+            - ia
+            - it
+            - ja
+            - kk
+            - km
+            - ko
+            - ky
+            - ms
+            - mt
+            - mhr
+            - mn
+            - "no"
+            - or
+            - pl
+            - pt
+            - pa
+            - ro
+            - ru
+            - sr
+            - sk
+            - sl
+            - es
+            - sv
+            - ta
+            - te
+            - th
+            - tr
+            - uk
+            - vi
+            - unknown
             type: string
           nullable: true
           type: array
@@ -3902,20 +3966,22 @@ paths:
       summary: Update an existing domain
       tags:
       - distribution
-  /v1/distribution/articles/top_n_for_domain:
+  /v1/distribution/articles/top_n_for_domains:
     get:
       description: Get the top N domain articles by hits.
-      operationId: top_n_articles_for_domain
+      operationId: top_n_articles_for_domains
       parameters:
-      - description: Domain name to filter by
+      - description: Domain names to filter by
         explode: true
         in: query
-        name: domain_name
+        name: domain_names
         required: true
         schema:
-          description: Domain name to filter by
-          title: Domain Name
-          type: string
+          description: Domain names to filter by
+          items:
+            nullable: true
+            type: string
+          type: array
         style: form
       - description: Number of top domain articles to return
         explode: true
@@ -3993,7 +4059,7 @@ paths:
           description: Internal Server Error
       security:
       - APIKey: []
-      summary: Get the top N articles by hits for domain
+      summary: Get the top N articles by hits for domains
       tags:
       - distribution
   /v1/distribution/articles/top_n_for_domain_timeseries:
@@ -4199,7 +4265,6 @@ paths:
         schema:
           description: Domain names to filter by
           items:
-            nullable: true
             type: string
           type: array
         style: form
@@ -4280,6 +4345,183 @@ paths:
       summary: Get queries that surfaced domain articles
       tags:
       - distribution
+  /v1/distribution/articles/domain_hits_surface:
+    get:
+      description: Get total hits and surfaced articles for domains.
+      operationId: get_domain_hits_surface
+      parameters:
+      - description: List of domain names to filter by
+        explode: true
+        in: query
+        name: domain_names
+        required: true
+        schema:
+          description: List of domain names to filter by
+          items:
+            nullable: true
+            type: string
+          type: array
+        style: form
+      - description: Year (4 digits)
+        explode: true
+        in: query
+        name: year
+        required: true
+        schema:
+          description: Year (4 digits)
+          maximum: 2100
+          minimum: 2000
+          title: Year
+          type: integer
+        style: form
+      - description: Month (1-12)
+        explode: true
+        in: query
+        name: month
+        required: true
+        schema:
+          description: Month (1-12)
+          maximum: 12
+          minimum: 1
+          title: Month
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DomainHitsSurfaceResponse'
+          description: Total hits and distinct article count for the specified domains
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorModel'
+          description: Unprocessable Entity
+        "405":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/abc__APIErrorModel__89'
+          description: Method Not Allowed
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/abc__APIErrorModel__90'
+          description: Forbidden
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/abc__APIErrorModel__91'
+          description: Unauthorized
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/abc__APIErrorModel__92'
+          description: Bad Request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/asknews_api__errors__APIErrorModel'
+          description: Internal Server Error
+      security:
+      - APIKey: []
+      summary: Get total hits and surfaced articles for domains
+      tags:
+      - distribution
+  /v1/distribution/articles/domain_hits_surface_timewindow:
+    get:
+      description: Get hits and surfaced articles per day for domains.
+      operationId: get_domain_hits_surface_timewindow
+      parameters:
+      - description: List of domain names to filter by
+        explode: true
+        in: query
+        name: domain_names
+        required: true
+        schema:
+          description: List of domain names to filter by
+          items:
+            type: string
+          type: array
+        style: form
+      - description: Year (4 digits)
+        explode: true
+        in: query
+        name: year
+        required: true
+        schema:
+          description: Year (4 digits)
+          maximum: 2100
+          minimum: 2000
+          title: Year
+          type: integer
+        style: form
+      - description: Month (1-12)
+        explode: true
+        in: query
+        name: month
+        required: true
+        schema:
+          description: Month (1-12)
+          maximum: 12
+          minimum: 1
+          title: Month
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DomainHitsSurfaceTimeWindowResponse'
+          description: Daily breakdown of hits and distinct article count
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorModel'
+          description: Unprocessable Entity
+        "405":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/abc__APIErrorModel__93'
+          description: Method Not Allowed
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/abc__APIErrorModel__94'
+          description: Forbidden
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/abc__APIErrorModel__95'
+          description: Unauthorized
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/abc__APIErrorModel__96'
+          description: Bad Request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/asknews_api__errors__APIErrorModel'
+          description: Internal Server Error
+      security:
+      - APIKey: []
+      summary: Get hits and surfaced articles per day for domains
+      tags:
+      - distribution
   /v1/distribution/stats/hit_share:
     get:
       description: Get the hit share for a list of domains in a time period.
@@ -4342,25 +4584,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__89'
+                $ref: '#/components/schemas/abc__APIErrorModel__97'
           description: Method Not Allowed
         "403":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__90'
+                $ref: '#/components/schemas/abc__APIErrorModel__98'
           description: Forbidden
         "401":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__91'
+                $ref: '#/components/schemas/abc__APIErrorModel__99'
           description: Unauthorized
         "400":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__92'
+                $ref: '#/components/schemas/abc__APIErrorModel__100'
           description: Bad Request
         "500":
           content:
@@ -4423,25 +4665,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__93'
+                $ref: '#/components/schemas/abc__APIErrorModel__101'
           description: Method Not Allowed
         "403":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__94'
+                $ref: '#/components/schemas/abc__APIErrorModel__102'
           description: Forbidden
         "401":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__95'
+                $ref: '#/components/schemas/abc__APIErrorModel__103'
           description: Unauthorized
         "400":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__96'
+                $ref: '#/components/schemas/abc__APIErrorModel__104'
           description: Bad Request
         "500":
           content:
@@ -4572,25 +4814,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__97'
+                $ref: '#/components/schemas/abc__APIErrorModel__105'
           description: Method Not Allowed
         "403":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__98'
+                $ref: '#/components/schemas/abc__APIErrorModel__106'
           description: Forbidden
         "401":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__99'
+                $ref: '#/components/schemas/abc__APIErrorModel__107'
           description: Unauthorized
         "400":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__100'
+                $ref: '#/components/schemas/abc__APIErrorModel__108'
           description: Bad Request
         "500":
           content:
@@ -5103,8 +5345,8 @@ components:
           method: kw
           offset: 5
           languages:
-          - en
-          - en
+          - sq
+          - sq
           query: ""
           countries:
           - countries
@@ -5670,8 +5912,8 @@ components:
             method: kw
             offset: 5
             languages:
-            - en
-            - en
+            - sq
+            - sq
             query: ""
             countries:
             - countries
@@ -5731,8 +5973,8 @@ components:
             method: kw
             offset: 5
             languages:
-            - en
-            - en
+            - sq
+            - sq
             query: ""
             countries:
             - countries
@@ -6544,6 +6786,68 @@ components:
       - image_url
       - source_id
       title: DisplayImageUrl
+    DomainHitsSurfaceDayItem:
+      example:
+        hits: 0
+        surfaced: 6
+        day: day
+      properties:
+        day:
+          title: Day
+          type: string
+        hits:
+          title: Hits
+          type: integer
+        surfaced:
+          title: Surfaced
+          type: integer
+      required:
+      - day
+      - hits
+      - surfaced
+      title: DomainHitsSurfaceDayItem
+    DomainHitsSurfaceResponse:
+      example:
+        hits: 0
+        surfaced: 6
+      properties:
+        hits:
+          title: Hits
+          type: integer
+        surfaced:
+          title: Surfaced
+          type: integer
+      required:
+      - hits
+      - surfaced
+      title: DomainHitsSurfaceResponse
+    DomainHitsSurfaceTimeWindowResponse:
+      example:
+        data:
+        - hits: 0
+          surfaced: 6
+          day: day
+        - hits: 0
+          surfaced: 6
+          day: day
+        total_hits: 1
+        total_surfaced: 5
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/DomainHitsSurfaceDayItem'
+          type: array
+        total_hits:
+          title: Total Hits
+          type: integer
+        total_surfaced:
+          title: Total Surfaced
+          type: integer
+      required:
+      - data
+      - total_hits
+      - total_surfaced
+      title: DomainHitsSurfaceTimeWindowResponse
     DomainQueriesResponse:
       example:
         data:
@@ -6978,8 +7282,8 @@ components:
         method: kw
         offset: 5
         languages:
-        - en
-        - en
+        - sq
+        - sq
         query: ""
         countries:
         - countries
@@ -7209,25 +7513,57 @@ components:
         languages:
           items:
             enum:
-            - en
-            - de
-            - es
-            - fr
-            - it
-            - pt
-            - ru
+            - sq
             - ar
-            - tr
+            - az
+            - ca
             - zh
-            - jp
-            - ko
-            - sv
-            - nl
-            - "no"
+            - hr
+            - cs
             - da
-            - uk
-            - pl
+            - nl
+            - en
+            - eo
+            - fi
+            - fr
+            - gl
+            - de
+            - el
+            - he
             - hi
+            - hu
+            - is
+            - id
+            - ia
+            - it
+            - ja
+            - kk
+            - km
+            - ko
+            - ky
+            - ms
+            - mt
+            - mhr
+            - mn
+            - "no"
+            - or
+            - pl
+            - pt
+            - pa
+            - ro
+            - ru
+            - sr
+            - sk
+            - sl
+            - es
+            - sv
+            - ta
+            - te
+            - th
+            - tr
+            - uk
+            - vi
+            - unknown
             type: string
           nullable: true
           type: array
@@ -7321,8 +7657,8 @@ components:
           method: kw
           offset: 5
           languages:
-          - en
-          - en
+          - sq
+          - sq
           query: ""
           countries:
           - countries
@@ -9334,6 +9670,7 @@ components:
           - claude-3-5-sonnet-latest
           - claude-sonnet-4-20250514
           - claude-sonnet-4-5-20250929
+          - claude-opus-4-5-20251101
           - meta-llama/Meta-Llama-3.1-405B-Instruct
           - meta-llama/Meta-Llama-3.3-70B-Instruct
           nullable: true
@@ -16600,8 +16937,8 @@ components:
             method: kw
             offset: 5
             languages:
-            - en
-            - en
+            - sq
+            - sq
             query: ""
             countries:
             - countries
@@ -16661,8 +16998,8 @@ components:
             method: kw
             offset: 5
             languages:
-            - en
-            - en
+            - sq
+            - sq
             query: ""
             countries:
             - countries
@@ -17291,9 +17628,129 @@ components:
       - code
       - detail
       title: APIErrorModel
-    abc__APIErrorModel__11:
+    abc__APIErrorModel__101:
+      example:
+        code: 3
+        detail: detail
+      properties:
+        code:
+          title: Code
+          type: integer
+        detail:
+          title: Detail
+          type: string
+      required:
+      - code
+      - detail
+      title: APIErrorModel
+    abc__APIErrorModel__102:
+      example:
+        code: 6
+        detail: detail
+      properties:
+        code:
+          title: Code
+          type: integer
+        detail:
+          title: Detail
+          type: string
+      required:
+      - code
+      - detail
+      title: APIErrorModel
+    abc__APIErrorModel__103:
       example:
         code: 4
+        detail: detail
+      properties:
+        code:
+          title: Code
+          type: integer
+        detail:
+          title: Detail
+          type: string
+      required:
+      - code
+      - detail
+      title: APIErrorModel
+    abc__APIErrorModel__104:
+      example:
+        code: 5
+        detail: detail
+      properties:
+        code:
+          title: Code
+          type: integer
+        detail:
+          title: Detail
+          type: string
+      required:
+      - code
+      - detail
+      title: APIErrorModel
+    abc__APIErrorModel__105:
+      example:
+        code: 0
+        detail: detail
+      properties:
+        code:
+          title: Code
+          type: integer
+        detail:
+          title: Detail
+          type: string
+      required:
+      - code
+      - detail
+      title: APIErrorModel
+    abc__APIErrorModel__106:
+      example:
+        code: 6
+        detail: detail
+      properties:
+        code:
+          title: Code
+          type: integer
+        detail:
+          title: Detail
+          type: string
+      required:
+      - code
+      - detail
+      title: APIErrorModel
+    abc__APIErrorModel__107:
+      example:
+        code: 1
+        detail: detail
+      properties:
+        code:
+          title: Code
+          type: integer
+        detail:
+          title: Detail
+          type: string
+      required:
+      - code
+      - detail
+      title: APIErrorModel
+    abc__APIErrorModel__108:
+      example:
+        code: 5
+        detail: detail
+      properties:
+        code:
+          title: Code
+          type: integer
+        detail:
+          title: Detail
+          type: string
+      required:
+      - code
+      - detail
+      title: APIErrorModel
+    abc__APIErrorModel__11:
+      example:
+        code: 1
         detail: detail
       properties:
         code:
@@ -17323,7 +17780,7 @@ components:
       title: APIErrorModel
     abc__APIErrorModel__13:
       example:
-        code: 3
+        code: 0
         detail: detail
       properties:
         code:

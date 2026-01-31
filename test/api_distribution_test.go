@@ -72,6 +72,30 @@ func Test_asknews_DistributionAPIService(t *testing.T) {
 
 	})
 
+	t.Run("Test DistributionAPIService GetDomainHitsSurface", func(t *testing.T) {
+
+		t.Skip("skip test")  // remove to run test
+
+		resp, httpRes, err := apiClient.DistributionAPI.GetDomainHitsSurface(context.Background()).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
+	t.Run("Test DistributionAPIService GetDomainHitsSurfaceTimewindow", func(t *testing.T) {
+
+		t.Skip("skip test")  // remove to run test
+
+		resp, httpRes, err := apiClient.DistributionAPI.GetDomainHitsSurfaceTimewindow(context.Background()).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
 	t.Run("Test DistributionAPIService GetDomainQueries", func(t *testing.T) {
 
 		t.Skip("skip test")  // remove to run test
@@ -96,11 +120,11 @@ func Test_asknews_DistributionAPIService(t *testing.T) {
 
 	})
 
-	t.Run("Test DistributionAPIService TopNArticlesForDomain", func(t *testing.T) {
+	t.Run("Test DistributionAPIService TopNArticlesForDomainTimeseries", func(t *testing.T) {
 
 		t.Skip("skip test")  // remove to run test
 
-		resp, httpRes, err := apiClient.DistributionAPI.TopNArticlesForDomain(context.Background()).Execute()
+		resp, httpRes, err := apiClient.DistributionAPI.TopNArticlesForDomainTimeseries(context.Background()).Execute()
 
 		require.Nil(t, err)
 		require.NotNil(t, resp)
@@ -108,11 +132,11 @@ func Test_asknews_DistributionAPIService(t *testing.T) {
 
 	})
 
-	t.Run("Test DistributionAPIService TopNArticlesForDomainTimeseries", func(t *testing.T) {
+	t.Run("Test DistributionAPIService TopNArticlesForDomains", func(t *testing.T) {
 
 		t.Skip("skip test")  // remove to run test
 
-		resp, httpRes, err := apiClient.DistributionAPI.TopNArticlesForDomainTimeseries(context.Background()).Execute()
+		resp, httpRes, err := apiClient.DistributionAPI.TopNArticlesForDomains(context.Background()).Execute()
 
 		require.Nil(t, err)
 		require.NotNil(t, resp)
