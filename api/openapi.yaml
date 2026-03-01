@@ -2,7 +2,7 @@ openapi: 3.1.0
 info:
   description: "AskNews API [![status](https://status.asknews.app/api/badge/2/status?style=for-the-badge)](https://status.asknews.app/status/prod)"
   title: AskNews API
-  version: 0.24.43
+  version: 0.24.45
 servers:
 - url: https://api.asknews.app
 paths:
@@ -6159,9 +6159,9 @@ components:
           type: string
         cron:
           description: "How often or when to check sources for this alert, specified\
-            \ as a cron expression. Examples: '*/15 * * * *' (every 15 minutes), '0\
-            \ * * * *' (hourly), '0 9 * * *' (daily at 9am), '0 9 * * 1' (Mondays\
-            \ at 9am).  See https://crontab.run/ for more examples."
+            \ as a cron expression. Examples: '0 * * * *' (hourly), '0 9 * * *' (daily\
+            \ at 9am), '0 9 * * 1' (Mondays at 9am).  See https://crontab.run/ for\
+            \ more examples."
           example: '''0 0 * * *'' (daily at midnight UTC)'
           title: Cron
           type: string
