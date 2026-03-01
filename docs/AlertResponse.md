@@ -19,6 +19,8 @@ Name | Type | Description | Notes
 **AlwaysTrigger** | Pointer to **bool** |  | [optional] [default to false]
 **Repeat** | Pointer to **bool** |  | [optional] [default to true]
 **Active** | Pointer to **bool** |  | [optional] [default to true]
+**AlertType** | Pointer to **NullableString** |  | [optional] 
+**Title** | Pointer to **NullableString** |  | [optional] 
 
 ## Methods
 
@@ -454,6 +456,76 @@ SetActive sets Active field to given value.
 
 HasActive returns a boolean if a field has been set.
 
+### GetAlertType
+
+`func (o *AlertResponse) GetAlertType() string`
+
+GetAlertType returns the AlertType field if non-nil, zero value otherwise.
+
+### GetAlertTypeOk
+
+`func (o *AlertResponse) GetAlertTypeOk() (*string, bool)`
+
+GetAlertTypeOk returns a tuple with the AlertType field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetAlertType
+
+`func (o *AlertResponse) SetAlertType(v string)`
+
+SetAlertType sets AlertType field to given value.
+
+### HasAlertType
+
+`func (o *AlertResponse) HasAlertType() bool`
+
+HasAlertType returns a boolean if a field has been set.
+
+### SetAlertTypeNil
+
+`func (o *AlertResponse) SetAlertTypeNil(b bool)`
+
+ SetAlertTypeNil sets the value for AlertType to be an explicit nil
+
+### UnsetAlertType
+`func (o *AlertResponse) UnsetAlertType()`
+
+UnsetAlertType ensures that no value is present for AlertType, not even an explicit nil
+### GetTitle
+
+`func (o *AlertResponse) GetTitle() string`
+
+GetTitle returns the Title field if non-nil, zero value otherwise.
+
+### GetTitleOk
+
+`func (o *AlertResponse) GetTitleOk() (*string, bool)`
+
+GetTitleOk returns a tuple with the Title field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetTitle
+
+`func (o *AlertResponse) SetTitle(v string)`
+
+SetTitle sets Title field to given value.
+
+### HasTitle
+
+`func (o *AlertResponse) HasTitle() bool`
+
+HasTitle returns a boolean if a field has been set.
+
+### SetTitleNil
+
+`func (o *AlertResponse) SetTitleNil(b bool)`
+
+ SetTitleNil sets the value for Title to be an explicit nil
+
+### UnsetTitle
+`func (o *AlertResponse) UnsetTitle()`
+
+UnsetTitle ensures that no value is present for Title, not even an explicit nil
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

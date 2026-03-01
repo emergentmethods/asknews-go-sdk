@@ -4,14 +4,14 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Action** | Pointer to **string** |  | [optional] [default to "resend_broadcast"]
-**Params** | [**ResendBroadcastParams**](ResendBroadcastParams.md) |  | 
+**Action** | Pointer to **string** |  | [optional] [default to "google_docs"]
+**Params** | [**GoogleDocsParams**](GoogleDocsParams.md) |  | 
 
 ## Methods
 
 ### NewTriggersInner
 
-`func NewTriggersInner(params ResendBroadcastParams, ) *TriggersInner`
+`func NewTriggersInner(params GoogleDocsParams, ) *TriggersInner`
 
 NewTriggersInner instantiates a new TriggersInner object
 This constructor will assign default values to properties that have it defined,
@@ -53,20 +53,20 @@ HasAction returns a boolean if a field has been set.
 
 ### GetParams
 
-`func (o *TriggersInner) GetParams() ResendBroadcastParams`
+`func (o *TriggersInner) GetParams() GoogleDocsParams`
 
 GetParams returns the Params field if non-nil, zero value otherwise.
 
 ### GetParamsOk
 
-`func (o *TriggersInner) GetParamsOk() (*ResendBroadcastParams, bool)`
+`func (o *TriggersInner) GetParamsOk() (*GoogleDocsParams, bool)`
 
 GetParamsOk returns a tuple with the Params field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetParams
 
-`func (o *TriggersInner) SetParams(v ResendBroadcastParams)`
+`func (o *TriggersInner) SetParams(v GoogleDocsParams)`
 
 SetParams sets Params field to given value.
 

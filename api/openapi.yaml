@@ -2,7 +2,7 @@ openapi: 3.1.0
 info:
   description: "AskNews API [![status](https://status.asknews.app/api/badge/2/status?style=for-the-badge)](https://status.asknews.app/status/prod)"
   title: AskNews API
-  version: 0.24.22
+  version: 0.24.43
 servers:
 - url: https://api.asknews.app
 paths:
@@ -52,6 +52,7 @@ paths:
         schema:
           default: 10
           description: Number of articles to return
+          maximum: 101
           title: N Articles
           type: integer
         style: form
@@ -600,6 +601,25 @@ paths:
           nullable: true
           type: array
         style: form
+      - description: "Enable response caching with the specified TTL. When a cached\
+          \ response is returned, usage is charged at 0.25x the normal rate. Valid\
+          \ values: '1h' (1 hour), '6h' (6 hours), '12h' (12 hours), '24h' (24 hours),\
+          \ '3d' (3 days), '7d' (7 days)."
+        explode: true
+        in: query
+        name: try_cache
+        required: false
+        schema:
+          enum:
+          - 1h
+          - 6h
+          - 12h
+          - 24h
+          - 3d
+          - 7d
+          nullable: true
+          type: string
+        style: form
       responses:
         "200":
           content:
@@ -644,7 +664,8 @@ paths:
                 $ref: '#/components/schemas/asknews_api__errors__APIErrorModel'
           description: Internal Server Error
       security:
-      - APIKey: []
+      - APIKey:
+        - news
       summary: Search for enriched real-time news context
       tags:
       - news
@@ -709,7 +730,8 @@ paths:
                 $ref: '#/components/schemas/asknews_api__errors__APIErrorModel'
           description: Internal Server Error
       security:
-      - APIKey: []
+      - APIKey:
+        - news
       summary: Build a custom mega-news-knowledge graph
       tags:
       - graph
@@ -767,7 +789,8 @@ paths:
                 $ref: '#/components/schemas/asknews_api__errors__APIErrorModel'
           description: Internal Server Error
       security:
-      - APIKey: []
+      - APIKey:
+        - news
       summary: Index a list of URLs into AskNews
       tags:
       - index_urls
@@ -834,7 +857,8 @@ paths:
                 $ref: '#/components/schemas/asknews_api__errors__APIErrorModel'
           description: Internal Server Error
       security:
-      - APIKey: []
+      - APIKey:
+        - news
       summary: Get multiple articles by UUID
       tags:
       - news
@@ -897,7 +921,8 @@ paths:
                 $ref: '#/components/schemas/asknews_api__errors__APIErrorModel'
           description: Internal Server Error
       security:
-      - APIKey: []
+      - APIKey:
+        - news
       summary: Get an article by its UUID
       tags:
       - news
@@ -1019,7 +1044,8 @@ paths:
                 $ref: '#/components/schemas/asknews_api__errors__APIErrorModel'
           description: Internal Server Error
       security:
-      - APIKey: []
+      - APIKey:
+        - news
       summary: Get the sources underlying AskNews
       tags:
       - news
@@ -1421,7 +1447,8 @@ paths:
                 $ref: '#/components/schemas/asknews_api__errors__APIErrorModel'
           description: Internal Server Error
       security:
-      - APIKey: []
+      - APIKey:
+        - news
       summary: Get the index counts underlying AskNews
       tags:
       - news
@@ -1491,7 +1518,8 @@ paths:
                 $ref: '#/components/schemas/asknews_api__errors__APIErrorModel'
           description: Internal Server Error
       security:
-      - APIKey: []
+      - APIKey:
+        - chat
       summary: Get chat completions from a news-infused AI assistant
       tags:
       - chat
@@ -1551,7 +1579,8 @@ paths:
                 $ref: '#/components/schemas/asknews_api__errors__APIErrorModel'
           description: Internal Server Error
       security:
-      - APIKey: []
+      - APIKey:
+        - chat
       summary: "Deep research into real-time news, archive news, and Google."
       tags:
       - chat
@@ -1573,7 +1602,8 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
       security:
-      - APIKey: []
+      - APIKey:
+        - chat
       summary: List available chat models
       tags:
       - chat
@@ -1610,7 +1640,9 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
       security:
-      - APIKey: []
+      - APIKey:
+        - chat
+        - internal
       summary: Get example headline questions
       tags:
       - chat
@@ -1695,6 +1727,8 @@ paths:
           - claude-sonnet-4-20250514
           - claude-opus-4-20250514
           - claude-sonnet-4-5-20250929
+          - claude-opus-4-6
+          - claude-sonnet-4-6
           - o1-mini
           - o3-mini
           - o3
@@ -1774,7 +1808,8 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
       security:
-      - APIKey: []
+      - APIKey:
+        - chat
       summary: Make an expert forecast for a news event.
       tags:
       - forecast
@@ -1860,7 +1895,8 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
       security:
-      - APIKey: []
+      - APIKey:
+        - chat
       summary: Run a live websearch.
       tags:
       - websearch
@@ -1900,7 +1936,8 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
       security:
-      - APIKey: []
+      - APIKey:
+        - chat
       summary: Generate filter params for AskNews endpoints
       tags:
       - autofilter
@@ -1956,7 +1993,8 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
       security:
-      - APIKey: []
+      - APIKey:
+        - chat
       summary: Get all created alerts
       tags:
       - alerts
@@ -1983,7 +2021,8 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
       security:
-      - APIKey: []
+      - APIKey:
+        - chat
       summary: Create an alert
       tags:
       - alerts
@@ -2077,7 +2116,8 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
       security:
-      - APIKey: []
+      - APIKey:
+        - chat
       summary: Get all alert logs
       tags:
       - alerts
@@ -2107,7 +2147,8 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
       security:
-      - APIKey: []
+      - APIKey:
+        - chat
       summary: Delete an alert
       tags:
       - alerts
@@ -2150,7 +2191,8 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
       security:
-      - APIKey: []
+      - APIKey:
+        - chat
       summary: Get an alert
       tags:
       - alerts
@@ -2189,7 +2231,8 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
       security:
-      - APIKey: []
+      - APIKey:
+        - chat
       summary: Update an alert
       tags:
       - alerts
@@ -2233,7 +2276,8 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
       security:
-      - APIKey: []
+      - APIKey:
+        - chat
       summary: Run an existing alert
       tags:
       - alerts
@@ -2328,7 +2372,8 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
       security:
-      - APIKey: []
+      - APIKey:
+        - chat
       summary: Get alert logs
       tags:
       - alerts
@@ -2350,7 +2395,8 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
       security:
-      - APIKey: []
+      - APIKey:
+        - chat
       summary: Get all created newsletters
       tags:
       - newsletters
@@ -2377,7 +2423,8 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
       security:
-      - APIKey: []
+      - APIKey:
+        - chat
       summary: Create a newsletter
       tags:
       - newsletters
@@ -2433,7 +2480,8 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
       security:
-      - APIKey: []
+      - APIKey:
+        - chat
       summary: Get all public newsletters
       tags:
       - newsletters
@@ -2463,7 +2511,8 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
       security:
-      - APIKey: []
+      - APIKey:
+        - chat
       summary: Delete a newsletter
       tags:
       - newsletters
@@ -2496,7 +2545,8 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
       security:
-      - APIKey: []
+      - APIKey:
+        - chat
       summary: Get a newsletter
       tags:
       - newsletters
@@ -2535,7 +2585,8 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
       security:
-      - APIKey: []
+      - APIKey:
+        - chat
       summary: Update a newsletter
       tags:
       - newsletters
@@ -2565,7 +2616,9 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
       security:
-      - APIKey: []
+      - APIKey:
+        - chat
+        - internal
       summary: Unsubscribe from a newsletter
       tags:
       - newsletters
@@ -2601,7 +2654,8 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
       security:
-      - APIKey: []
+      - APIKey:
+        - chat
       summary: Get newsletter contacts
       tags:
       - newsletters
@@ -2640,7 +2694,8 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
       security:
-      - APIKey: []
+      - APIKey:
+        - chat
       summary: Create a newsletter contact
       tags:
       - newsletters
@@ -2680,7 +2735,8 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
       security:
-      - APIKey: []
+      - APIKey:
+        - chat
       summary: Delete a newsletter contact
       tags:
       - newsletters
@@ -2723,7 +2779,8 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
       security:
-      - APIKey: []
+      - APIKey:
+        - chat
       summary: Get a newsletter contact
       tags:
       - newsletters
@@ -2772,7 +2829,8 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
       security:
-      - APIKey: []
+      - APIKey:
+        - chat
       summary: Update a newsletter contact
       tags:
       - newsletters
@@ -2800,7 +2858,8 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
       security:
-      - APIKey: []
+      - APIKey:
+        - chat
       summary: Create a chart
       tags:
       - charts
@@ -2939,7 +2998,8 @@ paths:
                 $ref: '#/components/schemas/asknews_api__errors__APIErrorModel'
           description: Internal Server Error
       security:
-      - APIKey: []
+      - APIKey:
+        - stories
       summary: Get a story containing updates
       tags:
       - stories
@@ -3290,7 +3350,8 @@ paths:
                 $ref: '#/components/schemas/asknews_api__errors__APIErrorModel'
           description: Internal Server Error
       security:
-      - APIKey: []
+      - APIKey:
+        - stories
       summary: Filter and search for top news narratives
       tags:
       - stories
@@ -3416,7 +3477,8 @@ paths:
                 $ref: '#/components/schemas/asknews_api__errors__APIErrorModel'
           description: Internal Server Error
       security:
-      - APIKey: []
+      - APIKey:
+        - analytics
       summary: Get a timeseries of finance news sentiment for assets
       tags:
       - analytics
@@ -3468,7 +3530,8 @@ paths:
                 $ref: '#/components/schemas/asknews_api__errors__APIErrorModel'
           description: Internal Server Error
       security:
-      - APIKey: []
+      - APIKey:
+        - profile
       summary: Get the current user's profile
       tags:
       - profile
@@ -3633,7 +3696,8 @@ paths:
                 $ref: '#/components/schemas/asknews_api__errors__APIErrorModel'
           description: Internal Server Error
       security:
-      - APIKey: []
+      - APIKey:
+        - news
       summary: "Search Reddit, summarize threads, and return analysis."
       tags:
       - reddit
@@ -3728,7 +3792,8 @@ paths:
                 $ref: '#/components/schemas/asknews_api__errors__APIErrorModel'
           description: Internal Server Error
       security:
-      - APIKey: []
+      - APIKey:
+        - distribution
       summary: Get the top N domains by hits
       tags:
       - distribution
@@ -3835,7 +3900,8 @@ paths:
                 $ref: '#/components/schemas/asknews_api__errors__APIErrorModel'
           description: Internal Server Error
       security:
-      - APIKey: []
+      - APIKey:
+        - distribution
       summary: Find domains
       tags:
       - distribution
@@ -3896,7 +3962,9 @@ paths:
                 $ref: '#/components/schemas/asknews_api__errors__APIErrorModel'
           description: Internal Server Error
       security:
-      - APIKey: []
+      - APIKey:
+        - distribution
+        - internal
       summary: Get a domain by name
       tags:
       - distribution
@@ -3962,7 +4030,9 @@ paths:
                 $ref: '#/components/schemas/asknews_api__errors__APIErrorModel'
           description: Internal Server Error
       security:
-      - APIKey: []
+      - APIKey:
+        - distribution
+        - internal
       summary: Update an existing domain
       tags:
       - distribution
@@ -4058,7 +4128,9 @@ paths:
                 $ref: '#/components/schemas/asknews_api__errors__APIErrorModel'
           description: Internal Server Error
       security:
-      - APIKey: []
+      - APIKey:
+        - distribution
+        - internal
       summary: Get the top N articles by hits for domains
       tags:
       - distribution
@@ -4153,7 +4225,9 @@ paths:
                 $ref: '#/components/schemas/asknews_api__errors__APIErrorModel'
           description: Internal Server Error
       security:
-      - APIKey: []
+      - APIKey:
+        - distribution
+        - internal
       summary: Get the top N articles by hits for domain with daily breakdown
       tags:
       - distribution
@@ -4248,7 +4322,9 @@ paths:
                 $ref: '#/components/schemas/asknews_api__errors__APIErrorModel'
           description: Internal Server Error
       security:
-      - APIKey: []
+      - APIKey:
+        - distribution
+        - internal
       summary: Get the top N articles by hits
       tags:
       - distribution
@@ -4341,7 +4417,9 @@ paths:
                 $ref: '#/components/schemas/asknews_api__errors__APIErrorModel'
           description: Internal Server Error
       security:
-      - APIKey: []
+      - APIKey:
+        - distribution
+        - internal
       summary: Get queries that surfaced domain articles
       tags:
       - distribution
@@ -4430,7 +4508,9 @@ paths:
                 $ref: '#/components/schemas/asknews_api__errors__APIErrorModel'
           description: Internal Server Error
       security:
-      - APIKey: []
+      - APIKey:
+        - distribution
+        - internal
       summary: Get total hits and surfaced articles for domains
       tags:
       - distribution
@@ -4518,7 +4598,9 @@ paths:
                 $ref: '#/components/schemas/asknews_api__errors__APIErrorModel'
           description: Internal Server Error
       security:
-      - APIKey: []
+      - APIKey:
+        - distribution
+        - internal
       summary: Get hits and surfaced articles per day for domains
       tags:
       - distribution
@@ -4611,7 +4693,9 @@ paths:
                 $ref: '#/components/schemas/asknews_api__errors__APIErrorModel'
           description: Internal Server Error
       security:
-      - APIKey: []
+      - APIKey:
+        - distribution
+        - internal
       summary: Get the hit share for a list of domains in a time period
       tags:
       - distribution
@@ -4692,7 +4776,9 @@ paths:
                 $ref: '#/components/schemas/asknews_api__errors__APIErrorModel'
           description: Internal Server Error
       security:
-      - APIKey: []
+      - APIKey:
+        - distribution
+        - internal
       summary: Get article hits
       tags:
       - distribution
@@ -4841,7 +4927,8 @@ paths:
                 $ref: '#/components/schemas/asknews_api__errors__APIErrorModel'
           description: Internal Server Error
       security:
-      - APIKey: []
+      - APIKey:
+        - news
       summary: Search for Wikipedia context with natural language
       tags:
       - wiki
@@ -4935,6 +5022,8 @@ components:
         triggers:
         - key: ""
         - key: ""
+        title: title
+        alert_type: alert_type
         share_link: share_link
         expires_at: 2000-01-23T04:56:07.000+00:00
         updated_at: 2000-01-23T04:56:07.000+00:00
@@ -5005,6 +5094,12 @@ components:
           default: true
           title: Active
           type: boolean
+        alert_type:
+          nullable: true
+          type: string
+        title:
+          nullable: true
+          type: string
       required:
       - cron
       - id
@@ -5791,7 +5886,7 @@ components:
           title: Chart Json
           type: object
         query:
-          title: Query
+          nullable: true
           type: string
         reasoning:
           nullable: true
@@ -5866,9 +5961,7 @@ components:
       title: CountResponse
     CreateAlertRequest:
       example:
-        cron: '*/15 * * * *'
-        share_link: https://openapi-generator.tech
-        expires_at: 2000-01-23T04:56:07.000+00:00
+        cron: '''0 0 * * *'' (daily at midnight UTC)'
         sources:
         - identifier: asknews
           params:
@@ -5992,18 +6085,9 @@ components:
             - countries_blacklist
             - countries_blacklist
             strategy: default
-        query: query
-        repeat: true
-        report:
-          logo_url: https://openapi-generator.tech
-          model: gpt-5
-          prompt:
-          - - prompt
-            - prompt
-          - - prompt
-            - prompt
+        query: I want to be alerted if the president of the US says something about
+          the economy
         active: true
-        model: meta-llama/Meta-Llama-3.1-8B-Instruct
         always_trigger: false
         triggers:
         - action: webhook
@@ -6021,17 +6105,44 @@ components:
               key: ""
             url: https://openapi-generator.tech
         title: title
+        alert_type: AlwaysAlertWhen
+        share_link: https://openapi-generator.tech
+        expires_at: 2000-01-23T04:56:07.000+00:00
+        repeat: true
+        report:
+          logo_url: https://openapi-generator.tech
+          model: gpt-4o
+          include_appendix: true
+          prompt:
+          - - prompt
+            - prompt
+          - - prompt
+            - prompt
+          asknews_watermark: true
+        model: gpt-4o-mini
       properties:
         query:
+          description: The query to run for the alert.
+          example: I want to be alerted if the president of the US says something
+            about the economy
+          title: Query
+          type: string
+        sources:
+          items:
+            $ref: '#/components/schemas/Sources_inner'
+          type: array
+        alert_type:
+          enum:
+          - AlwaysAlertWhen
+          - AlertOnceIf
+          - ReportAbout
           nullable: true
           type: string
-        cron:
-          description: The cron schedule for the alert. For example hourly is '0 *
-            * * *'. See https://crontab.run/ for more examples
-          example: '*/15 * * * *'
-          title: Cron
-          type: string
         model:
+          default: gpt-4o
+          description: The model that is used to check if the alert conditions are
+            satisfied by sources (this is not the same as the model used to write
+            the report.)Defaults to gpt-4o.
           enum:
           - meta-llama/Meta-Llama-3.1-8B-Instruct
           - gpt-4o-mini
@@ -6043,34 +6154,32 @@ components:
           - gpt-4.1-2025-04-14
           - gpt-4.1-nano-2025-04-14
           - gpt-4.1-mini-2025-04-14
-          nullable: true
+          example: gpt-4o-mini
+          title: Model
           type: string
-        share_link:
-          format: uri
-          maxLength: 2083
-          minLength: 1
-          nullable: true
+        cron:
+          description: "How often or when to check sources for this alert, specified\
+            \ as a cron expression. Examples: '*/15 * * * *' (every 15 minutes), '0\
+            \ * * * *' (hourly), '0 9 * * *' (daily at 9am), '0 9 * * 1' (Mondays\
+            \ at 9am).  See https://crontab.run/ for more examples."
+          example: '''0 0 * * *'' (daily at midnight UTC)'
+          title: Cron
           type: string
-        sources:
-          items:
-            $ref: '#/components/schemas/Sources_inner'
-          type: array
-        report:
-          $ref: '#/components/schemas/ReportRequest'
         triggers:
           items:
             $ref: '#/components/schemas/Triggers_inner'
           type: array
         always_trigger:
           default: false
-          description: Whether to always trigger the alert. Default is False. This
-            skips the alert check and run triggers immediately
+          description: Whether to always trigger the actions when sources are scanned.
+            This skips the check for if the alert conditions are satisfied and run
+            triggers immediately. Defaults to False.
           title: Always Trigger
           type: boolean
         repeat:
           default: true
           description: "Whether to repeat the alert. Default is True. If False, the\
-            \ alert will be disabled after it triggers once"
+            \ alert will be disabled after it triggers once."
           title: Repeat
           type: boolean
         active:
@@ -6082,12 +6191,20 @@ components:
           format: date-time
           nullable: true
           type: string
+        report:
+          $ref: '#/components/schemas/ReportRequest'
         title:
+          nullable: true
+          type: string
+        share_link:
+          format: uri
+          maxLength: 2083
+          minLength: 1
           nullable: true
           type: string
       required:
       - cron
-      - model
+      - query
       - sources
       - triggers
       title: CreateAlertRequest
@@ -6323,126 +6440,221 @@ components:
       additionalProperties: {}
       example:
         include_coordinates: false
-        append_references: true
         sources: asknews
-        presence_penalty: 5
-        max_depth: 9
+        append_references: true
+        max_depth: 36
+        presence_penalty: 1
         conversational_awareness: true
         return_sources: true
         journalist_mode: true
-        top_p: 6.027456183070403
+        top_p: 7.386281948385884
+        search_depth: 55
         thread_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-        search_depth: 7
-        frequency_penalty: 2
+        frequency_penalty: 6
         stream: false
-        temperature: 0.8008281904610115
+        temperature: 4.145608029883936
         filter_params:
-          key: ""
-        model: gpt-5
+          return_type: dicts
+          sentiment: negative
+          entity_guarantee_op: OR
+          start_timestamp: 6
+          doc_start_delimiter: <doc>
+          entity_guarantee:
+          - entity_guarantee
+          - entity_guarantee
+          historical: false
+          similarity_score_threshold: 5.962133916683182
+          diversify_sources: false
+          hours_back: 7
+          reporting_voice:
+          - Objective
+          - Objective
+          premium: false
+          end_timestamp: 1
+          domain_url:
+          - Domain_Url_1
+          - Domain_Url_1
+          string_guarantee:
+          - string_guarantee
+          - string_guarantee
+          reverse_string_guarantee:
+          - reverse_string_guarantee
+          - reverse_string_guarantee
+          return_graphs: false
+          time_filter: crawl_date
+          n_articles: 0
+          categories:
+          - All
+          - All
+          string_guarantee_op: AND
+          bad_domain_url:
+          - Bad_Domain_Url_2
+          - Bad_Domain_Url_2
+          provocative: all
+          method: kw
+          offset: 5
+          languages:
+          - sq
+          - sq
+          query: ""
+          countries:
+          - countries
+          - countries
+          doc_end_delimiter: </doc>
+          continents:
+          - Africa
+          - Africa
+          page_rank: 2
+          reverse_entity_guarantee:
+          - reverse_entity_guarantee
+          - reverse_entity_guarantee
+          return_geo: false
+          countries_blacklist:
+          - countries_blacklist
+          - countries_blacklist
+          strategy: default
+        model: claude-sonnet-4-5-20250929
         asknews_watermark: true
         include_graphs: false
-        max_tokens: 5
+        max_tokens: 1
+        start_citation_number: 2
+        only_cited_sources: true
         "n": 1
-        stop: Stop
+        stop: Stop_1
         include_entities: true
         messages:
-        - role: role
-          function_call:
-            key: ""
-          name: name
-          content: content
-        - role: role
-          function_call:
-            key: ""
-          name: name
-          content: content
+        - content: What are the latest developments in AI regulation?
+          role: user
         inline_citations: markdown_link
-        user: User
+        user: User_1
       properties:
-        model:
-          $ref: '#/components/schemas/DeepNewsModel'
         messages:
+          description: The messages to send to DeepNews. Each message should have
+            'role' and 'content' keys. Use this to specify what research/monitoring
+            task DeepNews should perform. The 'content' for the final 'user' message
+            should be your Alert query.
+          example:
+          - content: What are the latest developments in AI regulation?
+            role: user
           items:
             $ref: '#/components/schemas/CreateDeepNewsRequestMessage'
           title: Messages
-        temperature:
-          default: 0.9
-          title: Temperature
-        top_p:
-          default: 1.0
-          title: Top P
-        "n":
-          default: 1
-          title: "N"
-        stream:
-          default: false
-          title: Stream
-        stop:
-          $ref: '#/components/schemas/Stop'
-        max_tokens:
-          default: 9999
-          title: Max Tokens
-        presence_penalty:
-          default: 0
-          title: Presence Penalty
-        frequency_penalty:
-          default: 0
-          title: Frequency Penalty
-        user:
-          $ref: '#/components/schemas/User'
-        thread_id:
-          $ref: '#/components/schemas/Thread_Id_1'
-        inline_citations:
-          default: markdown_link
-          enum:
-          - numbered
-          - markdown_link
-          - none
-          title: Inline Citations
-        append_references:
-          default: true
-          title: Append References
-        journalist_mode:
-          default: true
-          title: Journalist Mode
-        asknews_watermark:
-          default: true
-          title: Asknews Watermark
-        conversational_awareness:
-          default: true
-          title: Conversational Awareness
+        model:
+          $ref: '#/components/schemas/CreateDeepNewsRequest_model'
         filter_params:
-          $ref: '#/components/schemas/Filter_Params_1'
+          $ref: '#/components/schemas/CreateDeepNewsRequest_filter_params'
         search_depth:
           default: 2
+          description: The search depth for deep research. Higher values mean more
+            thorough research.
+          maximum: 60.0
+          minimum: 1.0
           title: Search Depth
         max_depth:
-          default: 4
+          default: 6
+          description: The maximum research depth allowed.
+          maximum: 100.0
+          minimum: 1.0
           title: Max Depth
         sources:
           $ref: '#/components/schemas/Sources_1'
+        inline_citations:
+          default: markdown_link
+          description: "How to format inline citations in the response. Defaults to:\
+            \ markdown_link. Available options: markdown_link, numbered, none"
+          enum:
+          - markdown_link
+          - numbered
+          - none
+          title: Inline Citations
+        start_citation_number:
+          default: 1
+          description: Starting number for inline citations. Offsets fetched source
+            citation keys. Useful if you are providing the agent outside sources with
+            numbered citation keys.
+          title: Start Citation Number
         return_sources:
           default: true
+          description: Whether return a list of sources used by the agent.
           title: Return Sources
-        include_coordinates:
-          default: false
-          title: Include Coordinates
+        only_cited_sources:
+          default: true
+          description: Whether to return only of sources that are cited/referenced
+            in the generated response content.
+          title: Only Cited Sources
+        append_references:
+          default: true
+          description: Whether to append a 'Cited Articles' section at the end of
+            the response.
+          title: Append References
+        journalist_mode:
+          default: true
+          description: Whether to use journalist mode for more factual reporting.
+          title: Journalist Mode
+        conversational_awareness:
+          default: true
+          description: Whether to use conversational awareness.
+          title: Conversational Awareness
         include_entities:
           default: true
+          description: Whether to provide extracted entities to the agent.
           title: Include Entities
         include_graphs:
           default: false
+          description: Whether to provide knowledge graphs to the agent
           title: Include Graphs
+        include_coordinates:
+          default: false
+          description: Whether to provide geo coordinates to the agent.
+          title: Include Coordinates
+        asknews_watermark:
+          default: true
+          description: Append 'Generated by AskNews AI' watermark
+          title: Asknews Watermark
+          type: boolean
+        stream:
+          default: false
+          description: Whether to stream the response as server-sent events.
+          title: Stream
+        stop:
+          $ref: '#/components/schemas/Stop_1'
+        temperature:
+          default: 0.9
+          description: "The temperature of the DeepNews agent model. Controls randomness\
+            \ in the output. Higher values (e.g., 1.0) make output more random, lower\
+            \ values (e.g., 0.1) make it more deterministic."
+          title: Temperature
+        top_p:
+          default: 1.0
+          description: Nucleus sampling parameter. Only tokens with cumulative probability
+            up to top_p are considered.
+          title: Top P
+        "n":
+          default: 1
+          description: Number of completions to generate.
+          title: "N"
+        max_tokens:
+          default: 9999
+          description: Maximum number of tokens to generate in the response.
+          title: Max Tokens
+        presence_penalty:
+          default: 0
+          description: "Penalizes new tokens based on whether they appear in the text\
+            \ so far, encouraging new topics."
+          title: Presence Penalty
+        frequency_penalty:
+          default: 0
+          description: "Penalizes new tokens based on their frequency in the text\
+            \ so far, reducing repetition."
+          title: Frequency Penalty
+        user:
+          $ref: '#/components/schemas/User_1'
+        thread_id:
+          $ref: '#/components/schemas/Thread_Id_1'
       required:
       - messages
       title: CreateDeepNewsRequest
     CreateDeepNewsRequestMessage:
-      example:
-        role: role
-        function_call:
-          key: ""
-        name: name
-        content: content
       properties:
         role:
           title: Role
@@ -6474,7 +6686,7 @@ components:
           title: Object
           type: string
         model:
-          default: deepseek
+          default: claude-sonnet-4-5-20250929
           title: Model
           type: string
         usage:
@@ -6519,7 +6731,7 @@ components:
           title: Object
           type: string
         model:
-          default: deepseek
+          default: claude-sonnet-4-5-20250929
           title: Model
           type: string
         usage:
@@ -6748,8 +6960,11 @@ components:
       - claude-sonnet-4-5-20250929
       - gemini-2.5-pro
       - gemini-3-pro
+      - gemini-3.1-pro
       - gemini-2.5-pro-preview-03-25
       - claude-opus-4-20250514
+      - claude-sonnet-4-6
+      - claude-opus-4-6
       - gpt-4.1-2025-04-14
       - gemini-2.5-flash
       - claude-opus-4-5-20251101
@@ -6768,6 +6983,80 @@ components:
           nullable: true
           type: array
       title: DeepNewsResponseSources
+    DeepNewsSource:
+      properties:
+        identifier:
+          enum:
+          - deepnews
+          title: Identifier
+          type: string
+        params:
+          $ref: '#/components/schemas/DeepNewsSourceParams'
+      required:
+      - identifier
+      - params
+      title: DeepNewsSource
+    DeepNewsSourceParams:
+      description: |-
+        Parameters for DeepNews alert source.
+
+        DeepNews performs deep research using multiple sources and returns
+        a synthesized report. Can only be used for alerts that output a report.
+      properties:
+        model:
+          $ref: '#/components/schemas/DeepNewsModel'
+        filter_params:
+          $ref: '#/components/schemas/FilterParams'
+        search_depth:
+          default: 2
+          description: The search depth for deep research. Higher values mean more
+            thorough research.
+          maximum: 60.0
+          minimum: 1.0
+          title: Search Depth
+          type: integer
+        max_depth:
+          default: 4
+          description: The maximum research depth allowed.
+          maximum: 100.0
+          minimum: 1.0
+          title: Max Depth
+          type: integer
+        sources:
+          $ref: '#/components/schemas/Sources_2'
+        start_citation_number:
+          default: 1
+          description: Starting number for inline citations. Offsets fetched source
+            citation keys. Useful if you are providing the agent outside sources with
+            numbered citation keys.
+          title: Start Citation Number
+          type: integer
+        journalist_mode:
+          default: true
+          description: Whether to use journalist mode for more factual reporting.
+          title: Journalist Mode
+          type: boolean
+        include_entities:
+          default: true
+          description: Whether to provide extracted entities to the agent.
+          title: Include Entities
+          type: boolean
+        include_graphs:
+          default: false
+          description: Whether to provide knowledge graphs to the agent
+          title: Include Graphs
+          type: boolean
+        include_coordinates:
+          default: false
+          description: Whether to provide geo coordinates to the agent.
+          title: Include Coordinates
+          type: boolean
+        asknews_watermark:
+          default: true
+          description: Append 'Generated by AskNews AI' watermark
+          title: Asknews Watermark
+          type: boolean
+      title: DeepNewsSourceParams
     DisplayImageUrl:
       example:
         image_url: https://openapi-generator.tech
@@ -7040,6 +7329,11 @@ components:
         subject:
           nullable: true
           type: string
+        asknews_watermark:
+          default: true
+          description: Append 'Generated by AskNews AI' watermark
+          title: Asknews Watermark
+          type: boolean
       required:
       - to
       title: EmailParams
@@ -8193,6 +8487,11 @@ components:
             type: string
           nullable: true
           type: array
+        asknews_watermark:
+          default: true
+          description: Append 'Generated by AskNews AI' watermark
+          title: Asknews Watermark
+          type: boolean
       required:
       - client_json
       title: GoogleDocsParams
@@ -8520,11 +8819,15 @@ components:
           loc:
           - ValidationError_loc_inner
           - ValidationError_loc_inner
+          input: ""
+          ctx: "{}"
           type: type
         - msg: msg
           loc:
           - ValidationError_loc_inner
           - ValidationError_loc_inner
+          input: ""
+          ctx: "{}"
           type: type
       properties:
         detail:
@@ -8997,6 +9300,8 @@ components:
           triggers:
           - key: ""
           - key: ""
+          title: title
+          alert_type: alert_type
           share_link: share_link
           expires_at: 2000-01-23T04:56:07.000+00:00
           updated_at: 2000-01-23T04:56:07.000+00:00
@@ -9017,6 +9322,8 @@ components:
           triggers:
           - key: ""
           - key: ""
+          title: title
+          alert_type: alert_type
           share_link: share_link
           expires_at: 2000-01-23T04:56:07.000+00:00
           updated_at: 2000-01-23T04:56:07.000+00:00
@@ -9646,12 +9953,14 @@ components:
     ReportRequest:
       example:
         logo_url: https://openapi-generator.tech
-        model: gpt-5
+        model: gpt-4o
+        include_appendix: true
         prompt:
         - - prompt
           - prompt
         - - prompt
           - prompt
+        asknews_watermark: true
       properties:
         prompt:
           items:
@@ -9661,19 +9970,27 @@ components:
           nullable: true
           type: array
         model:
+          default: claude-sonnet-4-5-20250929
+          description: "The model to use for the report. Defaults to claude-sonnet-4-5-20250929.\
+            \ If you have DeepNews as a source, the DeepNews model will be used for\
+            \ the report."
           enum:
           - gpt-5
           - gpt-4o
           - gpt-4.1-2025-04-14
-          - gpt-4.1-mini-2025-04-14gpt-4o-mini
+          - gpt-4.1-mini-2025-04-14
+          - gpt-4o-mini
           - o3-mini
           - claude-3-5-sonnet-latest
           - claude-sonnet-4-20250514
           - claude-sonnet-4-5-20250929
           - claude-opus-4-5-20251101
+          - claude-opus-4-6
+          - claude-sonnet-4-6
           - meta-llama/Meta-Llama-3.1-405B-Instruct
           - meta-llama/Meta-Llama-3.3-70B-Instruct
-          nullable: true
+          example: gpt-4o
+          title: Model
           type: string
         logo_url:
           format: uri
@@ -9681,6 +9998,14 @@ components:
           minLength: 1
           nullable: true
           type: string
+        include_appendix:
+          nullable: true
+          type: boolean
+        asknews_watermark:
+          default: true
+          description: Append 'Generated by AskNews AI' watermark
+          title: Asknews Watermark
+          type: boolean
       title: ReportRequest
     ResendBroadcastAction:
       properties:
@@ -9714,6 +10039,11 @@ components:
           description: Resend API key to use
           title: Resend Api Key
           type: string
+        asknews_watermark:
+          default: true
+          description: Append 'Generated by AskNews AI' watermark
+          title: Asknews Watermark
+          type: boolean
       required:
       - audience_id
       - resend_api_key
@@ -16892,8 +17222,6 @@ components:
     UpdateAlertRequest:
       example:
         cron: cron
-        share_link: https://openapi-generator.tech
-        expires_at: 2000-01-23T04:56:07.000+00:00
         sources:
         - identifier: asknews
           params:
@@ -17018,17 +17346,7 @@ components:
             - countries_blacklist
             strategy: default
         query: query
-        repeat: true
-        report:
-          logo_url: https://openapi-generator.tech
-          model: gpt-5
-          prompt:
-          - - prompt
-            - prompt
-          - - prompt
-            - prompt
         active: true
-        model: meta-llama/Meta-Llama-3.1-8B-Instruct
         always_trigger: true
         triggers:
         - action: webhook
@@ -17046,11 +17364,34 @@ components:
               key: ""
             url: https://openapi-generator.tech
         title: title
+        alert_type: AlwaysAlertWhen
+        share_link: https://openapi-generator.tech
+        expires_at: 2000-01-23T04:56:07.000+00:00
+        repeat: true
+        report:
+          logo_url: https://openapi-generator.tech
+          model: gpt-4o
+          include_appendix: true
+          prompt:
+          - - prompt
+            - prompt
+          - - prompt
+            - prompt
+          asknews_watermark: true
+        model: meta-llama/Meta-Llama-3.1-8B-Instruct
       properties:
         query:
           nullable: true
           type: string
-        cron:
+        sources:
+          items:
+            $ref: '#/components/schemas/Sources_inner'
+          type: array
+        alert_type:
+          enum:
+          - AlwaysAlertWhen
+          - AlertOnceIf
+          - ReportAbout
           nullable: true
           type: string
         model:
@@ -17067,18 +17408,9 @@ components:
           - gpt-4.1-mini-2025-04-14
           nullable: true
           type: string
-        share_link:
-          format: uri
-          maxLength: 2083
-          minLength: 1
+        cron:
           nullable: true
           type: string
-        sources:
-          items:
-            $ref: '#/components/schemas/Sources_inner'
-          type: array
-        report:
-          $ref: '#/components/schemas/ReportRequest'
         triggers:
           items:
             $ref: '#/components/schemas/Triggers_inner'
@@ -17096,7 +17428,15 @@ components:
           format: date-time
           nullable: true
           type: string
+        report:
+          $ref: '#/components/schemas/ReportRequest'
         title:
+          nullable: true
+          type: string
+        share_link:
+          format: uri
+          maxLength: 2083
+          minLength: 1
           nullable: true
           type: string
       title: UpdateAlertRequest
@@ -17263,6 +17603,8 @@ components:
         loc:
         - ValidationError_loc_inner
         - ValidationError_loc_inner
+        input: ""
+        ctx: "{}"
         type: type
       properties:
         loc:
@@ -17275,6 +17617,10 @@ components:
         type:
           title: Error Type
           type: string
+        input: {}
+        ctx:
+          title: Context
+          type: object
       required:
       - loc
       - msg
@@ -20994,7 +21340,7 @@ components:
           completion_tokens: 1
           prompt_tokens: 6
           total_tokens: 5
-        model: deepseek
+        model: claude-sonnet-4-5-20250929
         id: id
         choices:
         - finish_reason: finish_reason
@@ -21026,7 +21372,7 @@ components:
           title: Object
           type: string
         model:
-          default: deepseek
+          default: claude-sonnet-4-5-20250929
           title: Model
           type: string
         usage:
@@ -22332,7 +22678,7 @@ components:
           title: Object
           type: string
         model:
-          default: deepseek
+          default: claude-sonnet-4-5-20250929
           title: Model
           type: string
         usage:
@@ -22478,16 +22824,18 @@ components:
         type: object
       - nullable: true
       title: Filter Params
-    Thread_Id_1:
+    CreateDeepNewsRequest_model:
       anyOf:
-      - format: uuid
+      - $ref: '#/components/schemas/DeepNewsModel'
       - {}
-      title: Thread Id
-    Filter_Params_1:
+      default: claude-sonnet-4-5-20250929
+      description: The model to use for DeepNews research. Defaults to claude-sonnet-4-5-20250929.
+      example: claude-sonnet-4-5-20250929
+    CreateDeepNewsRequest_filter_params:
       anyOf:
-      - additionalProperties: true
+      - $ref: '#/components/schemas/FilterParams'
       - {}
-      title: Filter Params
+      description: Filter parameters to apply to the AskNews search within DeepNews.
     Sources_1:
       anyOf:
       - enum:
@@ -22508,7 +22856,30 @@ components:
           - reddit
           - charts
       default: asknews
+      description: "Which data sources DeepNews should use. Can be a single source\
+        \ or a list. Available sources are: asknews, google, graph, wiki, x, reddit,\
+        \ charts"
       title: Sources
+    Stop_1:
+      anyOf:
+      - {}
+      - items: {}
+      - {}
+      description: Sequence(s) where the model will stop generating further tokens.
+      title: Stop
+    User_1:
+      anyOf:
+      - {}
+      - {}
+      description: "A unique identifier for the end-user, useful for tracking and\
+        \ abuse detection."
+      title: User
+    Thread_Id_1:
+      anyOf:
+      - format: uuid
+      - {}
+      description: ID of an existing thread to continue the conversation.
+      title: Thread Id
     Source:
       anyOf:
       - $ref: '#/components/schemas/CreateDeepNewsResponseStreamSourcesNewsSource'
@@ -22516,6 +22887,33 @@ components:
       - $ref: '#/components/schemas/CreateDeepNewsResponseStreamSourcesGraphSource'
       - $ref: '#/components/schemas/CreateDeepNewsResponseStreamSourcesChartSource'
       title: Source
+    Sources_2:
+      anyOf:
+      - enum:
+        - asknews
+        - google
+        - graph
+        - wiki
+        - x
+        - reddit
+        - charts
+        type: string
+      - items:
+          enum:
+          - asknews
+          - google
+          - graph
+          - wiki
+          - x
+          - reddit
+          - charts
+          type: string
+        type: array
+      default: asknews
+      description: "Which data sources DeepNews should use. Can be a single source\
+        \ or a list. Available sources are: asknews, google, graph, wiki, x, reddit,\
+        \ charts"
+      title: Sources
     Offset_2:
       anyOf:
       - type: integer
@@ -22636,6 +23034,7 @@ components:
         mapping:
           asknews: '#/components/schemas/AskNewsSource'
           bluesky: '#/components/schemas/BlueskySource'
+          deepnews: '#/components/schemas/DeepNewsSource'
           telegram: '#/components/schemas/TelegramSource'
           web: '#/components/schemas/WebSource'
         propertyName: identifier
@@ -22644,6 +23043,7 @@ components:
       - $ref: '#/components/schemas/TelegramSource'
       - $ref: '#/components/schemas/BlueskySource'
       - $ref: '#/components/schemas/WebSource'
+      - $ref: '#/components/schemas/DeepNewsSource'
     Offset_4:
       anyOf:
       - type: integer
@@ -22664,8 +23064,8 @@ components:
       oneOf:
       - $ref: '#/components/schemas/WebhookAction'
       - $ref: '#/components/schemas/EmailAction'
-      - $ref: '#/components/schemas/GoogleDocsAction'
       - $ref: '#/components/schemas/ResendBroadcastAction'
+      - $ref: '#/components/schemas/GoogleDocsAction'
     ValidationError_loc_inner:
       anyOf:
       - type: string

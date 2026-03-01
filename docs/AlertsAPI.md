@@ -36,7 +36,7 @@ import (
 )
 
 func main() {
-	createAlertRequest := *openapiclient.NewCreateAlertRequest("*/15 * * * *", "Model_example", []openapiclient.SourcesInner{openapiclient.Sources_inner{AskNewsSource: openapiclient.NewAskNewsSource("Identifier_example")}}, []openapiclient.TriggersInner{openapiclient.Triggers_inner{EmailAction: openapiclient.NewEmailAction(*openapiclient.NewEmailParams("To_example"))}}) // CreateAlertRequest | 
+	createAlertRequest := *openapiclient.NewCreateAlertRequest("I want to be alerted if the president of the US says something about the economy", []openapiclient.SourcesInner{openapiclient.Sources_inner{AskNewsSource: openapiclient.NewAskNewsSource("Identifier_example")}}, "'0 0 * * *' (daily at midnight UTC)", []openapiclient.TriggersInner{openapiclient.Triggers_inner{EmailAction: openapiclient.NewEmailAction(*openapiclient.NewEmailParams("To_example"))}}) // CreateAlertRequest | 
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)

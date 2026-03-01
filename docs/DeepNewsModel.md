@@ -37,9 +37,15 @@
 
 * `GEMINI_3_PRO` (value: `"gemini-3-pro"`)
 
+* `GEMINI_3_1_PRO` (value: `"gemini-3.1-pro"`)
+
 * `GEMINI_2_5_PRO_PREVIEW_03_25` (value: `"gemini-2.5-pro-preview-03-25"`)
 
 * `CLAUDE_OPUS_4_20250514` (value: `"claude-opus-4-20250514"`)
+
+* `CLAUDE_SONNET_4_6` (value: `"claude-sonnet-4-6"`)
+
+* `CLAUDE_OPUS_4_6` (value: `"claude-opus-4-6"`)
 
 * `GPT_4_1_2025_04_14` (value: `"gpt-4.1-2025-04-14"`)
 

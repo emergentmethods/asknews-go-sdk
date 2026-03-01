@@ -6,7 +6,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Success** | **bool** |  | 
 **ChartJson** | **map[string]interface{}** | The plotly fig.to_json() JSON representation of the chart | 
-**Query** | Pointer to **string** |  | [optional] 
+**Query** | Pointer to **NullableString** |  | [optional] 
 **Reasoning** | Pointer to **NullableString** |  | [optional] 
 **Parameters** | Pointer to [**NullableChartParameters**](ChartParameters.md) |  | [optional] 
 **Context** | Pointer to **map[string]interface{}** |  | [optional] 
@@ -101,6 +101,16 @@ SetQuery sets Query field to given value.
 
 HasQuery returns a boolean if a field has been set.
 
+### SetQueryNil
+
+`func (o *ChartResponse) SetQueryNil(b bool)`
+
+ SetQueryNil sets the value for Query to be an explicit nil
+
+### UnsetQuery
+`func (o *ChartResponse) UnsetQuery()`
+
+UnsetQuery ensures that no value is present for Query, not even an explicit nil
 ### GetReasoning
 
 `func (o *ChartResponse) GetReasoning() string`

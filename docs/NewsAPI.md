@@ -329,7 +329,7 @@ Name | Type | Description  | Notes
 
 ## SearchNews
 
-> SearchResponse SearchNews(ctx).Query(query).NArticles(nArticles).StartTimestamp(startTimestamp).EndTimestamp(endTimestamp).TimeFilter(timeFilter).ReturnType(returnType).Historical(historical).Method(method).SimilarityScoreThreshold(similarityScoreThreshold).Offset(offset).Categories(categories).DocStartDelimiter(docStartDelimiter).DocEndDelimiter(docEndDelimiter).Provocative(provocative).ReportingVoice(reportingVoice).DomainUrl(domainUrl).BadDomainUrl(badDomainUrl).PageRank(pageRank).DiversifySources(diversifySources).Strategy(strategy).HoursBack(hoursBack).StringGuarantee(stringGuarantee).StringGuaranteeOp(stringGuaranteeOp).ReverseStringGuarantee(reverseStringGuarantee).EntityGuarantee(entityGuarantee).ReverseEntityGuarantee(reverseEntityGuarantee).EntityGuaranteeOp(entityGuaranteeOp).ReturnGraphs(returnGraphs).ReturnGeo(returnGeo).Languages(languages).Countries(countries).CountriesBlacklist(countriesBlacklist).Continents(continents).Sentiment(sentiment).Premium(premium).Authors(authors).Execute()
+> SearchResponse SearchNews(ctx).Query(query).NArticles(nArticles).StartTimestamp(startTimestamp).EndTimestamp(endTimestamp).TimeFilter(timeFilter).ReturnType(returnType).Historical(historical).Method(method).SimilarityScoreThreshold(similarityScoreThreshold).Offset(offset).Categories(categories).DocStartDelimiter(docStartDelimiter).DocEndDelimiter(docEndDelimiter).Provocative(provocative).ReportingVoice(reportingVoice).DomainUrl(domainUrl).BadDomainUrl(badDomainUrl).PageRank(pageRank).DiversifySources(diversifySources).Strategy(strategy).HoursBack(hoursBack).StringGuarantee(stringGuarantee).StringGuaranteeOp(stringGuaranteeOp).ReverseStringGuarantee(reverseStringGuarantee).EntityGuarantee(entityGuarantee).ReverseEntityGuarantee(reverseEntityGuarantee).EntityGuaranteeOp(entityGuaranteeOp).ReturnGraphs(returnGraphs).ReturnGeo(returnGeo).Languages(languages).Countries(countries).CountriesBlacklist(countriesBlacklist).Continents(continents).Sentiment(sentiment).Premium(premium).Authors(authors).TryCache(tryCache).Execute()
 
 Search for enriched real-time news context
 
@@ -384,10 +384,11 @@ func main() {
 	sentiment := "sentiment_example" // string | Sentiment to filter articles by. (optional)
 	premium := true // bool | Include premium sources. (optional) (default to false)
 	authors := []string{"Inner_example"} // []string | Authors to filter articles by. (optional)
+	tryCache := "tryCache_example" // string | Enable response caching with the specified TTL. When a cached response is returned, usage is charged at 0.25x the normal rate. Valid values: '1h' (1 hour), '6h' (6 hours), '12h' (12 hours), '24h' (24 hours), '3d' (3 days), '7d' (7 days). (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.NewsAPI.SearchNews(context.Background()).Query(query).NArticles(nArticles).StartTimestamp(startTimestamp).EndTimestamp(endTimestamp).TimeFilter(timeFilter).ReturnType(returnType).Historical(historical).Method(method).SimilarityScoreThreshold(similarityScoreThreshold).Offset(offset).Categories(categories).DocStartDelimiter(docStartDelimiter).DocEndDelimiter(docEndDelimiter).Provocative(provocative).ReportingVoice(reportingVoice).DomainUrl(domainUrl).BadDomainUrl(badDomainUrl).PageRank(pageRank).DiversifySources(diversifySources).Strategy(strategy).HoursBack(hoursBack).StringGuarantee(stringGuarantee).StringGuaranteeOp(stringGuaranteeOp).ReverseStringGuarantee(reverseStringGuarantee).EntityGuarantee(entityGuarantee).ReverseEntityGuarantee(reverseEntityGuarantee).EntityGuaranteeOp(entityGuaranteeOp).ReturnGraphs(returnGraphs).ReturnGeo(returnGeo).Languages(languages).Countries(countries).CountriesBlacklist(countriesBlacklist).Continents(continents).Sentiment(sentiment).Premium(premium).Authors(authors).Execute()
+	resp, r, err := apiClient.NewsAPI.SearchNews(context.Background()).Query(query).NArticles(nArticles).StartTimestamp(startTimestamp).EndTimestamp(endTimestamp).TimeFilter(timeFilter).ReturnType(returnType).Historical(historical).Method(method).SimilarityScoreThreshold(similarityScoreThreshold).Offset(offset).Categories(categories).DocStartDelimiter(docStartDelimiter).DocEndDelimiter(docEndDelimiter).Provocative(provocative).ReportingVoice(reportingVoice).DomainUrl(domainUrl).BadDomainUrl(badDomainUrl).PageRank(pageRank).DiversifySources(diversifySources).Strategy(strategy).HoursBack(hoursBack).StringGuarantee(stringGuarantee).StringGuaranteeOp(stringGuaranteeOp).ReverseStringGuarantee(reverseStringGuarantee).EntityGuarantee(entityGuarantee).ReverseEntityGuarantee(reverseEntityGuarantee).EntityGuaranteeOp(entityGuaranteeOp).ReturnGraphs(returnGraphs).ReturnGeo(returnGeo).Languages(languages).Countries(countries).CountriesBlacklist(countriesBlacklist).Continents(continents).Sentiment(sentiment).Premium(premium).Authors(authors).TryCache(tryCache).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `NewsAPI.SearchNews``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -444,6 +445,7 @@ Name | Type | Description  | Notes
  **sentiment** | **string** | Sentiment to filter articles by. | 
  **premium** | **bool** | Include premium sources. | [default to false]
  **authors** | **[]string** | Authors to filter articles by. | 
+ **tryCache** | **string** | Enable response caching with the specified TTL. When a cached response is returned, usage is charged at 0.25x the normal rate. Valid values: &#39;1h&#39; (1 hour), &#39;6h&#39; (6 hours), &#39;12h&#39; (12 hours), &#39;24h&#39; (24 hours), &#39;3d&#39; (3 days), &#39;7d&#39; (7 days). | 
 
 ### Return type
 

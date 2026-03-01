@@ -4,24 +4,25 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Query** | Pointer to **NullableString** |  | [optional] 
-**Cron** | **string** | The cron schedule for the alert. For example hourly is &#39;0 * * * *&#39;. See https://crontab.run/ for more examples | 
-**Model** | **NullableString** |  | 
-**ShareLink** | Pointer to **NullableString** |  | [optional] 
+**Query** | **string** | The query to run for the alert. | 
 **Sources** | [**[]SourcesInner**](SourcesInner.md) |  | 
-**Report** | Pointer to [**NullableReportRequest**](ReportRequest.md) |  | [optional] 
+**AlertType** | Pointer to **NullableString** |  | [optional] 
+**Model** | Pointer to **string** | The model that is used to check if the alert conditions are satisfied by sources (this is not the same as the model used to write the report.)Defaults to gpt-4o. | [optional] [default to "gpt-4o"]
+**Cron** | **string** | How often or when to check sources for this alert, specified as a cron expression. Examples: &#39;*_/15 * * * *&#39; (every 15 minutes), &#39;0 * * * *&#39; (hourly), &#39;0 9 * * *&#39; (daily at 9am), &#39;0 9 * * 1&#39; (Mondays at 9am).  See https://crontab.run/ for more examples. | 
 **Triggers** | [**[]TriggersInner**](TriggersInner.md) |  | 
-**AlwaysTrigger** | Pointer to **bool** | Whether to always trigger the alert. Default is False. This skips the alert check and run triggers immediately | [optional] [default to false]
-**Repeat** | Pointer to **bool** | Whether to repeat the alert. Default is True. If False, the alert will be disabled after it triggers once | [optional] [default to true]
+**AlwaysTrigger** | Pointer to **bool** | Whether to always trigger the actions when sources are scanned. This skips the check for if the alert conditions are satisfied and run triggers immediately. Defaults to False. | [optional] [default to false]
+**Repeat** | Pointer to **bool** | Whether to repeat the alert. Default is True. If False, the alert will be disabled after it triggers once. | [optional] [default to true]
 **Active** | Pointer to **bool** | Whether the alert is active or not. Default is True. | [optional] [default to true]
 **ExpiresAt** | Pointer to **NullableTime** |  | [optional] 
+**Report** | Pointer to [**NullableReportRequest**](ReportRequest.md) |  | [optional] 
 **Title** | Pointer to **NullableString** |  | [optional] 
+**ShareLink** | Pointer to **NullableString** |  | [optional] 
 
 ## Methods
 
 ### NewCreateAlertRequest
 
-`func NewCreateAlertRequest(cron string, model NullableString, sources []SourcesInner, triggers []TriggersInner, ) *CreateAlertRequest`
+`func NewCreateAlertRequest(query string, sources []SourcesInner, cron string, triggers []TriggersInner, ) *CreateAlertRequest`
 
 NewCreateAlertRequest instantiates a new CreateAlertRequest object
 This constructor will assign default values to properties that have it defined,
@@ -55,107 +56,7 @@ and a boolean to check if the value has been set.
 
 SetQuery sets Query field to given value.
 
-### HasQuery
 
-`func (o *CreateAlertRequest) HasQuery() bool`
-
-HasQuery returns a boolean if a field has been set.
-
-### SetQueryNil
-
-`func (o *CreateAlertRequest) SetQueryNil(b bool)`
-
- SetQueryNil sets the value for Query to be an explicit nil
-
-### UnsetQuery
-`func (o *CreateAlertRequest) UnsetQuery()`
-
-UnsetQuery ensures that no value is present for Query, not even an explicit nil
-### GetCron
-
-`func (o *CreateAlertRequest) GetCron() string`
-
-GetCron returns the Cron field if non-nil, zero value otherwise.
-
-### GetCronOk
-
-`func (o *CreateAlertRequest) GetCronOk() (*string, bool)`
-
-GetCronOk returns a tuple with the Cron field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetCron
-
-`func (o *CreateAlertRequest) SetCron(v string)`
-
-SetCron sets Cron field to given value.
-
-
-### GetModel
-
-`func (o *CreateAlertRequest) GetModel() string`
-
-GetModel returns the Model field if non-nil, zero value otherwise.
-
-### GetModelOk
-
-`func (o *CreateAlertRequest) GetModelOk() (*string, bool)`
-
-GetModelOk returns a tuple with the Model field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetModel
-
-`func (o *CreateAlertRequest) SetModel(v string)`
-
-SetModel sets Model field to given value.
-
-
-### SetModelNil
-
-`func (o *CreateAlertRequest) SetModelNil(b bool)`
-
- SetModelNil sets the value for Model to be an explicit nil
-
-### UnsetModel
-`func (o *CreateAlertRequest) UnsetModel()`
-
-UnsetModel ensures that no value is present for Model, not even an explicit nil
-### GetShareLink
-
-`func (o *CreateAlertRequest) GetShareLink() string`
-
-GetShareLink returns the ShareLink field if non-nil, zero value otherwise.
-
-### GetShareLinkOk
-
-`func (o *CreateAlertRequest) GetShareLinkOk() (*string, bool)`
-
-GetShareLinkOk returns a tuple with the ShareLink field if it's non-nil, zero value otherwise
-and a boolean to check if the value has been set.
-
-### SetShareLink
-
-`func (o *CreateAlertRequest) SetShareLink(v string)`
-
-SetShareLink sets ShareLink field to given value.
-
-### HasShareLink
-
-`func (o *CreateAlertRequest) HasShareLink() bool`
-
-HasShareLink returns a boolean if a field has been set.
-
-### SetShareLinkNil
-
-`func (o *CreateAlertRequest) SetShareLinkNil(b bool)`
-
- SetShareLinkNil sets the value for ShareLink to be an explicit nil
-
-### UnsetShareLink
-`func (o *CreateAlertRequest) UnsetShareLink()`
-
-UnsetShareLink ensures that no value is present for ShareLink, not even an explicit nil
 ### GetSources
 
 `func (o *CreateAlertRequest) GetSources() []SourcesInner`
@@ -176,41 +77,86 @@ and a boolean to check if the value has been set.
 SetSources sets Sources field to given value.
 
 
-### GetReport
+### GetAlertType
 
-`func (o *CreateAlertRequest) GetReport() ReportRequest`
+`func (o *CreateAlertRequest) GetAlertType() string`
 
-GetReport returns the Report field if non-nil, zero value otherwise.
+GetAlertType returns the AlertType field if non-nil, zero value otherwise.
 
-### GetReportOk
+### GetAlertTypeOk
 
-`func (o *CreateAlertRequest) GetReportOk() (*ReportRequest, bool)`
+`func (o *CreateAlertRequest) GetAlertTypeOk() (*string, bool)`
 
-GetReportOk returns a tuple with the Report field if it's non-nil, zero value otherwise
+GetAlertTypeOk returns a tuple with the AlertType field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
-### SetReport
+### SetAlertType
 
-`func (o *CreateAlertRequest) SetReport(v ReportRequest)`
+`func (o *CreateAlertRequest) SetAlertType(v string)`
 
-SetReport sets Report field to given value.
+SetAlertType sets AlertType field to given value.
 
-### HasReport
+### HasAlertType
 
-`func (o *CreateAlertRequest) HasReport() bool`
+`func (o *CreateAlertRequest) HasAlertType() bool`
 
-HasReport returns a boolean if a field has been set.
+HasAlertType returns a boolean if a field has been set.
 
-### SetReportNil
+### SetAlertTypeNil
 
-`func (o *CreateAlertRequest) SetReportNil(b bool)`
+`func (o *CreateAlertRequest) SetAlertTypeNil(b bool)`
 
- SetReportNil sets the value for Report to be an explicit nil
+ SetAlertTypeNil sets the value for AlertType to be an explicit nil
 
-### UnsetReport
-`func (o *CreateAlertRequest) UnsetReport()`
+### UnsetAlertType
+`func (o *CreateAlertRequest) UnsetAlertType()`
 
-UnsetReport ensures that no value is present for Report, not even an explicit nil
+UnsetAlertType ensures that no value is present for AlertType, not even an explicit nil
+### GetModel
+
+`func (o *CreateAlertRequest) GetModel() string`
+
+GetModel returns the Model field if non-nil, zero value otherwise.
+
+### GetModelOk
+
+`func (o *CreateAlertRequest) GetModelOk() (*string, bool)`
+
+GetModelOk returns a tuple with the Model field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetModel
+
+`func (o *CreateAlertRequest) SetModel(v string)`
+
+SetModel sets Model field to given value.
+
+### HasModel
+
+`func (o *CreateAlertRequest) HasModel() bool`
+
+HasModel returns a boolean if a field has been set.
+
+### GetCron
+
+`func (o *CreateAlertRequest) GetCron() string`
+
+GetCron returns the Cron field if non-nil, zero value otherwise.
+
+### GetCronOk
+
+`func (o *CreateAlertRequest) GetCronOk() (*string, bool)`
+
+GetCronOk returns a tuple with the Cron field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetCron
+
+`func (o *CreateAlertRequest) SetCron(v string)`
+
+SetCron sets Cron field to given value.
+
+
 ### GetTriggers
 
 `func (o *CreateAlertRequest) GetTriggers() []TriggersInner`
@@ -341,6 +287,41 @@ HasExpiresAt returns a boolean if a field has been set.
 `func (o *CreateAlertRequest) UnsetExpiresAt()`
 
 UnsetExpiresAt ensures that no value is present for ExpiresAt, not even an explicit nil
+### GetReport
+
+`func (o *CreateAlertRequest) GetReport() ReportRequest`
+
+GetReport returns the Report field if non-nil, zero value otherwise.
+
+### GetReportOk
+
+`func (o *CreateAlertRequest) GetReportOk() (*ReportRequest, bool)`
+
+GetReportOk returns a tuple with the Report field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetReport
+
+`func (o *CreateAlertRequest) SetReport(v ReportRequest)`
+
+SetReport sets Report field to given value.
+
+### HasReport
+
+`func (o *CreateAlertRequest) HasReport() bool`
+
+HasReport returns a boolean if a field has been set.
+
+### SetReportNil
+
+`func (o *CreateAlertRequest) SetReportNil(b bool)`
+
+ SetReportNil sets the value for Report to be an explicit nil
+
+### UnsetReport
+`func (o *CreateAlertRequest) UnsetReport()`
+
+UnsetReport ensures that no value is present for Report, not even an explicit nil
 ### GetTitle
 
 `func (o *CreateAlertRequest) GetTitle() string`
@@ -376,6 +357,41 @@ HasTitle returns a boolean if a field has been set.
 `func (o *CreateAlertRequest) UnsetTitle()`
 
 UnsetTitle ensures that no value is present for Title, not even an explicit nil
+### GetShareLink
+
+`func (o *CreateAlertRequest) GetShareLink() string`
+
+GetShareLink returns the ShareLink field if non-nil, zero value otherwise.
+
+### GetShareLinkOk
+
+`func (o *CreateAlertRequest) GetShareLinkOk() (*string, bool)`
+
+GetShareLinkOk returns a tuple with the ShareLink field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetShareLink
+
+`func (o *CreateAlertRequest) SetShareLink(v string)`
+
+SetShareLink sets ShareLink field to given value.
+
+### HasShareLink
+
+`func (o *CreateAlertRequest) HasShareLink() bool`
+
+HasShareLink returns a boolean if a field has been set.
+
+### SetShareLinkNil
+
+`func (o *CreateAlertRequest) SetShareLinkNil(b bool)`
+
+ SetShareLinkNil sets the value for ShareLink to be an explicit nil
+
+### UnsetShareLink
+`func (o *CreateAlertRequest) UnsetShareLink()`
+
+UnsetShareLink ensures that no value is present for ShareLink, not even an explicit nil
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

@@ -5,13 +5,13 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Identifier** | **string** |  | 
-**Params** | [**WebSourceParams**](WebSourceParams.md) |  | 
+**Params** | [**DeepNewsSourceParams**](DeepNewsSourceParams.md) |  | 
 
 ## Methods
 
 ### NewSourcesInner
 
-`func NewSourcesInner(identifier string, params WebSourceParams, ) *SourcesInner`
+`func NewSourcesInner(identifier string, params DeepNewsSourceParams, ) *SourcesInner`
 
 NewSourcesInner instantiates a new SourcesInner object
 This constructor will assign default values to properties that have it defined,
@@ -48,20 +48,20 @@ SetIdentifier sets Identifier field to given value.
 
 ### GetParams
 
-`func (o *SourcesInner) GetParams() WebSourceParams`
+`func (o *SourcesInner) GetParams() DeepNewsSourceParams`
 
 GetParams returns the Params field if non-nil, zero value otherwise.
 
 ### GetParamsOk
 
-`func (o *SourcesInner) GetParamsOk() (*WebSourceParams, bool)`
+`func (o *SourcesInner) GetParamsOk() (*DeepNewsSourceParams, bool)`
 
 GetParamsOk returns a tuple with the Params field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetParams
 
-`func (o *SourcesInner) SetParams(v WebSourceParams)`
+`func (o *SourcesInner) SetParams(v DeepNewsSourceParams)`
 
 SetParams sets Params field to given value.
 
