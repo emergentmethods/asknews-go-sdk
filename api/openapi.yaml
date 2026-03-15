@@ -2,7 +2,7 @@ openapi: 3.1.0
 info:
   description: "AskNews API [![status](https://status.asknews.app/api/badge/2/status?style=for-the-badge)](https://status.asknews.app/status/prod)"
   title: AskNews API
-  version: 0.24.45
+  version: 0.24.50
 servers:
 - url: https://api.asknews.app
 paths:
@@ -617,6 +617,52 @@ paths:
           - 24h
           - 3d
           - 7d
+          nullable: true
+          type: string
+        style: form
+      - description: Latitude for geo-radius filter. Must be provided together with
+          geo_lon and geo_radius. Filters articles whose coordinates fall within the
+          specified circle.
+        explode: true
+        in: query
+        name: geo_lat
+        required: false
+        schema:
+          nullable: true
+          type: number
+        style: form
+      - description: Longitude for geo-radius filter. Must be provided together with
+          geo_lat and geo_radius.
+        explode: true
+        in: query
+        name: geo_lon
+        required: false
+        schema:
+          nullable: true
+          type: number
+        style: form
+      - description: Radius in meters for geo-radius filter. Must be provided together
+          with geo_lat and geo_lon.
+        explode: true
+        in: query
+        name: geo_radius
+        required: false
+        schema:
+          nullable: true
+          type: number
+        style: form
+      - description: "JSON string defining a polygon for geo filtering. Must contain\
+          \ an 'exterior' key with a list of {lon, lat} points. The first and last\
+          \ point must be the same. Optionally include 'interiors' as a list of rings\
+          \ (each a list of {lon, lat} points) to exclude areas. Example: {\"exterior\"\
+          : [{\"lon\": -70, \"lat\": -70}, {\"lon\": 60, \"lat\": -70}, {\"lon\":\
+          \ 60, \"lat\": 60}, {\"lon\": -70, \"lat\": 60}, {\"lon\": -70, \"lat\"\
+          : -70}]}"
+        explode: true
+        in: query
+        name: geo_polygon
+        required: false
+        schema:
           nullable: true
           type: string
         style: form
@@ -1584,66 +1630,18 @@ paths:
       summary: "Deep research into real-time news, archive news, and Google."
       tags:
       - chat
-  /v1/openai/models:
+  /v1/chat/deepnews-models:
     get:
-      description: List the available chat models.
-      operationId: list_chat_models
+      description: List the available DeepNews models with their type (rich/fast).
+      operationId: list_deepnews_models
       responses:
         "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ListModelResponse'
-          description: Available chat models
-        "422":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/HTTPValidationError'
-          description: Validation Error
-      security:
-      - APIKey:
-        - chat
-      summary: List available chat models
-      tags:
-      - chat
-  /v1/chat/questions:
-    get:
-      description: Get the headline example questions related to the given queries.
-      operationId: get_headline_questions
-      parameters:
-      - description: Queries to get questions for
-        explode: true
-        in: query
-        name: queries
-        required: false
-        schema:
-          items:
-            type: string
-          nullable: true
-          type: array
-        style: form
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                additionalProperties:
-                  items:
-                    type: string
-                title: Response 200 Get Headline Questions
-          description: Example questions
-        "422":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/HTTPValidationError'
-          description: Validation Error
-      security:
-      - APIKey:
-        - chat
-        - internal
-      summary: Get example headline questions
+                $ref: '#/components/schemas/ListDeepNewsModelResponse'
+          description: List of DeepNews models with type
+      summary: List available DeepNews models
       tags:
       - chat
   /v1/chat/forecast:
@@ -2261,6 +2259,17 @@ paths:
           format: uuid
           nullable: true
           type: string
+        style: form
+      - description: Whether this is a test run
+        explode: true
+        in: query
+        name: is_test
+        required: false
+        schema:
+          default: false
+          description: Whether this is a test run
+          title: Is Test
+          type: boolean
         style: form
       responses:
         "200":
@@ -5150,6 +5159,7 @@ components:
           - key: edges
         summary: summary
         provocative: unknown
+        image_description: image_description
         eng_title: eng_title
         image_url: image_url
         article_url: https://openapi-generator.tech
@@ -5159,6 +5169,7 @@ components:
         centroid_distance: 6.84685269835264
         cluster_probability: 7.457744773683766
         page_rank: 1
+        original_language_summary: original_language_summary
         entities:
           Space:
           - Space
@@ -5375,6 +5386,12 @@ components:
           nullable: true
           type: array
         full_text:
+          nullable: true
+          type: string
+        original_language_summary:
+          nullable: true
+          type: string
+        image_description:
           nullable: true
           type: string
       required:
@@ -6110,9 +6127,10 @@ components:
         expires_at: 2000-01-23T04:56:07.000+00:00
         repeat: true
         report:
+          identifier: legacy
           logo_url: https://openapi-generator.tech
-          model: gpt-4o
           include_appendix: true
+          model: gpt-4o
           prompt:
           - - prompt
             - prompt
@@ -6192,7 +6210,7 @@ components:
           nullable: true
           type: string
         report:
-          $ref: '#/components/schemas/ReportRequest'
+          $ref: '#/components/schemas/CreateAlertRequest_report'
         title:
           nullable: true
           type: string
@@ -6452,6 +6470,8 @@ components:
         thread_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
         frequency_penalty: 6
         stream: false
+        max_parallel_tool_calls: 3
+        engine: v1
         temperature: 4.145608029883936
         filter_params:
           return_type: dicts
@@ -6513,7 +6533,7 @@ components:
           - countries_blacklist
           - countries_blacklist
           strategy: default
-        model: claude-sonnet-4-5-20250929
+        model: claude-sonnet-4-6
         asknews_watermark: true
         include_graphs: false
         max_tokens: 1
@@ -6651,6 +6671,20 @@ components:
           $ref: '#/components/schemas/User_1'
         thread_id:
           $ref: '#/components/schemas/Thread_Id_1'
+        max_parallel_tool_calls:
+          default: 1
+          description: "Maximum number of parallel tool calls (e.g., searches) the\
+            \ agent can make during generation. Higher values may speed up responses,\
+            \ but may reduce on-the-fly adaptivity."
+          maximum: 4.0
+          minimum: 1.0
+          title: Max Parallel Tool Calls
+        engine:
+          default: v1
+          enum:
+          - v1
+          - v1.5
+          title: Engine
       required:
       - messages
       title: CreateDeepNewsRequest
@@ -6686,7 +6720,7 @@ components:
           title: Object
           type: string
         model:
-          default: claude-sonnet-4-5-20250929
+          default: claude-sonnet-4-6
           title: Model
           type: string
         usage:
@@ -6731,7 +6765,7 @@ components:
           title: Object
           type: string
         model:
-          default: claude-sonnet-4-5-20250929
+          default: claude-sonnet-4-6
           title: Model
           type: string
         usage:
@@ -6943,33 +6977,156 @@ components:
       title: CreateNewsletterRequest
     DeepNewsModel:
       enum:
-      - gpt-5
+      - o1-mini
+      - o1
       - o3-mini
       - o3
-      - claude-3-7-sonnet-latest
-      - deepseek
-      - meta-llama/Llama-4-Maverick-17B-128E-Instruct
-      - claude-3-5-sonnet-latest
+      - gpt-4o-mini
       - gpt-4o
-      - meta-llama/Meta-Llama-3.3-70B-Instruct
-      - deepseek-basic
-      - deepseek-r1-0528
+      - gpt-4.1-2025-04-14
+      - gpt-5-mini
+      - gpt-5
+      - command-nightly
+      - claude-3-5-sonnet-20240620
+      - claude-3-5-sonnet-latest
+      - claude-3-7-sonnet-latest
       - claude-3-7-sonnet-20250219
       - claude-3-7-sonnet-nothinking
       - claude-sonnet-4-20250514
-      - claude-sonnet-4-5-20250929
-      - gemini-2.5-pro
-      - gemini-3-pro
-      - gemini-3.1-pro
-      - gemini-2.5-pro-preview-03-25
       - claude-opus-4-20250514
+      - claude-sonnet-4-5-20250929
+      - claude-opus-4-5-20251101
       - claude-sonnet-4-6
       - claude-opus-4-6
-      - gpt-4.1-2025-04-14
+      - deepseek
+      - deepseek-basic
+      - deepseek-r1-0528
+      - meta-llama/Meta-Llama-3-8B-Instruct
+      - meta-llama/Meta-Llama-3.1-405B-Instruct
+      - meta-llama/Meta-Llama-3.3-70B-Instruct
+      - meta-llama/Llama-4-Maverick-17B-128E-Instruct
       - gemini-2.5-flash
-      - claude-opus-4-5-20251101
+      - gemini-2.5-pro
+      - gemini-2.5-pro-preview-03-25
+      - gemini-3-pro
+      - gemini-3.1-pro
+      - open-source-best
+      - kimi-k2p5
       title: DeepNewsModel
       type: string
+    DeepNewsModelItem:
+      example:
+        model: o1-mini
+        type: rich
+      properties:
+        model:
+          $ref: '#/components/schemas/DeepNewsModel'
+        type:
+          enum:
+          - rich
+          - fast
+          title: Type
+          type: string
+      required:
+      - model
+      - type
+      title: DeepNewsModelItem
+    DeepNewsReportParams:
+      description: |-
+        Parameters for DeepNews alert report.
+
+        DeepNews performs deep research using multiple tools.
+      properties:
+        sources:
+          $ref: '#/components/schemas/Sources_2'
+        filter_params:
+          $ref: '#/components/schemas/FilterParams'
+        include_entities:
+          default: true
+          description: Whether to provide extracted entities to the agent. Defaults
+            to True.
+          title: Include Entities
+          type: boolean
+        include_graphs:
+          default: false
+          description: Whether to provide knowledge graphs to the agent. Defaults
+            to False.
+          title: Include Graphs
+          type: boolean
+        include_coordinates:
+          default: false
+          description: Whether to provide geo coordinates to the agent. Defaults to
+            False.
+          title: Include Coordinates
+          type: boolean
+        model:
+          $ref: '#/components/schemas/DeepNewsModel'
+        search_depth:
+          default: 2
+          description: The search depth for deep research. Higher values mean more
+            thorough research. Defaults to 2.
+          maximum: 80.0
+          minimum: 1.0
+          title: Search Depth
+          type: integer
+        max_depth:
+          default: 4
+          description: The maximum research depth allowed. Defaults to 4.
+          maximum: 100.0
+          minimum: 1.0
+          title: Max Depth
+          type: integer
+        start_citation_number:
+          default: 1
+          description: Starting number for inline citations. Offsets fetched source
+            citation keys. Useful if you are providing the agent outside sources with
+            numbered citation keys. Defaults to 1.
+          title: Start Citation Number
+          type: integer
+        journalist_mode:
+          default: true
+          description: Whether to use journalist mode for more factual reporting.
+            Defaults to True.
+          title: Journalist Mode
+          type: boolean
+      title: DeepNewsReportParams
+    DeepNewsReportRequest:
+      description: |-
+        DeepNews report configuration.
+
+        Uses DeepNews deep research capabilities for report generation.
+      properties:
+        prompt:
+          items:
+            items:
+              type: string
+            type: array
+          nullable: true
+          type: array
+        logo_url:
+          format: uri
+          maxLength: 2083
+          minLength: 1
+          nullable: true
+          type: string
+        include_appendix:
+          nullable: true
+          type: boolean
+        asknews_watermark:
+          default: true
+          description: Append 'Generated by AskNews AI' watermark
+          title: Asknews Watermark
+          type: boolean
+        identifier:
+          enum:
+          - deepnews
+          title: Identifier
+          type: string
+        params:
+          $ref: '#/components/schemas/DeepNewsReportParams'
+      required:
+      - identifier
+      title: DeepNewsReportRequest
     DeepNewsResponseSources:
       properties:
         news:
@@ -6994,68 +7151,52 @@ components:
           $ref: '#/components/schemas/DeepNewsSourceParams'
       required:
       - identifier
-      - params
       title: DeepNewsSource
     DeepNewsSourceParams:
       description: |-
         Parameters for DeepNews alert source.
 
-        DeepNews performs deep research using multiple sources and returns
-        a synthesized report. Can only be used for alerts that output a report.
+        DeepNews performs deep research using multiple tools.
       properties:
-        model:
-          $ref: '#/components/schemas/DeepNewsModel'
+        sources:
+          $ref: '#/components/schemas/Sources_2'
         filter_params:
           $ref: '#/components/schemas/FilterParams'
+        include_entities:
+          default: true
+          description: Whether to provide extracted entities to the agent. Defaults
+            to True.
+          title: Include Entities
+          type: boolean
+        include_graphs:
+          default: false
+          description: Whether to provide knowledge graphs to the agent. Defaults
+            to False.
+          title: Include Graphs
+          type: boolean
+        include_coordinates:
+          default: false
+          description: Whether to provide geo coordinates to the agent. Defaults to
+            False.
+          title: Include Coordinates
+          type: boolean
+        model:
+          $ref: '#/components/schemas/DeepNewsModel'
         search_depth:
           default: 2
           description: The search depth for deep research. Higher values mean more
-            thorough research.
-          maximum: 60.0
+            thorough research. Defaults to 2.
+          maximum: 10.0
           minimum: 1.0
           title: Search Depth
           type: integer
         max_depth:
           default: 4
-          description: The maximum research depth allowed.
-          maximum: 100.0
+          description: The maximum research depth allowed. Defaults to 4.
+          maximum: 10.0
           minimum: 1.0
           title: Max Depth
           type: integer
-        sources:
-          $ref: '#/components/schemas/Sources_2'
-        start_citation_number:
-          default: 1
-          description: Starting number for inline citations. Offsets fetched source
-            citation keys. Useful if you are providing the agent outside sources with
-            numbered citation keys.
-          title: Start Citation Number
-          type: integer
-        journalist_mode:
-          default: true
-          description: Whether to use journalist mode for more factual reporting.
-          title: Journalist Mode
-          type: boolean
-        include_entities:
-          default: true
-          description: Whether to provide extracted entities to the agent.
-          title: Include Entities
-          type: boolean
-        include_graphs:
-          default: false
-          description: Whether to provide knowledge graphs to the agent
-          title: Include Graphs
-          type: boolean
-        include_coordinates:
-          default: false
-          description: Whether to provide geo coordinates to the agent.
-          title: Include Coordinates
-          type: boolean
-        asknews_watermark:
-          default: true
-          description: Append 'Generated by AskNews AI' watermark
-          title: Asknews Watermark
-          type: boolean
       title: DeepNewsSourceParams
     DisplayImageUrl:
       example:
@@ -8072,6 +8213,7 @@ components:
             - key: edges
           summary: summary
           provocative: unknown
+          image_description: image_description
           eng_title: eng_title
           image_url: image_url
           article_url: https://openapi-generator.tech
@@ -8081,6 +8223,7 @@ components:
           centroid_distance: 1.4658129805029452
           cluster_probability: 5.962133916683182
           page_rank: 0
+          original_language_summary: original_language_summary
           entities:
             Space:
             - Space
@@ -8206,6 +8349,7 @@ components:
             - key: edges
           summary: summary
           provocative: unknown
+          image_description: image_description
           eng_title: eng_title
           image_url: image_url
           article_url: https://openapi-generator.tech
@@ -8215,6 +8359,7 @@ components:
           centroid_distance: 1.4658129805029452
           cluster_probability: 5.962133916683182
           page_rank: 0
+          original_language_summary: original_language_summary
           entities:
             Space:
             - Space
@@ -8550,6 +8695,7 @@ components:
             - key: edges
           summary: summary
           provocative: unknown
+          image_description: image_description
           eng_title: eng_title
           image_url: image_url
           article_url: https://openapi-generator.tech
@@ -8559,6 +8705,7 @@ components:
           centroid_distance: 1.4658129805029452
           cluster_probability: 5.962133916683182
           page_rank: 0
+          original_language_summary: original_language_summary
           entities:
             Space:
             - Space
@@ -8684,6 +8831,7 @@ components:
             - key: edges
           summary: summary
           provocative: unknown
+          image_description: image_description
           eng_title: eng_title
           image_url: image_url
           article_url: https://openapi-generator.tech
@@ -8693,6 +8841,7 @@ components:
           centroid_distance: 1.4658129805029452
           cluster_probability: 5.962133916683182
           page_rank: 0
+          original_language_summary: original_language_summary
           entities:
             Space:
             - Space
@@ -8952,54 +9101,88 @@ components:
       - name
       - role
       title: KeyPerson
-    ListModelResponse:
+    LegacyReportRequest:
+      description: |-
+        Legacy report configuration (original format).
+
+        This is the original ReportRequest format that uses a simple model field
+        for report generation without DeepNews capabilities.
       example:
-        data:
-        - created: 0
-          owned_by: asknews
-          id: id
-          object: model
-        - created: 0
-          owned_by: asknews
-          id: id
-          object: model
-        object: list
+        identifier: legacy
+        logo_url: https://openapi-generator.tech
+        include_appendix: true
+        model: gpt-4o
+        prompt:
+        - - prompt
+          - prompt
+        - - prompt
+          - prompt
+        asknews_watermark: true
       properties:
-        object:
-          default: list
-          title: Object
-          type: string
-        data:
+        prompt:
           items:
-            $ref: '#/components/schemas/ModelItem'
+            items:
+              type: string
+            type: array
+          nullable: true
+          type: array
+        logo_url:
+          format: uri
+          maxLength: 2083
+          minLength: 1
+          nullable: true
+          type: string
+        include_appendix:
+          nullable: true
+          type: boolean
+        asknews_watermark:
+          default: true
+          description: Append 'Generated by AskNews AI' watermark
+          title: Asknews Watermark
+          type: boolean
+        identifier:
+          default: legacy
+          enum:
+          - legacy
+          title: Identifier
+          type: string
+        model:
+          default: claude-sonnet-4-5-20250929
+          description: The model to use for the report. Defaults to claude-sonnet-4-5-20250929.
+          enum:
+          - gpt-5
+          - gpt-4o
+          - gpt-4.1-2025-04-14
+          - gpt-4.1-mini-2025-04-14
+          - gpt-4o-mini
+          - o3-mini
+          - claude-3-5-sonnet-latest
+          - claude-sonnet-4-20250514
+          - claude-sonnet-4-5-20250929
+          - claude-opus-4-5-20251101
+          - claude-opus-4-6
+          - claude-sonnet-4-6
+          - meta-llama/Meta-Llama-3.1-405B-Instruct
+          - meta-llama/Meta-Llama-3.3-70B-Instruct
+          example: gpt-4o
+          title: Model
+          type: string
+      title: LegacyReportRequest
+    ListDeepNewsModelResponse:
+      example:
+        models:
+        - model: o1-mini
+          type: rich
+        - model: o1-mini
+          type: rich
+      properties:
+        models:
+          items:
+            $ref: '#/components/schemas/DeepNewsModelItem'
           type: array
       required:
-      - data
-      title: ListModelResponse
-    ModelItem:
-      example:
-        created: 0
-        owned_by: asknews
-        id: id
-        object: model
-      properties:
-        id:
-          title: Id
-          type: string
-        object:
-          default: model
-          title: Object
-          type: string
-        created:
-          title: Created
-          type: integer
-        owned_by:
-          default: asknews
-          title: Owned By
-          type: string
-      required:
-      - id
-      title: ModelItem
+      - models
+      title: ListDeepNewsModelResponse
     NewsletterContactCreateResponse:
       example:
         id: id
@@ -9950,63 +10133,6 @@ components:
       - count
       - site
       title: ReferralItem
-    ReportRequest:
-      example:
-        logo_url: https://openapi-generator.tech
-        model: gpt-4o
-        include_appendix: true
-        prompt:
-        - - prompt
-          - prompt
-        - - prompt
-          - prompt
-        asknews_watermark: true
-      properties:
-        prompt:
-          items:
-            items:
-              type: string
-            type: array
-          nullable: true
-          type: array
-        model:
-          default: claude-sonnet-4-5-20250929
-          description: "The model to use for the report. Defaults to claude-sonnet-4-5-20250929.\
-            \ If you have DeepNews as a source, the DeepNews model will be used for\
-            \ the report."
-          enum:
-          - gpt-5
-          - gpt-4o
-          - gpt-4.1-2025-04-14
-          - gpt-4.1-mini-2025-04-14
-          - gpt-4o-mini
-          - o3-mini
-          - claude-3-5-sonnet-latest
-          - claude-sonnet-4-20250514
-          - claude-sonnet-4-5-20250929
-          - claude-opus-4-5-20251101
-          - claude-opus-4-6
-          - claude-sonnet-4-6
-          - meta-llama/Meta-Llama-3.1-405B-Instruct
-          - meta-llama/Meta-Llama-3.3-70B-Instruct
-          example: gpt-4o
-          title: Model
-          type: string
-        logo_url:
-          format: uri
-          maxLength: 2083
-          minLength: 1
-          nullable: true
-          type: string
-        include_appendix:
-          nullable: true
-          type: boolean
-        asknews_watermark:
-          default: true
-          description: Append 'Generated by AskNews AI' watermark
-          title: Asknews Watermark
-          type: boolean
-      title: ReportRequest
     ResendBroadcastAction:
       properties:
         action:
@@ -10170,6 +10296,7 @@ components:
             - key: edges
           summary: summary
           provocative: unknown
+          image_description: image_description
           eng_title: eng_title
           image_url: image_url
           article_url: https://openapi-generator.tech
@@ -10179,6 +10306,7 @@ components:
           centroid_distance: 1.4658129805029452
           cluster_probability: 5.962133916683182
           page_rank: 0
+          original_language_summary: original_language_summary
           entities:
             Space:
             - Space
@@ -10304,6 +10432,7 @@ components:
             - key: edges
           summary: summary
           provocative: unknown
+          image_description: image_description
           eng_title: eng_title
           image_url: image_url
           article_url: https://openapi-generator.tech
@@ -10313,6 +10442,7 @@ components:
           centroid_distance: 1.4658129805029452
           cluster_probability: 5.962133916683182
           page_rank: 0
+          original_language_summary: original_language_summary
           entities:
             Space:
             - Space
@@ -10452,6 +10582,7 @@ components:
           - key: edges
         summary: summary
         provocative: unknown
+        image_description: image_description
         eng_title: eng_title
         image_url: image_url
         article_url: https://openapi-generator.tech
@@ -10461,6 +10592,7 @@ components:
         centroid_distance: 1.4658129805029452
         cluster_probability: 5.962133916683182
         page_rank: 0
+        original_language_summary: original_language_summary
         entities:
           Space:
           - Space
@@ -10677,6 +10809,12 @@ components:
           nullable: true
           type: array
         full_text:
+          nullable: true
+          type: string
+        original_language_summary:
+          nullable: true
+          type: string
+        image_description:
           nullable: true
           type: string
         as_string_key:
@@ -10970,6 +11108,7 @@ components:
                 - key: edges
               summary: summary
               provocative: unknown
+              image_description: image_description
               eng_title: eng_title
               image_url: image_url
               article_url: https://openapi-generator.tech
@@ -10979,6 +11118,7 @@ components:
               centroid_distance: 6.84685269835264
               cluster_probability: 7.457744773683766
               page_rank: 1
+              original_language_summary: original_language_summary
               entities:
                 Space:
                 - Space
@@ -11103,6 +11243,7 @@ components:
                 - key: edges
               summary: summary
               provocative: unknown
+              image_description: image_description
               eng_title: eng_title
               image_url: image_url
               article_url: https://openapi-generator.tech
@@ -11112,6 +11253,7 @@ components:
               centroid_distance: 6.84685269835264
               cluster_probability: 7.457744773683766
               page_rank: 1
+              original_language_summary: original_language_summary
               entities:
                 Space:
                 - Space
@@ -11275,6 +11417,7 @@ components:
                 - key: edges
               summary: summary
               provocative: unknown
+              image_description: image_description
               eng_title: eng_title
               image_url: image_url
               article_url: https://openapi-generator.tech
@@ -11284,6 +11427,7 @@ components:
               centroid_distance: 6.84685269835264
               cluster_probability: 7.457744773683766
               page_rank: 1
+              original_language_summary: original_language_summary
               entities:
                 Space:
                 - Space
@@ -11408,6 +11552,7 @@ components:
                 - key: edges
               summary: summary
               provocative: unknown
+              image_description: image_description
               eng_title: eng_title
               image_url: image_url
               article_url: https://openapi-generator.tech
@@ -11417,6 +11562,7 @@ components:
               centroid_distance: 6.84685269835264
               cluster_probability: 7.457744773683766
               page_rank: 1
+              original_language_summary: original_language_summary
               entities:
                 Space:
                 - Space
@@ -11762,6 +11908,7 @@ components:
                 - key: edges
               summary: summary
               provocative: unknown
+              image_description: image_description
               eng_title: eng_title
               image_url: image_url
               article_url: https://openapi-generator.tech
@@ -11771,6 +11918,7 @@ components:
               centroid_distance: 6.84685269835264
               cluster_probability: 7.457744773683766
               page_rank: 1
+              original_language_summary: original_language_summary
               entities:
                 Space:
                 - Space
@@ -11895,6 +12043,7 @@ components:
                 - key: edges
               summary: summary
               provocative: unknown
+              image_description: image_description
               eng_title: eng_title
               image_url: image_url
               article_url: https://openapi-generator.tech
@@ -11904,6 +12053,7 @@ components:
               centroid_distance: 6.84685269835264
               cluster_probability: 7.457744773683766
               page_rank: 1
+              original_language_summary: original_language_summary
               entities:
                 Space:
                 - Space
@@ -12067,6 +12217,7 @@ components:
                 - key: edges
               summary: summary
               provocative: unknown
+              image_description: image_description
               eng_title: eng_title
               image_url: image_url
               article_url: https://openapi-generator.tech
@@ -12076,6 +12227,7 @@ components:
               centroid_distance: 6.84685269835264
               cluster_probability: 7.457744773683766
               page_rank: 1
+              original_language_summary: original_language_summary
               entities:
                 Space:
                 - Space
@@ -12200,6 +12352,7 @@ components:
                 - key: edges
               summary: summary
               provocative: unknown
+              image_description: image_description
               eng_title: eng_title
               image_url: image_url
               article_url: https://openapi-generator.tech
@@ -12209,6 +12362,7 @@ components:
               centroid_distance: 6.84685269835264
               cluster_probability: 7.457744773683766
               page_rank: 1
+              original_language_summary: original_language_summary
               entities:
                 Space:
                 - Space
@@ -12611,6 +12765,7 @@ components:
                 - key: edges
               summary: summary
               provocative: unknown
+              image_description: image_description
               eng_title: eng_title
               image_url: image_url
               article_url: https://openapi-generator.tech
@@ -12620,6 +12775,7 @@ components:
               centroid_distance: 6.84685269835264
               cluster_probability: 7.457744773683766
               page_rank: 1
+              original_language_summary: original_language_summary
               entities:
                 Space:
                 - Space
@@ -12744,6 +12900,7 @@ components:
                 - key: edges
               summary: summary
               provocative: unknown
+              image_description: image_description
               eng_title: eng_title
               image_url: image_url
               article_url: https://openapi-generator.tech
@@ -12753,6 +12910,7 @@ components:
               centroid_distance: 6.84685269835264
               cluster_probability: 7.457744773683766
               page_rank: 1
+              original_language_summary: original_language_summary
               entities:
                 Space:
                 - Space
@@ -12916,6 +13074,7 @@ components:
                 - key: edges
               summary: summary
               provocative: unknown
+              image_description: image_description
               eng_title: eng_title
               image_url: image_url
               article_url: https://openapi-generator.tech
@@ -12925,6 +13084,7 @@ components:
               centroid_distance: 6.84685269835264
               cluster_probability: 7.457744773683766
               page_rank: 1
+              original_language_summary: original_language_summary
               entities:
                 Space:
                 - Space
@@ -13049,6 +13209,7 @@ components:
                 - key: edges
               summary: summary
               provocative: unknown
+              image_description: image_description
               eng_title: eng_title
               image_url: image_url
               article_url: https://openapi-generator.tech
@@ -13058,6 +13219,7 @@ components:
               centroid_distance: 6.84685269835264
               cluster_probability: 7.457744773683766
               page_rank: 1
+              original_language_summary: original_language_summary
               entities:
                 Space:
                 - Space
@@ -13403,6 +13565,7 @@ components:
                 - key: edges
               summary: summary
               provocative: unknown
+              image_description: image_description
               eng_title: eng_title
               image_url: image_url
               article_url: https://openapi-generator.tech
@@ -13412,6 +13575,7 @@ components:
               centroid_distance: 6.84685269835264
               cluster_probability: 7.457744773683766
               page_rank: 1
+              original_language_summary: original_language_summary
               entities:
                 Space:
                 - Space
@@ -13536,6 +13700,7 @@ components:
                 - key: edges
               summary: summary
               provocative: unknown
+              image_description: image_description
               eng_title: eng_title
               image_url: image_url
               article_url: https://openapi-generator.tech
@@ -13545,6 +13710,7 @@ components:
               centroid_distance: 6.84685269835264
               cluster_probability: 7.457744773683766
               page_rank: 1
+              original_language_summary: original_language_summary
               entities:
                 Space:
                 - Space
@@ -13708,6 +13874,7 @@ components:
                 - key: edges
               summary: summary
               provocative: unknown
+              image_description: image_description
               eng_title: eng_title
               image_url: image_url
               article_url: https://openapi-generator.tech
@@ -13717,6 +13884,7 @@ components:
               centroid_distance: 6.84685269835264
               cluster_probability: 7.457744773683766
               page_rank: 1
+              original_language_summary: original_language_summary
               entities:
                 Space:
                 - Space
@@ -13841,6 +14009,7 @@ components:
                 - key: edges
               summary: summary
               provocative: unknown
+              image_description: image_description
               eng_title: eng_title
               image_url: image_url
               article_url: https://openapi-generator.tech
@@ -13850,6 +14019,7 @@ components:
               centroid_distance: 6.84685269835264
               cluster_probability: 7.457744773683766
               page_rank: 1
+              original_language_summary: original_language_summary
               entities:
                 Space:
                 - Space
@@ -14266,6 +14436,7 @@ components:
               - key: edges
             summary: summary
             provocative: unknown
+            image_description: image_description
             eng_title: eng_title
             image_url: image_url
             article_url: https://openapi-generator.tech
@@ -14275,6 +14446,7 @@ components:
             centroid_distance: 6.84685269835264
             cluster_probability: 7.457744773683766
             page_rank: 1
+            original_language_summary: original_language_summary
             entities:
               Space:
               - Space
@@ -14399,6 +14571,7 @@ components:
               - key: edges
             summary: summary
             provocative: unknown
+            image_description: image_description
             eng_title: eng_title
             image_url: image_url
             article_url: https://openapi-generator.tech
@@ -14408,6 +14581,7 @@ components:
             centroid_distance: 6.84685269835264
             cluster_probability: 7.457744773683766
             page_rank: 1
+            original_language_summary: original_language_summary
             entities:
               Space:
               - Space
@@ -14571,6 +14745,7 @@ components:
               - key: edges
             summary: summary
             provocative: unknown
+            image_description: image_description
             eng_title: eng_title
             image_url: image_url
             article_url: https://openapi-generator.tech
@@ -14580,6 +14755,7 @@ components:
             centroid_distance: 6.84685269835264
             cluster_probability: 7.457744773683766
             page_rank: 1
+            original_language_summary: original_language_summary
             entities:
               Space:
               - Space
@@ -14704,6 +14880,7 @@ components:
               - key: edges
             summary: summary
             provocative: unknown
+            image_description: image_description
             eng_title: eng_title
             image_url: image_url
             article_url: https://openapi-generator.tech
@@ -14713,6 +14890,7 @@ components:
             centroid_distance: 6.84685269835264
             cluster_probability: 7.457744773683766
             page_rank: 1
+            original_language_summary: original_language_summary
             entities:
               Space:
               - Space
@@ -15058,6 +15236,7 @@ components:
               - key: edges
             summary: summary
             provocative: unknown
+            image_description: image_description
             eng_title: eng_title
             image_url: image_url
             article_url: https://openapi-generator.tech
@@ -15067,6 +15246,7 @@ components:
             centroid_distance: 6.84685269835264
             cluster_probability: 7.457744773683766
             page_rank: 1
+            original_language_summary: original_language_summary
             entities:
               Space:
               - Space
@@ -15191,6 +15371,7 @@ components:
               - key: edges
             summary: summary
             provocative: unknown
+            image_description: image_description
             eng_title: eng_title
             image_url: image_url
             article_url: https://openapi-generator.tech
@@ -15200,6 +15381,7 @@ components:
             centroid_distance: 6.84685269835264
             cluster_probability: 7.457744773683766
             page_rank: 1
+            original_language_summary: original_language_summary
             entities:
               Space:
               - Space
@@ -15363,6 +15545,7 @@ components:
               - key: edges
             summary: summary
             provocative: unknown
+            image_description: image_description
             eng_title: eng_title
             image_url: image_url
             article_url: https://openapi-generator.tech
@@ -15372,6 +15555,7 @@ components:
             centroid_distance: 6.84685269835264
             cluster_probability: 7.457744773683766
             page_rank: 1
+            original_language_summary: original_language_summary
             entities:
               Space:
               - Space
@@ -15496,6 +15680,7 @@ components:
               - key: edges
             summary: summary
             provocative: unknown
+            image_description: image_description
             eng_title: eng_title
             image_url: image_url
             article_url: https://openapi-generator.tech
@@ -15505,6 +15690,7 @@ components:
             centroid_distance: 6.84685269835264
             cluster_probability: 7.457744773683766
             page_rank: 1
+            original_language_summary: original_language_summary
             entities:
               Space:
               - Space
@@ -16025,6 +16211,7 @@ components:
             - key: edges
           summary: summary
           provocative: unknown
+          image_description: image_description
           eng_title: eng_title
           image_url: image_url
           article_url: https://openapi-generator.tech
@@ -16034,6 +16221,7 @@ components:
           centroid_distance: 6.84685269835264
           cluster_probability: 7.457744773683766
           page_rank: 1
+          original_language_summary: original_language_summary
           entities:
             Space:
             - Space
@@ -16158,6 +16346,7 @@ components:
             - key: edges
           summary: summary
           provocative: unknown
+          image_description: image_description
           eng_title: eng_title
           image_url: image_url
           article_url: https://openapi-generator.tech
@@ -16167,6 +16356,7 @@ components:
           centroid_distance: 6.84685269835264
           cluster_probability: 7.457744773683766
           page_rank: 1
+          original_language_summary: original_language_summary
           entities:
             Space:
             - Space
@@ -16330,6 +16520,7 @@ components:
             - key: edges
           summary: summary
           provocative: unknown
+          image_description: image_description
           eng_title: eng_title
           image_url: image_url
           article_url: https://openapi-generator.tech
@@ -16339,6 +16530,7 @@ components:
           centroid_distance: 6.84685269835264
           cluster_probability: 7.457744773683766
           page_rank: 1
+          original_language_summary: original_language_summary
           entities:
             Space:
             - Space
@@ -16463,6 +16655,7 @@ components:
             - key: edges
           summary: summary
           provocative: unknown
+          image_description: image_description
           eng_title: eng_title
           image_url: image_url
           article_url: https://openapi-generator.tech
@@ -16472,6 +16665,7 @@ components:
           centroid_distance: 6.84685269835264
           cluster_probability: 7.457744773683766
           page_rank: 1
+          original_language_summary: original_language_summary
           entities:
             Space:
             - Space
@@ -17369,9 +17563,10 @@ components:
         expires_at: 2000-01-23T04:56:07.000+00:00
         repeat: true
         report:
+          identifier: legacy
           logo_url: https://openapi-generator.tech
-          model: gpt-4o
           include_appendix: true
+          model: gpt-4o
           prompt:
           - - prompt
             - prompt
@@ -17429,7 +17624,7 @@ components:
           nullable: true
           type: string
         report:
-          $ref: '#/components/schemas/ReportRequest'
+          $ref: '#/components/schemas/CreateAlertRequest_report'
         title:
           nullable: true
           type: string
@@ -20438,6 +20633,7 @@ components:
           - key: edges
         summary: summary
         provocative: unknown
+        image_description: image_description
         eng_title: eng_title
         image_url: image_url
         article_url: https://openapi-generator.tech
@@ -20447,6 +20643,7 @@ components:
         centroid_distance: 9.301444243932576
         cluster_probability: 3.616076749251911
         page_rank: 2
+        original_language_summary: original_language_summary
         entities:
           Space:
           - Space
@@ -20665,6 +20862,12 @@ components:
         full_text:
           nullable: true
           type: string
+        original_language_summary:
+          nullable: true
+          type: string
+        image_description:
+          nullable: true
+          type: string
         as_string_key:
           title: As String Key
           type: string
@@ -20778,6 +20981,7 @@ components:
             - key: edges
           summary: summary
           provocative: unknown
+          image_description: image_description
           eng_title: eng_title
           image_url: image_url
           article_url: https://openapi-generator.tech
@@ -20787,6 +20991,7 @@ components:
           centroid_distance: 9.301444243932576
           cluster_probability: 3.616076749251911
           page_rank: 2
+          original_language_summary: original_language_summary
           entities:
             Space:
             - Space
@@ -20912,6 +21117,7 @@ components:
             - key: edges
           summary: summary
           provocative: unknown
+          image_description: image_description
           eng_title: eng_title
           image_url: image_url
           article_url: https://openapi-generator.tech
@@ -20921,6 +21127,7 @@ components:
           centroid_distance: 9.301444243932576
           cluster_probability: 3.616076749251911
           page_rank: 2
+          original_language_summary: original_language_summary
           entities:
             Space:
             - Space
@@ -21089,6 +21296,7 @@ components:
               - key: edges
             summary: summary
             provocative: unknown
+            image_description: image_description
             eng_title: eng_title
             image_url: image_url
             article_url: https://openapi-generator.tech
@@ -21098,6 +21306,7 @@ components:
             centroid_distance: 9.301444243932576
             cluster_probability: 3.616076749251911
             page_rank: 2
+            original_language_summary: original_language_summary
             entities:
               Space:
               - Space
@@ -21223,6 +21432,7 @@ components:
               - key: edges
             summary: summary
             provocative: unknown
+            image_description: image_description
             eng_title: eng_title
             image_url: image_url
             article_url: https://openapi-generator.tech
@@ -21232,6 +21442,7 @@ components:
             centroid_distance: 9.301444243932576
             cluster_probability: 3.616076749251911
             page_rank: 2
+            original_language_summary: original_language_summary
             entities:
               Space:
               - Space
@@ -21340,7 +21551,7 @@ components:
           completion_tokens: 1
           prompt_tokens: 6
           total_tokens: 5
-        model: claude-sonnet-4-5-20250929
+        model: claude-sonnet-4-6
         id: id
         choices:
         - finish_reason: finish_reason
@@ -21372,7 +21583,7 @@ components:
           title: Object
           type: string
         model:
-          default: claude-sonnet-4-5-20250929
+          default: claude-sonnet-4-6
           title: Model
           type: string
         usage:
@@ -21915,6 +22126,16 @@ components:
                       - type: string
                       - type: "null"
                       title: Full Text
+                    original_language_summary:
+                      anyOf:
+                      - type: string
+                      - type: "null"
+                      title: Original Language Summary
+                    image_description:
+                      anyOf:
+                      - type: string
+                      - type: "null"
+                      title: Image Description
                     as_string_key:
                       type: string
                       title: As String Key
@@ -22588,6 +22809,16 @@ components:
               - type: string
               - type: "null"
               title: Full Text
+            original_language_summary:
+              anyOf:
+              - type: string
+              - type: "null"
+              title: Original Language Summary
+            image_description:
+              anyOf:
+              - type: string
+              - type: "null"
+              title: Image Description
             as_string_key:
               type: string
               title: As String Key
@@ -22678,7 +22909,7 @@ components:
           title: Object
           type: string
         model:
-          default: claude-sonnet-4-5-20250929
+          default: claude-sonnet-4-6
           title: Model
           type: string
         usage:
@@ -22801,6 +23032,16 @@ components:
       default: 0
       description: Offset to use
       title: Offset
+    CreateAlertRequest_report:
+      discriminator:
+        mapping:
+          deepnews: '#/components/schemas/DeepNewsReportRequest'
+          legacy: '#/components/schemas/LegacyReportRequest'
+        propertyName: identifier
+      nullable: true
+      oneOf:
+      - $ref: '#/components/schemas/LegacyReportRequest'
+      - $ref: '#/components/schemas/DeepNewsReportRequest'
     Stop:
       anyOf:
       - {}
@@ -22828,9 +23069,9 @@ components:
       anyOf:
       - $ref: '#/components/schemas/DeepNewsModel'
       - {}
-      default: claude-sonnet-4-5-20250929
-      description: The model to use for DeepNews research. Defaults to claude-sonnet-4-5-20250929.
-      example: claude-sonnet-4-5-20250929
+      default: claude-sonnet-4-6
+      description: The model to use for DeepNews research. Defaults to claude-sonnet-4-6.
+      example: claude-sonnet-4-6
     CreateDeepNewsRequest_filter_params:
       anyOf:
       - $ref: '#/components/schemas/FilterParams'
@@ -22846,6 +23087,7 @@ components:
         - x
         - reddit
         - charts
+        - email
       - items:
           enum:
           - asknews
@@ -22855,10 +23097,11 @@ components:
           - x
           - reddit
           - charts
+          - email
       default: asknews
       description: "Which data sources DeepNews should use. Can be a single source\
         \ or a list. Available sources are: asknews, google, graph, wiki, x, reddit,\
-        \ charts"
+        \ charts, email"
       title: Sources
     Stop_1:
       anyOf:
@@ -22897,6 +23140,7 @@ components:
         - x
         - reddit
         - charts
+        - email
         type: string
       - items:
           enum:
@@ -22907,12 +23151,17 @@ components:
           - x
           - reddit
           - charts
+          - email
           type: string
         type: array
-      default: asknews
+      default:
+      - asknews
+      - google
+      - wiki
+      - x
       description: "Which data sources DeepNews should use. Can be a single source\
         \ or a list. Available sources are: asknews, google, graph, wiki, x, reddit,\
-        \ charts"
+        \ charts, email. Defaults to ['asknews', 'google', 'wiki', 'x']."
       title: Sources
     Offset_2:
       anyOf:

@@ -5,13 +5,13 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Identifier** | **string** |  | 
-**Params** | [**DeepNewsSourceParams**](DeepNewsSourceParams.md) |  | 
+**Params** | Pointer to [**DeepNewsSourceParams**](DeepNewsSourceParams.md) |  | [optional] 
 
 ## Methods
 
 ### NewDeepNewsSource
 
-`func NewDeepNewsSource(identifier string, params DeepNewsSourceParams, ) *DeepNewsSource`
+`func NewDeepNewsSource(identifier string, ) *DeepNewsSource`
 
 NewDeepNewsSource instantiates a new DeepNewsSource object
 This constructor will assign default values to properties that have it defined,
@@ -65,6 +65,11 @@ and a boolean to check if the value has been set.
 
 SetParams sets Params field to given value.
 
+### HasParams
+
+`func (o *DeepNewsSource) HasParams() bool`
+
+HasParams returns a boolean if a field has been set.
 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

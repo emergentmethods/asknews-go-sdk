@@ -34,6 +34,8 @@ Name | Type | Description | Notes
 **Bias** | Pointer to **NullableString** |  | [optional] 
 **Authors** | Pointer to [**[]Author**](Author.md) |  | [optional] 
 **FullText** | Pointer to **NullableString** |  | [optional] 
+**OriginalLanguageSummary** | Pointer to **NullableString** |  | [optional] 
+**ImageDescription** | Pointer to **NullableString** |  | [optional] 
 
 ## Methods
 
@@ -819,6 +821,76 @@ HasFullText returns a boolean if a field has been set.
 `func (o *Article) UnsetFullText()`
 
 UnsetFullText ensures that no value is present for FullText, not even an explicit nil
+### GetOriginalLanguageSummary
+
+`func (o *Article) GetOriginalLanguageSummary() string`
+
+GetOriginalLanguageSummary returns the OriginalLanguageSummary field if non-nil, zero value otherwise.
+
+### GetOriginalLanguageSummaryOk
+
+`func (o *Article) GetOriginalLanguageSummaryOk() (*string, bool)`
+
+GetOriginalLanguageSummaryOk returns a tuple with the OriginalLanguageSummary field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetOriginalLanguageSummary
+
+`func (o *Article) SetOriginalLanguageSummary(v string)`
+
+SetOriginalLanguageSummary sets OriginalLanguageSummary field to given value.
+
+### HasOriginalLanguageSummary
+
+`func (o *Article) HasOriginalLanguageSummary() bool`
+
+HasOriginalLanguageSummary returns a boolean if a field has been set.
+
+### SetOriginalLanguageSummaryNil
+
+`func (o *Article) SetOriginalLanguageSummaryNil(b bool)`
+
+ SetOriginalLanguageSummaryNil sets the value for OriginalLanguageSummary to be an explicit nil
+
+### UnsetOriginalLanguageSummary
+`func (o *Article) UnsetOriginalLanguageSummary()`
+
+UnsetOriginalLanguageSummary ensures that no value is present for OriginalLanguageSummary, not even an explicit nil
+### GetImageDescription
+
+`func (o *Article) GetImageDescription() string`
+
+GetImageDescription returns the ImageDescription field if non-nil, zero value otherwise.
+
+### GetImageDescriptionOk
+
+`func (o *Article) GetImageDescriptionOk() (*string, bool)`
+
+GetImageDescriptionOk returns a tuple with the ImageDescription field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetImageDescription
+
+`func (o *Article) SetImageDescription(v string)`
+
+SetImageDescription sets ImageDescription field to given value.
+
+### HasImageDescription
+
+`func (o *Article) HasImageDescription() bool`
+
+HasImageDescription returns a boolean if a field has been set.
+
+### SetImageDescriptionNil
+
+`func (o *Article) SetImageDescriptionNil(b bool)`
+
+ SetImageDescriptionNil sets the value for ImageDescription to be an explicit nil
+
+### UnsetImageDescription
+`func (o *Article) UnsetImageDescription()`
+
+UnsetImageDescription ensures that no value is present for ImageDescription, not even an explicit nil
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

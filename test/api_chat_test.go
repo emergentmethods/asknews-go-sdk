@@ -46,23 +46,11 @@ func Test_asknews_ChatAPIService(t *testing.T) {
 
 	})
 
-	t.Run("Test ChatAPIService GetHeadlineQuestions", func(t *testing.T) {
+	t.Run("Test ChatAPIService ListDeepnewsModels", func(t *testing.T) {
 
 		t.Skip("skip test")  // remove to run test
 
-		resp, httpRes, err := apiClient.ChatAPI.GetHeadlineQuestions(context.Background()).Execute()
-
-		require.Nil(t, err)
-		require.NotNil(t, resp)
-		assert.Equal(t, 200, httpRes.StatusCode)
-
-	})
-
-	t.Run("Test ChatAPIService ListChatModels", func(t *testing.T) {
-
-		t.Skip("skip test")  // remove to run test
-
-		resp, httpRes, err := apiClient.ChatAPI.ListChatModels(context.Background()).Execute()
+		resp, httpRes, err := apiClient.ChatAPI.ListDeepnewsModels(context.Background()).Execute()
 
 		require.Nil(t, err)
 		require.NotNil(t, resp)

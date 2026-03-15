@@ -525,7 +525,7 @@ Name | Type | Description  | Notes
 
 ## RunAlert
 
-> AlertResponse RunAlert(ctx, alertId).UserId(userId).Execute()
+> AlertResponse RunAlert(ctx, alertId).UserId(userId).IsTest(isTest).Execute()
 
 Run an existing alert
 
@@ -546,10 +546,11 @@ import (
 func main() {
 	alertId := "38400000-8cf0-11bd-b23e-10b96e4ef00d" // string | The alert ID
 	userId := "38400000-8cf0-11bd-b23e-10b96e4ef00d" // string | The ID of the user to get logs for (optional)
+	isTest := true // bool | Whether this is a test run (optional) (default to false)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.AlertsAPI.RunAlert(context.Background(), alertId).UserId(userId).Execute()
+	resp, r, err := apiClient.AlertsAPI.RunAlert(context.Background(), alertId).UserId(userId).IsTest(isTest).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `AlertsAPI.RunAlert``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -576,6 +577,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
  **userId** | **string** | The ID of the user to get logs for | 
+ **isTest** | **bool** | Whether this is a test run | [default to false]
 
 ### Return type
 

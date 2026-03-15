@@ -5,7 +5,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Messages** | [**[]CreateDeepNewsRequestMessage**](CreateDeepNewsRequestMessage.md) | The messages to send to DeepNews. Each message should have &#39;role&#39; and &#39;content&#39; keys. Use this to specify what research/monitoring task DeepNews should perform. The &#39;content&#39; for the final &#39;user&#39; message should be your Alert query. | 
-**Model** | Pointer to [**CreateDeepNewsRequestModel**](CreateDeepNewsRequestModel.md) |  | [optional] [default to claude-sonnet-4-5-20250929]
+**Model** | Pointer to [**CreateDeepNewsRequestModel**](CreateDeepNewsRequestModel.md) |  | [optional] [default to claude-sonnet-4-6]
 **FilterParams** | Pointer to [**CreateDeepNewsRequestFilterParams**](CreateDeepNewsRequestFilterParams.md) |  | [optional] 
 **SearchDepth** | Pointer to **int32** | The search depth for deep research. Higher values mean more thorough research. | [optional] [default to 2]
 **MaxDepth** | Pointer to **int32** | The maximum research depth allowed. | [optional] [default to 6]
@@ -31,6 +31,8 @@ Name | Type | Description | Notes
 **FrequencyPenalty** | Pointer to **int32** | Penalizes new tokens based on their frequency in the text so far, reducing repetition. | [optional] [default to 0]
 **User** | Pointer to [**User1**](User1.md) |  | [optional] 
 **ThreadId** | Pointer to [**ThreadId1**](ThreadId1.md) |  | [optional] 
+**MaxParallelToolCalls** | Pointer to **int32** | Maximum number of parallel tool calls (e.g., searches) the agent can make during generation. Higher values may speed up responses, but may reduce on-the-fly adaptivity. | [optional] [default to 1]
+**Engine** | Pointer to **string** |  | [optional] [default to "v1"]
 
 ## Methods
 
@@ -720,6 +722,56 @@ SetThreadId sets ThreadId field to given value.
 `func (o *CreateDeepNewsRequest) HasThreadId() bool`
 
 HasThreadId returns a boolean if a field has been set.
+
+### GetMaxParallelToolCalls
+
+`func (o *CreateDeepNewsRequest) GetMaxParallelToolCalls() int32`
+
+GetMaxParallelToolCalls returns the MaxParallelToolCalls field if non-nil, zero value otherwise.
+
+### GetMaxParallelToolCallsOk
+
+`func (o *CreateDeepNewsRequest) GetMaxParallelToolCallsOk() (*int32, bool)`
+
+GetMaxParallelToolCallsOk returns a tuple with the MaxParallelToolCalls field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetMaxParallelToolCalls
+
+`func (o *CreateDeepNewsRequest) SetMaxParallelToolCalls(v int32)`
+
+SetMaxParallelToolCalls sets MaxParallelToolCalls field to given value.
+
+### HasMaxParallelToolCalls
+
+`func (o *CreateDeepNewsRequest) HasMaxParallelToolCalls() bool`
+
+HasMaxParallelToolCalls returns a boolean if a field has been set.
+
+### GetEngine
+
+`func (o *CreateDeepNewsRequest) GetEngine() string`
+
+GetEngine returns the Engine field if non-nil, zero value otherwise.
+
+### GetEngineOk
+
+`func (o *CreateDeepNewsRequest) GetEngineOk() (*string, bool)`
+
+GetEngineOk returns a tuple with the Engine field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetEngine
+
+`func (o *CreateDeepNewsRequest) SetEngine(v string)`
+
+SetEngine sets Engine field to given value.
+
+### HasEngine
+
+`func (o *CreateDeepNewsRequest) HasEngine() bool`
+
+HasEngine returns a boolean if a field has been set.
 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

@@ -6,8 +6,7 @@ Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**DeepNews**](ChatAPI.md#DeepNews) | **Post** /v1/chat/deepnews | Deep research into real-time news, archive news, and Google.
 [**GetChatCompletions**](ChatAPI.md#GetChatCompletions) | **Post** /v1/openai/chat/completions | Get chat completions from a news-infused AI assistant
-[**GetHeadlineQuestions**](ChatAPI.md#GetHeadlineQuestions) | **Get** /v1/chat/questions | Get example headline questions
-[**ListChatModels**](ChatAPI.md#ListChatModels) | **Get** /v1/openai/models | List available chat models
+[**ListDeepnewsModels**](ChatAPI.md#ListDeepnewsModels) | **Get** /v1/chat/deepnews-models | List available DeepNews models
 
 
 
@@ -141,77 +140,11 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
-## GetHeadlineQuestions
+## ListDeepnewsModels
 
-> map[string][]string GetHeadlineQuestions(ctx).Queries(queries).Execute()
+> ListDeepNewsModelResponse ListDeepnewsModels(ctx).Execute()
 
-Get example headline questions
-
-
-
-### Example
-
-```go
-package main
-
-import (
-	"context"
-	"fmt"
-	"os"
-	openapiclient "github.com/emergentmethods/asknews-go-sdk"
-)
-
-func main() {
-	queries := []string{"Inner_example"} // []string | Queries to get questions for (optional)
-
-	configuration := openapiclient.NewConfiguration()
-	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ChatAPI.GetHeadlineQuestions(context.Background()).Queries(queries).Execute()
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `ChatAPI.GetHeadlineQuestions``: %v\n", err)
-		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-	}
-	// response from `GetHeadlineQuestions`: map[string][]string
-	fmt.Fprintf(os.Stdout, "Response from `ChatAPI.GetHeadlineQuestions`: %v\n", resp)
-}
-```
-
-### Path Parameters
-
-
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiGetHeadlineQuestionsRequest struct via the builder pattern
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **queries** | **[]string** | Queries to get questions for | 
-
-### Return type
-
-[**map[string][]string**](array.md)
-
-### Authorization
-
-[APIKey](../README.md#APIKey)
-
-### HTTP request headers
-
-- **Content-Type**: Not defined
-- **Accept**: application/json
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
-[[Back to README]](../README.md)
-
-
-## ListChatModels
-
-> ListModelResponse ListChatModels(ctx).Execute()
-
-List available chat models
+List available DeepNews models
 
 
 
@@ -231,13 +164,13 @@ func main() {
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.ChatAPI.ListChatModels(context.Background()).Execute()
+	resp, r, err := apiClient.ChatAPI.ListDeepnewsModels(context.Background()).Execute()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `ChatAPI.ListChatModels``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error when calling `ChatAPI.ListDeepnewsModels``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
-	// response from `ListChatModels`: ListModelResponse
-	fmt.Fprintf(os.Stdout, "Response from `ChatAPI.ListChatModels`: %v\n", resp)
+	// response from `ListDeepnewsModels`: ListDeepNewsModelResponse
+	fmt.Fprintf(os.Stdout, "Response from `ChatAPI.ListDeepnewsModels`: %v\n", resp)
 }
 ```
 
@@ -247,16 +180,16 @@ This endpoint does not need any parameter.
 
 ### Other Parameters
 
-Other parameters are passed through a pointer to a apiListChatModelsRequest struct via the builder pattern
+Other parameters are passed through a pointer to a apiListDeepnewsModelsRequest struct via the builder pattern
 
 
 ### Return type
 
-[**ListModelResponse**](ListModelResponse.md)
+[**ListDeepNewsModelResponse**](ListDeepNewsModelResponse.md)
 
 ### Authorization
 
-[APIKey](../README.md#APIKey)
+No authorization required
 
 ### HTTP request headers
 

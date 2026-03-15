@@ -34,6 +34,8 @@ Name | Type | Description | Notes
 **Bias** | Pointer to **NullableString** |  | [optional] 
 **Authors** | Pointer to [**[]Author**](Author.md) |  | [optional] 
 **FullText** | Pointer to **NullableString** |  | [optional] 
+**OriginalLanguageSummary** | Pointer to **NullableString** |  | [optional] 
+**ImageDescription** | Pointer to **NullableString** |  | [optional] 
 **AsStringKey** | **string** |  | 
 
 ## Methods
@@ -820,6 +822,76 @@ HasFullText returns a boolean if a field has been set.
 `func (o *SearchResponseDictItem) UnsetFullText()`
 
 UnsetFullText ensures that no value is present for FullText, not even an explicit nil
+### GetOriginalLanguageSummary
+
+`func (o *SearchResponseDictItem) GetOriginalLanguageSummary() string`
+
+GetOriginalLanguageSummary returns the OriginalLanguageSummary field if non-nil, zero value otherwise.
+
+### GetOriginalLanguageSummaryOk
+
+`func (o *SearchResponseDictItem) GetOriginalLanguageSummaryOk() (*string, bool)`
+
+GetOriginalLanguageSummaryOk returns a tuple with the OriginalLanguageSummary field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetOriginalLanguageSummary
+
+`func (o *SearchResponseDictItem) SetOriginalLanguageSummary(v string)`
+
+SetOriginalLanguageSummary sets OriginalLanguageSummary field to given value.
+
+### HasOriginalLanguageSummary
+
+`func (o *SearchResponseDictItem) HasOriginalLanguageSummary() bool`
+
+HasOriginalLanguageSummary returns a boolean if a field has been set.
+
+### SetOriginalLanguageSummaryNil
+
+`func (o *SearchResponseDictItem) SetOriginalLanguageSummaryNil(b bool)`
+
+ SetOriginalLanguageSummaryNil sets the value for OriginalLanguageSummary to be an explicit nil
+
+### UnsetOriginalLanguageSummary
+`func (o *SearchResponseDictItem) UnsetOriginalLanguageSummary()`
+
+UnsetOriginalLanguageSummary ensures that no value is present for OriginalLanguageSummary, not even an explicit nil
+### GetImageDescription
+
+`func (o *SearchResponseDictItem) GetImageDescription() string`
+
+GetImageDescription returns the ImageDescription field if non-nil, zero value otherwise.
+
+### GetImageDescriptionOk
+
+`func (o *SearchResponseDictItem) GetImageDescriptionOk() (*string, bool)`
+
+GetImageDescriptionOk returns a tuple with the ImageDescription field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetImageDescription
+
+`func (o *SearchResponseDictItem) SetImageDescription(v string)`
+
+SetImageDescription sets ImageDescription field to given value.
+
+### HasImageDescription
+
+`func (o *SearchResponseDictItem) HasImageDescription() bool`
+
+HasImageDescription returns a boolean if a field has been set.
+
+### SetImageDescriptionNil
+
+`func (o *SearchResponseDictItem) SetImageDescriptionNil(b bool)`
+
+ SetImageDescriptionNil sets the value for ImageDescription to be an explicit nil
+
+### UnsetImageDescription
+`func (o *SearchResponseDictItem) UnsetImageDescription()`
+
+UnsetImageDescription ensures that no value is present for ImageDescription, not even an explicit nil
 ### GetAsStringKey
 
 `func (o *SearchResponseDictItem) GetAsStringKey() string`

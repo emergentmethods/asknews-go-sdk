@@ -14,7 +14,7 @@ Name | Type | Description | Notes
 **Repeat** | Pointer to **bool** | Whether to repeat the alert. Default is True. If False, the alert will be disabled after it triggers once. | [optional] [default to true]
 **Active** | Pointer to **bool** | Whether the alert is active or not. Default is True. | [optional] [default to true]
 **ExpiresAt** | Pointer to **NullableTime** |  | [optional] 
-**Report** | Pointer to [**NullableReportRequest**](ReportRequest.md) |  | [optional] 
+**Report** | Pointer to [**NullableCreateAlertRequestReport**](CreateAlertRequestReport.md) |  | [optional] 
 **Title** | Pointer to **NullableString** |  | [optional] 
 **ShareLink** | Pointer to **NullableString** |  | [optional] 
 
@@ -289,20 +289,20 @@ HasExpiresAt returns a boolean if a field has been set.
 UnsetExpiresAt ensures that no value is present for ExpiresAt, not even an explicit nil
 ### GetReport
 
-`func (o *CreateAlertRequest) GetReport() ReportRequest`
+`func (o *CreateAlertRequest) GetReport() CreateAlertRequestReport`
 
 GetReport returns the Report field if non-nil, zero value otherwise.
 
 ### GetReportOk
 
-`func (o *CreateAlertRequest) GetReportOk() (*ReportRequest, bool)`
+`func (o *CreateAlertRequest) GetReportOk() (*CreateAlertRequestReport, bool)`
 
 GetReportOk returns a tuple with the Report field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetReport
 
-`func (o *CreateAlertRequest) SetReport(v ReportRequest)`
+`func (o *CreateAlertRequest) SetReport(v CreateAlertRequestReport)`
 
 SetReport sets Report field to given value.
 
