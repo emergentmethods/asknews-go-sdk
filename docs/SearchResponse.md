@@ -6,7 +6,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **AsDicts** | Pointer to [**[]SearchResponseDictItem**](SearchResponseDictItem.md) |  | [optional] 
 **AsString** | Pointer to **NullableString** |  | [optional] 
-**Offset** | Pointer to [**NullableOffset3**](Offset3.md) |  | [optional] 
+**Offset** | Pointer to [**NullableOffset4**](Offset4.md) |  | [optional] 
 
 ## Methods
 
@@ -99,20 +99,20 @@ HasAsString returns a boolean if a field has been set.
 UnsetAsString ensures that no value is present for AsString, not even an explicit nil
 ### GetOffset
 
-`func (o *SearchResponse) GetOffset() Offset3`
+`func (o *SearchResponse) GetOffset() Offset4`
 
 GetOffset returns the Offset field if non-nil, zero value otherwise.
 
 ### GetOffsetOk
 
-`func (o *SearchResponse) GetOffsetOk() (*Offset3, bool)`
+`func (o *SearchResponse) GetOffsetOk() (*Offset4, bool)`
 
 GetOffsetOk returns a tuple with the Offset field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetOffset
 
-`func (o *SearchResponse) SetOffset(v Offset3)`
+`func (o *SearchResponse) SetOffset(v Offset4)`
 
 SetOffset sets Offset field to given value.
 

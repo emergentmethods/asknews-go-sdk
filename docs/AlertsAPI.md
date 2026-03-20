@@ -1,6 +1,6 @@
 # \AlertsAPI
 
-All URIs are relative to *https://api.asknews.app*
+All URIs are relative to *https://api.asknews.dev*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
@@ -36,7 +36,7 @@ import (
 )
 
 func main() {
-	createAlertRequest := *openapiclient.NewCreateAlertRequest("I want to be alerted if the president of the US says something about the economy", []openapiclient.SourcesInner{openapiclient.Sources_inner{AskNewsSource: openapiclient.NewAskNewsSource("Identifier_example")}}, "'0 0 * * *' (daily at midnight UTC)", []openapiclient.TriggersInner{openapiclient.Triggers_inner{EmailAction: openapiclient.NewEmailAction(*openapiclient.NewEmailParams("To_example"))}}) // CreateAlertRequest | 
+	createAlertRequest := *openapiclient.NewCreateAlertRequest("'0 0 * * *' (daily at midnight UTC)", []openapiclient.TriggersInner{openapiclient.Triggers_inner{EmailAction: openapiclient.NewEmailAction(*openapiclient.NewEmailParams("To_example"))}}) // CreateAlertRequest | 
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)

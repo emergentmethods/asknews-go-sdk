@@ -5,13 +5,13 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Stories** | [**[]StoryResponse**](StoryResponse.md) |  | 
-**Offset** | [**Offset4**](Offset4.md) |  | 
+**Offset** | [**Offset5**](Offset5.md) |  | 
 
 ## Methods
 
 ### NewStoriesResponse
 
-`func NewStoriesResponse(stories []StoryResponse, offset Offset4, ) *StoriesResponse`
+`func NewStoriesResponse(stories []StoryResponse, offset Offset5, ) *StoriesResponse`
 
 NewStoriesResponse instantiates a new StoriesResponse object
 This constructor will assign default values to properties that have it defined,
@@ -48,20 +48,20 @@ SetStories sets Stories field to given value.
 
 ### GetOffset
 
-`func (o *StoriesResponse) GetOffset() Offset4`
+`func (o *StoriesResponse) GetOffset() Offset5`
 
 GetOffset returns the Offset field if non-nil, zero value otherwise.
 
 ### GetOffsetOk
 
-`func (o *StoriesResponse) GetOffsetOk() (*Offset4, bool)`
+`func (o *StoriesResponse) GetOffsetOk() (*Offset5, bool)`
 
 GetOffsetOk returns a tuple with the Offset field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetOffset
 
-`func (o *StoriesResponse) SetOffset(v Offset4)`
+`func (o *StoriesResponse) SetOffset(v Offset5)`
 
 SetOffset sets Offset field to given value.
 

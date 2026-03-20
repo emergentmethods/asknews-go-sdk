@@ -69,6 +69,8 @@
 
 * `GEMINI_3_1_PRO` (value: `"gemini-3.1-pro"`)
 
+* `GEMINI_3_FLASH` (value: `"gemini-3-flash"`)
+
 * `OPEN_SOURCE_BEST` (value: `"open-source-best"`)
 
 * `KIMI_K2P5` (value: `"kimi-k2p5"`)

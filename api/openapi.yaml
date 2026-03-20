@@ -2,9 +2,9 @@ openapi: 3.1.0
 info:
   description: "AskNews API [![status](https://status.asknews.app/api/badge/2/status?style=for-the-badge)](https://status.asknews.app/status/prod)"
   title: AskNews API
-  version: 0.24.50
+  version: 0.24.51
 servers:
-- url: https://api.asknews.app
+- url: https://api.asknews.dev
 paths:
   /v1/news/search:
     get:
@@ -5032,7 +5032,7 @@ components:
         - key: ""
         - key: ""
         title: title
-        alert_type: alert_type
+        alert_type: AlwaysAlertWhen
         share_link: share_link
         expires_at: 2000-01-23T04:56:07.000+00:00
         updated_at: 2000-01-23T04:56:07.000+00:00
@@ -5080,11 +5080,10 @@ components:
             additionalProperties: true
             nullable: true
             type: object
+          nullable: true
           type: array
         report:
-          additionalProperties: true
-          nullable: true
-          type: object
+          $ref: '#/components/schemas/Report'
         triggers:
           items:
             additionalProperties: true
@@ -5104,6 +5103,10 @@ components:
           title: Active
           type: boolean
         alert_type:
+          enum:
+          - AlwaysAlertWhen
+          - AlertOnceIf
+          - ReportAbout
           nullable: true
           type: string
         title:
@@ -5113,7 +5116,6 @@ components:
       - cron
       - id
       - model
-      - sources
       - triggers
       - user_id
       title: AlertResponse
@@ -5478,14 +5480,13 @@ components:
           strategy: default
       properties:
         identifier:
+          default: asknews
           enum:
           - asknews
           title: Identifier
           type: string
         params:
           $ref: '#/components/schemas/FilterParams'
-      required:
-      - identifier
       title: AskNewsSource
     Assets:
       example:
@@ -5527,14 +5528,13 @@ components:
     BlueskySource:
       properties:
         identifier:
+          default: bluesky
           enum:
           - bluesky
           title: Identifier
           type: string
         params:
           $ref: '#/components/schemas/BlueskySourceParams'
-      required:
-      - identifier
       title: BlueskySource
     BlueskySourceParams:
       properties:
@@ -5573,7 +5573,6 @@ components:
         constrained_disambiguations:
           items:
             additionalProperties: true
-            nullable: true
             type: object
           nullable: true
           type: array
@@ -6102,8 +6101,7 @@ components:
             - countries_blacklist
             - countries_blacklist
             strategy: default
-        query: I want to be alerted if the president of the US says something about
-          the economy
+        query: query
         active: true
         always_trigger: false
         triggers:
@@ -6131,19 +6129,11 @@ components:
           logo_url: https://openapi-generator.tech
           include_appendix: true
           model: gpt-4o
-          prompt:
-          - - prompt
-            - prompt
-          - - prompt
-            - prompt
           asknews_watermark: true
         model: gpt-4o-mini
       properties:
         query:
-          description: The query to run for the alert.
-          example: I want to be alerted if the president of the US says something
-            about the economy
-          title: Query
+          nullable: true
           type: string
         sources:
           items:
@@ -6210,7 +6200,7 @@ components:
           nullable: true
           type: string
         report:
-          $ref: '#/components/schemas/CreateAlertRequest_report'
+          $ref: '#/components/schemas/Report_1'
         title:
           nullable: true
           type: string
@@ -6222,8 +6212,6 @@ components:
           type: string
       required:
       - cron
-      - query
-      - sources
       - triggers
       title: CreateAlertRequest
     CreateChartRequest:
@@ -6460,86 +6448,28 @@ components:
         include_coordinates: false
         sources: asknews
         append_references: true
-        max_depth: 36
-        presence_penalty: 1
+        max_depth: 60
+        presence_penalty: 9
         conversational_awareness: true
         return_sources: true
         journalist_mode: true
-        top_p: 7.386281948385884
-        search_depth: 55
+        top_p: 5.637376656633329
+        search_depth: 5
         thread_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-        frequency_penalty: 6
+        frequency_penalty: 3
         stream: false
-        max_parallel_tool_calls: 3
+        max_parallel_tool_calls: 1
         engine: v1
-        temperature: 4.145608029883936
+        temperature: 5.962133916683182
         filter_params:
-          return_type: dicts
-          sentiment: negative
-          entity_guarantee_op: OR
-          start_timestamp: 6
-          doc_start_delimiter: <doc>
-          entity_guarantee:
-          - entity_guarantee
-          - entity_guarantee
-          historical: false
-          similarity_score_threshold: 5.962133916683182
-          diversify_sources: false
-          hours_back: 7
-          reporting_voice:
-          - Objective
-          - Objective
-          premium: false
-          end_timestamp: 1
-          domain_url:
-          - Domain_Url_1
-          - Domain_Url_1
-          string_guarantee:
-          - string_guarantee
-          - string_guarantee
-          reverse_string_guarantee:
-          - reverse_string_guarantee
-          - reverse_string_guarantee
-          return_graphs: false
-          time_filter: crawl_date
-          n_articles: 0
-          categories:
-          - All
-          - All
-          string_guarantee_op: AND
-          bad_domain_url:
-          - Bad_Domain_Url_2
-          - Bad_Domain_Url_2
-          provocative: all
-          method: kw
-          offset: 5
-          languages:
-          - sq
-          - sq
-          query: ""
-          countries:
-          - countries
-          - countries
-          doc_end_delimiter: </doc>
-          continents:
-          - Africa
-          - Africa
-          page_rank: 2
-          reverse_entity_guarantee:
-          - reverse_entity_guarantee
-          - reverse_entity_guarantee
-          return_geo: false
-          countries_blacklist:
-          - countries_blacklist
-          - countries_blacklist
-          strategy: default
+          key: ""
         model: claude-sonnet-4-6
         asknews_watermark: true
         include_graphs: false
-        max_tokens: 1
-        start_citation_number: 2
+        max_tokens: 7
+        start_citation_number: 1
         only_cited_sources: true
-        "n": 1
+        "n": 2
         stop: Stop_1
         include_entities: true
         messages:
@@ -6562,7 +6492,7 @@ components:
         model:
           $ref: '#/components/schemas/CreateDeepNewsRequest_model'
         filter_params:
-          $ref: '#/components/schemas/CreateDeepNewsRequest_filter_params'
+          $ref: '#/components/schemas/Filter_Params_1'
         search_depth:
           default: 2
           description: The search depth for deep research. Higher values mean more
@@ -7010,6 +6940,7 @@ components:
       - gemini-2.5-pro-preview-03-25
       - gemini-3-pro
       - gemini-3.1-pro
+      - gemini-3-flash
       - open-source-best
       - kimi-k2p5
       title: DeepNewsModel
@@ -7040,7 +6971,7 @@ components:
         sources:
           $ref: '#/components/schemas/Sources_2'
         filter_params:
-          $ref: '#/components/schemas/FilterParams'
+          $ref: '#/components/schemas/MCPFilterParams'
         include_entities:
           default: true
           description: Whether to provide extracted entities to the agent. Defaults
@@ -7059,6 +6990,21 @@ components:
             False.
           title: Include Coordinates
           type: boolean
+        engine:
+          default: v1
+          description: Legacy vs new DeepNews engine
+          enum:
+          - v1
+          - v1.5
+          title: Engine
+          type: string
+        max_parallel_tool_calls:
+          default: 1
+          description: The number of tool calls the agent can run in parallel.
+          maximum: 4.0
+          minimum: 1.0
+          title: Max Parallel Tool Calls
+          type: integer
         model:
           $ref: '#/components/schemas/DeepNewsModel'
         search_depth:
@@ -7094,15 +7040,8 @@ components:
       description: |-
         DeepNews report configuration.
 
-        Uses DeepNews deep research capabilities for report generation.
+        Uses DeepNews deep research capabilities for information retrieval and report generation.
       properties:
-        prompt:
-          items:
-            items:
-              type: string
-            type: array
-          nullable: true
-          type: array
         logo_url:
           format: uri
           maxLength: 2083
@@ -7118,14 +7057,26 @@ components:
           title: Asknews Watermark
           type: boolean
         identifier:
+          default: deepnews
           enum:
           - deepnews
           title: Identifier
           type: string
         params:
           $ref: '#/components/schemas/DeepNewsReportParams'
+        prompt:
+          description: The prompt to use for report generation instructions. This
+            is similar to the alert query but can contain additional instructions
+            on how to format the report.
+          example:
+          - Monitor Tesla stock and summarize any major price movements with percentage
+            changes
+          - Track the current situation in the Middle East and give me a bullet point
+            list of recent events
+          title: Prompt
+          type: string
       required:
-      - identifier
+      - prompt
       title: DeepNewsReportRequest
     DeepNewsResponseSources:
       properties:
@@ -7143,14 +7094,13 @@ components:
     DeepNewsSource:
       properties:
         identifier:
+          default: deepnews
           enum:
           - deepnews
           title: Identifier
           type: string
         params:
           $ref: '#/components/schemas/DeepNewsSourceParams'
-      required:
-      - identifier
       title: DeepNewsSource
     DeepNewsSourceParams:
       description: |-
@@ -7161,7 +7111,7 @@ components:
         sources:
           $ref: '#/components/schemas/Sources_2'
         filter_params:
-          $ref: '#/components/schemas/FilterParams'
+          $ref: '#/components/schemas/MCPFilterParams'
         include_entities:
           default: true
           description: Whether to provide extracted entities to the agent. Defaults
@@ -7180,20 +7130,35 @@ components:
             False.
           title: Include Coordinates
           type: boolean
+        engine:
+          default: v1
+          description: Legacy vs new DeepNews engine
+          enum:
+          - v1
+          - v1.5
+          title: Engine
+          type: string
+        max_parallel_tool_calls:
+          default: 1
+          description: The number of tool calls the agent can run in parallel.
+          maximum: 4.0
+          minimum: 1.0
+          title: Max Parallel Tool Calls
+          type: integer
         model:
           $ref: '#/components/schemas/DeepNewsModel'
         search_depth:
-          default: 2
+          default: 1
           description: The search depth for deep research. Higher values mean more
-            thorough research. Defaults to 2.
-          maximum: 10.0
+            thorough research. Defaults to 1.
+          maximum: 20.0
           minimum: 1.0
           title: Search Depth
           type: integer
         max_depth:
           default: 4
           description: The maximum research depth allowed. Defaults to 4.
-          maximum: 10.0
+          maximum: 40.0
           minimum: 1.0
           title: Max Depth
           type: integer
@@ -9103,6 +9068,7 @@ components:
       title: KeyPerson
     LegacyReportRequest:
       description: |-
+        DEPRECATED - Use DeepNewsReportRequest instead.
         Legacy report configuration (original format).
 
         This is the original ReportRequest format that uses a simple model field
@@ -9112,20 +9078,8 @@ components:
         logo_url: https://openapi-generator.tech
         include_appendix: true
         model: gpt-4o
-        prompt:
-        - - prompt
-          - prompt
-        - - prompt
-          - prompt
         asknews_watermark: true
       properties:
-        prompt:
-          items:
-            items:
-              type: string
-            type: array
-          nullable: true
-          type: array
         logo_url:
           format: uri
           maxLength: 2083
@@ -9147,8 +9101,8 @@ components:
           title: Identifier
           type: string
         model:
-          default: claude-sonnet-4-5-20250929
-          description: The model to use for the report. Defaults to claude-sonnet-4-5-20250929.
+          default: claude-sonnet-4-6
+          description: The model to use for the report. Defaults to claude-sonnet-4-6.
           enum:
           - gpt-5
           - gpt-4o
@@ -9183,6 +9137,221 @@ components:
       required:
       - models
       title: ListDeepNewsModelResponse
+    MCPFilterParams:
+      properties:
+        query:
+          default: ""
+          description: "Query string that can be any phrase, keyword, question, or\
+            \ paragraph. If method='nl', then this will be used as a natural language\
+            \ query. If method='kw', then this will be used as a direct keyword query.\
+            \ This is not required, if it is not passed, then the search is based\
+            \ on the remaining filters only."
+          title: Query
+          type: string
+        n_articles:
+          default: 10
+          description: Number of articles to return
+          title: N Articles
+          type: integer
+        start_timestamp:
+          nullable: true
+          type: integer
+        end_timestamp:
+          nullable: true
+          type: integer
+        time_filter:
+          default: crawl_date
+          description: "Control which date type to filter on. 'crawl_date' is the\
+            \ date the article was crawled, 'pub_date' is the date the article was\
+            \ published."
+          enum:
+          - crawl_date
+          - pub_date
+          title: Time Filter
+          type: string
+        offset:
+          $ref: '#/components/schemas/Offset_3'
+        categories:
+          default:
+          - All
+          description: Categories of news to filter on
+          items:
+            enum:
+            - All
+            - Business
+            - Crime
+            - Politics
+            - Science
+            - Sports
+            - Technology
+            - Military
+            - Health
+            - Entertainment
+            - Finance
+            - Culture
+            - Climate
+            - Environment
+            - World
+            type: string
+          type: array
+        provocative:
+          default: all
+          description: Filter articles based on how provocative they are deemed based
+            on the use of provocative language and emotional vocabulary.
+          enum:
+          - unknown
+          - low
+          - medium
+          - high
+          - all
+          title: Provocative
+          type: string
+        authors:
+          items:
+            type: string
+          nullable: true
+          type: array
+        reporting_voice:
+          $ref: '#/components/schemas/Reporting_Voice_2'
+        domain_url:
+          $ref: '#/components/schemas/Domain_Url_1'
+        bad_domain_url:
+          $ref: '#/components/schemas/Bad_Domain_Url_2'
+        page_rank:
+          nullable: true
+          type: integer
+        hours_back:
+          default: 24
+          description: "Can be set to easily control the look back on the search.\
+            \ This is the same as controlling the 'start_timestamp' parameter. The\
+            \ difference is that this is not a timestamp, it is the number of hours\
+            \ back to look from the current time. Defaults to 24 hours."
+          title: Hours Back
+          type: integer
+        string_guarantee:
+          items:
+            type: string
+          nullable: true
+          type: array
+        string_guarantee_op:
+          default: AND
+          description: Operator to use for string guarantee list.
+          enum:
+          - AND
+          - OR
+          title: String Guarantee Op
+          type: string
+        reverse_string_guarantee:
+          items:
+            type: string
+          nullable: true
+          type: array
+        entity_guarantee:
+          items:
+            type: string
+          nullable: true
+          type: array
+        reverse_entity_guarantee:
+          items:
+            type: string
+          nullable: true
+          type: array
+        entity_guarantee_op:
+          default: OR
+          description: Operator to use for entity guarantee list.
+          enum:
+          - AND
+          - OR
+          title: Entity Guarantee Op
+          type: string
+        languages:
+          items:
+            enum:
+            - sq
+            - ar
+            - az
+            - ca
+            - zh
+            - hr
+            - cs
+            - da
+            - nl
+            - en
+            - eo
+            - fi
+            - fr
+            - gl
+            - de
+            - el
+            - he
+            - hi
+            - hu
+            - is
+            - id
+            - ia
+            - it
+            - ja
+            - kk
+            - km
+            - ko
+            - ky
+            - ms
+            - mt
+            - mhr
+            - mn
+            - "no"
+            - or
+            - pl
+            - pt
+            - pa
+            - ro
+            - ru
+            - sr
+            - sk
+            - sl
+            - es
+            - sv
+            - ta
+            - te
+            - th
+            - tr
+            - uk
+            - vi
+            - unknown
+            type: string
+          nullable: true
+          type: array
+        countries:
+          items:
+            type: string
+          nullable: true
+          type: array
+        countries_blacklist:
+          items:
+            type: string
+          nullable: true
+          type: array
+        continents:
+          items:
+            enum:
+            - Africa
+            - Asia
+            - Oceania
+            - Europe
+            - Middle East
+            - North America
+            - South America
+            type: string
+          nullable: true
+          type: array
+        sentiment:
+          enum:
+          - negative
+          - neutral
+          - positive
+          nullable: true
+          type: string
+      title: MCPFilterParams
     NewsletterContactCreateResponse:
       example:
         id: id
@@ -9484,7 +9653,7 @@ components:
           - key: ""
           - key: ""
           title: title
-          alert_type: alert_type
+          alert_type: AlwaysAlertWhen
           share_link: share_link
           expires_at: 2000-01-23T04:56:07.000+00:00
           updated_at: 2000-01-23T04:56:07.000+00:00
@@ -9506,7 +9675,7 @@ components:
           - key: ""
           - key: ""
           title: title
-          alert_type: alert_type
+          alert_type: AlwaysAlertWhen
           share_link: share_link
           expires_at: 2000-01-23T04:56:07.000+00:00
           updated_at: 2000-01-23T04:56:07.000+00:00
@@ -10537,7 +10706,7 @@ components:
           nullable: true
           type: string
         offset:
-          $ref: '#/components/schemas/Offset_3'
+          $ref: '#/components/schemas/Offset_4'
       title: SearchResponse
     SearchResponseDictItem:
       example:
@@ -14359,7 +14528,7 @@ components:
             $ref: '#/components/schemas/StoryResponse'
           type: array
         offset:
-          $ref: '#/components/schemas/Offset_4'
+          $ref: '#/components/schemas/Offset_5'
       required:
       - offset
       - stories
@@ -17144,6 +17313,7 @@ components:
     TelegramSource:
       properties:
         identifier:
+          default: telegram
           enum:
           - telegram
           title: Identifier
@@ -17151,7 +17321,6 @@ components:
         params:
           $ref: '#/components/schemas/TelegramSourceParams'
       required:
-      - identifier
       - params
       title: TelegramSource
     TelegramSourceParams:
@@ -17567,11 +17736,6 @@ components:
           logo_url: https://openapi-generator.tech
           include_appendix: true
           model: gpt-4o
-          prompt:
-          - - prompt
-            - prompt
-          - - prompt
-            - prompt
           asknews_watermark: true
         model: meta-llama/Meta-Llama-3.1-8B-Instruct
       properties:
@@ -17624,7 +17788,7 @@ components:
           nullable: true
           type: string
         report:
-          $ref: '#/components/schemas/CreateAlertRequest_report'
+          $ref: '#/components/schemas/Report_2'
         title:
           nullable: true
           type: string
@@ -17902,7 +18066,7 @@ components:
             $ref: '#/components/schemas/WebSearchResult'
           type: array
         offset:
-          $ref: '#/components/schemas/Offset_3'
+          $ref: '#/components/schemas/Offset_4'
       required:
       - as_dicts
       - as_string
@@ -17955,6 +18119,7 @@ components:
     WebSource:
       properties:
         identifier:
+          default: web
           enum:
           - web
           title: Identifier
@@ -17962,7 +18127,6 @@ components:
         params:
           $ref: '#/components/schemas/WebSourceParams'
       required:
-      - identifier
       - params
       title: WebSource
     WebSourceParams:
@@ -23032,16 +23196,41 @@ components:
       default: 0
       description: Offset to use
       title: Offset
-    CreateAlertRequest_report:
+    Report:
+      anyOf:
+      - additionalProperties: true
+        nullable: true
+        type: object
+      - items:
+          additionalProperties: true
+          type: object
+        type: array
+      nullable: true
+      title: Report
+    Report_1_anyOf:
       discriminator:
         mapping:
           deepnews: '#/components/schemas/DeepNewsReportRequest'
           legacy: '#/components/schemas/LegacyReportRequest'
         propertyName: identifier
-      nullable: true
       oneOf:
       - $ref: '#/components/schemas/LegacyReportRequest'
       - $ref: '#/components/schemas/DeepNewsReportRequest'
+    Report_1:
+      anyOf:
+      - $ref: '#/components/schemas/Report_1_anyOf'
+      - items:
+          $ref: '#/components/schemas/Report_1_anyOf'
+        type: array
+      description: "Configuration for generating a written report when the alert triggers.\
+        \ If report is a list, the individual reports will be concatenated into one\
+        \ report in the order they are defined. If not specified, no report is generated.\
+        \ Use ReportRequest(identifier='deepnews', ...) for DeepNews reports.Use ReportRequest(...)\
+        \ or ReportRequest(identifier='legacy', ...) for legacy reports (DEPRECATED).\
+        \ Requests without identifier default to 'deepnews'. Only DeepNews reports\
+        \ can be used in list."
+      nullable: true
+      title: Report
     Stop:
       anyOf:
       - {}
@@ -23072,11 +23261,14 @@ components:
       default: claude-sonnet-4-6
       description: The model to use for DeepNews research. Defaults to claude-sonnet-4-6.
       example: claude-sonnet-4-6
-    CreateDeepNewsRequest_filter_params:
+    Filter_Params_1:
       anyOf:
-      - $ref: '#/components/schemas/FilterParams'
-      - {}
+      - additionalProperties: true
+        nullable: true
+        type: object
+      - nullable: true
       description: Filter parameters to apply to the AskNews search within DeepNews.
+      title: Filter Params
     Sources_1:
       anyOf:
       - enum:
@@ -23247,6 +23439,14 @@ components:
       anyOf:
       - type: integer
       - type: number
+    Offset_3:
+      anyOf:
+      - type: integer
+      - type: string
+      default: 0
+      description: The number of results to offset for followup queries. Use for pagination.
+        The value to put here is returned in the response.offset from previous searches.
+      title: Offset
     Profile:
       discriminator:
         mapping:
@@ -23272,7 +23472,7 @@ components:
         \ list of strings"
       nullable: true
       title: Reply To
-    Offset_3:
+    Offset_4:
       anyOf:
       - type: integer
       - type: string
@@ -23293,7 +23493,7 @@ components:
       - $ref: '#/components/schemas/BlueskySource'
       - $ref: '#/components/schemas/WebSource'
       - $ref: '#/components/schemas/DeepNewsSource'
-    Offset_4:
+    Offset_5:
       anyOf:
       - type: integer
       - type: string
@@ -23315,6 +23515,26 @@ components:
       - $ref: '#/components/schemas/EmailAction'
       - $ref: '#/components/schemas/ResendBroadcastAction'
       - $ref: '#/components/schemas/GoogleDocsAction'
+    Report_2_anyOf_inner:
+      anyOf:
+      - $ref: '#/components/schemas/LegacyReportRequest'
+      - $ref: '#/components/schemas/DeepNewsReportRequest'
+    Report_2:
+      anyOf:
+      - $ref: '#/components/schemas/LegacyReportRequest'
+      - $ref: '#/components/schemas/DeepNewsReportRequest'
+      - items:
+          $ref: '#/components/schemas/Report_2_anyOf_inner'
+        type: array
+      description: "Configuration for generating a written report when the alert triggers.\
+        \ If report is a list, the individual reports will be concatenated into one\
+        \ report in the order they are defined. If not specified, no report is generated.\
+        \ Use ReportRequest(identifier='deepnews', ...) for DeepNews reports.Use ReportRequest(...)\
+        \ or ReportRequest(identifier='legacy', ...) for legacy reports (DEPRECATED).\
+        \ Requests without identifier default to 'deepnews'. Only DeepNews reports\
+        \ can be used in list."
+      nullable: true
+      title: Report
     ValidationError_loc_inner:
       anyOf:
       - type: string

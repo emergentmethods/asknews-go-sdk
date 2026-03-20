@@ -169,20 +169,20 @@ HasFilterParams returns a boolean if a field has been set.
 UnsetFilterParams ensures that no value is present for FilterParams, not even an explicit nil
 ### GetConstrainedDisambiguations
 
-`func (o *BodyBuildGraph) GetConstrainedDisambiguations() []*map[string]interface{}`
+`func (o *BodyBuildGraph) GetConstrainedDisambiguations() []map[string]interface{}`
 
 GetConstrainedDisambiguations returns the ConstrainedDisambiguations field if non-nil, zero value otherwise.
 
 ### GetConstrainedDisambiguationsOk
 
-`func (o *BodyBuildGraph) GetConstrainedDisambiguationsOk() (*[]*map[string]interface{}, bool)`
+`func (o *BodyBuildGraph) GetConstrainedDisambiguationsOk() (*[]map[string]interface{}, bool)`
 
 GetConstrainedDisambiguationsOk returns a tuple with the ConstrainedDisambiguations field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetConstrainedDisambiguations
 
-`func (o *BodyBuildGraph) SetConstrainedDisambiguations(v []*map[string]interface{})`
+`func (o *BodyBuildGraph) SetConstrainedDisambiguations(v []map[string]interface{})`
 
 SetConstrainedDisambiguations sets ConstrainedDisambiguations field to given value.
 

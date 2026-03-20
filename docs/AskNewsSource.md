@@ -4,14 +4,14 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Identifier** | **string** |  | 
+**Identifier** | Pointer to **string** |  | [optional] [default to "asknews"]
 **Params** | Pointer to [**NullableFilterParams**](FilterParams.md) |  | [optional] 
 
 ## Methods
 
 ### NewAskNewsSource
 
-`func NewAskNewsSource(identifier string, ) *AskNewsSource`
+`func NewAskNewsSource() *AskNewsSource`
 
 NewAskNewsSource instantiates a new AskNewsSource object
 This constructor will assign default values to properties that have it defined,
@@ -45,6 +45,11 @@ and a boolean to check if the value has been set.
 
 SetIdentifier sets Identifier field to given value.
 
+### HasIdentifier
+
+`func (o *AskNewsSource) HasIdentifier() bool`
+
+HasIdentifier returns a boolean if a field has been set.
 
 ### GetParams
 

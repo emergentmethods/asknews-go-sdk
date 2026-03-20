@@ -4,14 +4,14 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Identifier** | **string** |  | 
+**Identifier** | Pointer to **string** |  | [optional] [default to "telegram"]
 **Params** | [**TelegramSourceParams**](TelegramSourceParams.md) |  | 
 
 ## Methods
 
 ### NewTelegramSource
 
-`func NewTelegramSource(identifier string, params TelegramSourceParams, ) *TelegramSource`
+`func NewTelegramSource(params TelegramSourceParams, ) *TelegramSource`
 
 NewTelegramSource instantiates a new TelegramSource object
 This constructor will assign default values to properties that have it defined,
@@ -45,6 +45,11 @@ and a boolean to check if the value has been set.
 
 SetIdentifier sets Identifier field to given value.
 
+### HasIdentifier
+
+`func (o *TelegramSource) HasIdentifier() bool`
+
+HasIdentifier returns a boolean if a field has been set.
 
 ### GetParams
 

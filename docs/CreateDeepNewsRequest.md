@@ -6,7 +6,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Messages** | [**[]CreateDeepNewsRequestMessage**](CreateDeepNewsRequestMessage.md) | The messages to send to DeepNews. Each message should have &#39;role&#39; and &#39;content&#39; keys. Use this to specify what research/monitoring task DeepNews should perform. The &#39;content&#39; for the final &#39;user&#39; message should be your Alert query. | 
 **Model** | Pointer to [**CreateDeepNewsRequestModel**](CreateDeepNewsRequestModel.md) |  | [optional] [default to claude-sonnet-4-6]
-**FilterParams** | Pointer to [**CreateDeepNewsRequestFilterParams**](CreateDeepNewsRequestFilterParams.md) |  | [optional] 
+**FilterParams** | Pointer to [**FilterParams1**](FilterParams1.md) |  | [optional] 
 **SearchDepth** | Pointer to **int32** | The search depth for deep research. Higher values mean more thorough research. | [optional] [default to 2]
 **MaxDepth** | Pointer to **int32** | The maximum research depth allowed. | [optional] [default to 6]
 **Sources** | Pointer to [**Sources1**](Sources1.md) |  | [optional] [default to asknews]
@@ -100,20 +100,20 @@ HasModel returns a boolean if a field has been set.
 
 ### GetFilterParams
 
-`func (o *CreateDeepNewsRequest) GetFilterParams() CreateDeepNewsRequestFilterParams`
+`func (o *CreateDeepNewsRequest) GetFilterParams() FilterParams1`
 
 GetFilterParams returns the FilterParams field if non-nil, zero value otherwise.
 
 ### GetFilterParamsOk
 
-`func (o *CreateDeepNewsRequest) GetFilterParamsOk() (*CreateDeepNewsRequestFilterParams, bool)`
+`func (o *CreateDeepNewsRequest) GetFilterParamsOk() (*FilterParams1, bool)`
 
 GetFilterParamsOk returns a tuple with the FilterParams field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetFilterParams
 
-`func (o *CreateDeepNewsRequest) SetFilterParams(v CreateDeepNewsRequestFilterParams)`
+`func (o *CreateDeepNewsRequest) SetFilterParams(v FilterParams1)`
 
 SetFilterParams sets FilterParams field to given value.
 

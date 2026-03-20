@@ -5,12 +5,14 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Sources** | Pointer to [**Sources2**](Sources2.md) |  | [optional] [default to [asknews, google, wiki, x]]
-**FilterParams** | Pointer to [**NullableFilterParams**](FilterParams.md) |  | [optional] 
+**FilterParams** | Pointer to [**NullableMCPFilterParams**](MCPFilterParams.md) |  | [optional] 
 **IncludeEntities** | Pointer to **bool** | Whether to provide extracted entities to the agent. Defaults to True. | [optional] [default to true]
 **IncludeGraphs** | Pointer to **bool** | Whether to provide knowledge graphs to the agent. Defaults to False. | [optional] [default to false]
 **IncludeCoordinates** | Pointer to **bool** | Whether to provide geo coordinates to the agent. Defaults to False. | [optional] [default to false]
+**Engine** | Pointer to **string** | Legacy vs new DeepNews engine | [optional] [default to "v1"]
+**MaxParallelToolCalls** | Pointer to **int32** | The number of tool calls the agent can run in parallel. | [optional] [default to 1]
 **Model** | Pointer to [**NullableDeepNewsModel**](DeepNewsModel.md) |  | [optional] 
-**SearchDepth** | Pointer to **int32** | The search depth for deep research. Higher values mean more thorough research. Defaults to 2. | [optional] [default to 2]
+**SearchDepth** | Pointer to **int32** | The search depth for deep research. Higher values mean more thorough research. Defaults to 1. | [optional] [default to 1]
 **MaxDepth** | Pointer to **int32** | The maximum research depth allowed. Defaults to 4. | [optional] [default to 4]
 
 ## Methods
@@ -59,20 +61,20 @@ HasSources returns a boolean if a field has been set.
 
 ### GetFilterParams
 
-`func (o *DeepNewsSourceParams) GetFilterParams() FilterParams`
+`func (o *DeepNewsSourceParams) GetFilterParams() MCPFilterParams`
 
 GetFilterParams returns the FilterParams field if non-nil, zero value otherwise.
 
 ### GetFilterParamsOk
 
-`func (o *DeepNewsSourceParams) GetFilterParamsOk() (*FilterParams, bool)`
+`func (o *DeepNewsSourceParams) GetFilterParamsOk() (*MCPFilterParams, bool)`
 
 GetFilterParamsOk returns a tuple with the FilterParams field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetFilterParams
 
-`func (o *DeepNewsSourceParams) SetFilterParams(v FilterParams)`
+`func (o *DeepNewsSourceParams) SetFilterParams(v MCPFilterParams)`
 
 SetFilterParams sets FilterParams field to given value.
 
@@ -166,6 +168,56 @@ SetIncludeCoordinates sets IncludeCoordinates field to given value.
 `func (o *DeepNewsSourceParams) HasIncludeCoordinates() bool`
 
 HasIncludeCoordinates returns a boolean if a field has been set.
+
+### GetEngine
+
+`func (o *DeepNewsSourceParams) GetEngine() string`
+
+GetEngine returns the Engine field if non-nil, zero value otherwise.
+
+### GetEngineOk
+
+`func (o *DeepNewsSourceParams) GetEngineOk() (*string, bool)`
+
+GetEngineOk returns a tuple with the Engine field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetEngine
+
+`func (o *DeepNewsSourceParams) SetEngine(v string)`
+
+SetEngine sets Engine field to given value.
+
+### HasEngine
+
+`func (o *DeepNewsSourceParams) HasEngine() bool`
+
+HasEngine returns a boolean if a field has been set.
+
+### GetMaxParallelToolCalls
+
+`func (o *DeepNewsSourceParams) GetMaxParallelToolCalls() int32`
+
+GetMaxParallelToolCalls returns the MaxParallelToolCalls field if non-nil, zero value otherwise.
+
+### GetMaxParallelToolCallsOk
+
+`func (o *DeepNewsSourceParams) GetMaxParallelToolCallsOk() (*int32, bool)`
+
+GetMaxParallelToolCallsOk returns a tuple with the MaxParallelToolCalls field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetMaxParallelToolCalls
+
+`func (o *DeepNewsSourceParams) SetMaxParallelToolCalls(v int32)`
+
+SetMaxParallelToolCalls sets MaxParallelToolCalls field to given value.
+
+### HasMaxParallelToolCalls
+
+`func (o *DeepNewsSourceParams) HasMaxParallelToolCalls() bool`
+
+HasMaxParallelToolCalls returns a boolean if a field has been set.
 
 ### GetModel
 

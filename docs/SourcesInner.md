@@ -4,14 +4,14 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Identifier** | **string** |  | 
+**Identifier** | Pointer to **string** |  | [optional] [default to "deepnews"]
 **Params** | [**DeepNewsSourceParams**](DeepNewsSourceParams.md) |  | 
 
 ## Methods
 
 ### NewSourcesInner
 
-`func NewSourcesInner(identifier string, params DeepNewsSourceParams, ) *SourcesInner`
+`func NewSourcesInner(params DeepNewsSourceParams, ) *SourcesInner`
 
 NewSourcesInner instantiates a new SourcesInner object
 This constructor will assign default values to properties that have it defined,
@@ -45,6 +45,11 @@ and a boolean to check if the value has been set.
 
 SetIdentifier sets Identifier field to given value.
 
+### HasIdentifier
+
+`func (o *SourcesInner) HasIdentifier() bool`
+
+HasIdentifier returns a boolean if a field has been set.
 
 ### GetParams
 

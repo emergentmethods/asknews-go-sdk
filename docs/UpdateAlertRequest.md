@@ -14,7 +14,7 @@ Name | Type | Description | Notes
 **Repeat** | Pointer to **NullableBool** |  | [optional] 
 **Active** | Pointer to **NullableBool** |  | [optional] 
 **ExpiresAt** | Pointer to **NullableTime** |  | [optional] 
-**Report** | Pointer to [**NullableCreateAlertRequestReport**](CreateAlertRequestReport.md) |  | [optional] 
+**Report** | Pointer to [**NullableReport2**](Report2.md) |  | [optional] 
 **Title** | Pointer to **NullableString** |  | [optional] 
 **ShareLink** | Pointer to **NullableString** |  | [optional] 
 
@@ -369,20 +369,20 @@ HasExpiresAt returns a boolean if a field has been set.
 UnsetExpiresAt ensures that no value is present for ExpiresAt, not even an explicit nil
 ### GetReport
 
-`func (o *UpdateAlertRequest) GetReport() CreateAlertRequestReport`
+`func (o *UpdateAlertRequest) GetReport() Report2`
 
 GetReport returns the Report field if non-nil, zero value otherwise.
 
 ### GetReportOk
 
-`func (o *UpdateAlertRequest) GetReportOk() (*CreateAlertRequestReport, bool)`
+`func (o *UpdateAlertRequest) GetReportOk() (*Report2, bool)`
 
 GetReportOk returns a tuple with the Report field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetReport
 
-`func (o *UpdateAlertRequest) SetReport(v CreateAlertRequestReport)`
+`func (o *UpdateAlertRequest) SetReport(v Report2)`
 
 SetReport sets Report field to given value.
 

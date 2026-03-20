@@ -4,14 +4,14 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Identifier** | **string** |  | 
+**Identifier** | Pointer to **string** |  | [optional] [default to "web"]
 **Params** | [**WebSourceParams**](WebSourceParams.md) |  | 
 
 ## Methods
 
 ### NewWebSource
 
-`func NewWebSource(identifier string, params WebSourceParams, ) *WebSource`
+`func NewWebSource(params WebSourceParams, ) *WebSource`
 
 NewWebSource instantiates a new WebSource object
 This constructor will assign default values to properties that have it defined,
@@ -45,6 +45,11 @@ and a boolean to check if the value has been set.
 
 SetIdentifier sets Identifier field to given value.
 
+### HasIdentifier
+
+`func (o *WebSource) HasIdentifier() bool`
+
+HasIdentifier returns a boolean if a field has been set.
 
 ### GetParams
 

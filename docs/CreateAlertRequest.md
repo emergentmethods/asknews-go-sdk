@@ -4,8 +4,8 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Query** | **string** | The query to run for the alert. | 
-**Sources** | [**[]SourcesInner**](SourcesInner.md) |  | 
+**Query** | Pointer to **NullableString** |  | [optional] 
+**Sources** | Pointer to [**[]SourcesInner**](SourcesInner.md) |  | [optional] 
 **AlertType** | Pointer to **NullableString** |  | [optional] 
 **Model** | Pointer to **string** | The model that is used to check if the alert conditions are satisfied by sources (this is not the same as the model used to write the report.)Defaults to gpt-4o. | [optional] [default to "gpt-4o"]
 **Cron** | **string** | How often or when to check sources for this alert, specified as a cron expression. Examples: &#39;0 * * * *&#39; (hourly), &#39;0 9 * * *&#39; (daily at 9am), &#39;0 9 * * 1&#39; (Mondays at 9am).  See https://crontab.run/ for more examples. | 
@@ -14,7 +14,7 @@ Name | Type | Description | Notes
 **Repeat** | Pointer to **bool** | Whether to repeat the alert. Default is True. If False, the alert will be disabled after it triggers once. | [optional] [default to true]
 **Active** | Pointer to **bool** | Whether the alert is active or not. Default is True. | [optional] [default to true]
 **ExpiresAt** | Pointer to **NullableTime** |  | [optional] 
-**Report** | Pointer to [**NullableCreateAlertRequestReport**](CreateAlertRequestReport.md) |  | [optional] 
+**Report** | Pointer to [**NullableReport1**](Report1.md) |  | [optional] 
 **Title** | Pointer to **NullableString** |  | [optional] 
 **ShareLink** | Pointer to **NullableString** |  | [optional] 
 
@@ -22,7 +22,7 @@ Name | Type | Description | Notes
 
 ### NewCreateAlertRequest
 
-`func NewCreateAlertRequest(query string, sources []SourcesInner, cron string, triggers []TriggersInner, ) *CreateAlertRequest`
+`func NewCreateAlertRequest(cron string, triggers []TriggersInner, ) *CreateAlertRequest`
 
 NewCreateAlertRequest instantiates a new CreateAlertRequest object
 This constructor will assign default values to properties that have it defined,
@@ -56,7 +56,22 @@ and a boolean to check if the value has been set.
 
 SetQuery sets Query field to given value.
 
+### HasQuery
 
+`func (o *CreateAlertRequest) HasQuery() bool`
+
+HasQuery returns a boolean if a field has been set.
+
+### SetQueryNil
+
+`func (o *CreateAlertRequest) SetQueryNil(b bool)`
+
+ SetQueryNil sets the value for Query to be an explicit nil
+
+### UnsetQuery
+`func (o *CreateAlertRequest) UnsetQuery()`
+
+UnsetQuery ensures that no value is present for Query, not even an explicit nil
 ### GetSources
 
 `func (o *CreateAlertRequest) GetSources() []SourcesInner`
@@ -76,6 +91,11 @@ and a boolean to check if the value has been set.
 
 SetSources sets Sources field to given value.
 
+### HasSources
+
+`func (o *CreateAlertRequest) HasSources() bool`
+
+HasSources returns a boolean if a field has been set.
 
 ### GetAlertType
 
@@ -289,20 +309,20 @@ HasExpiresAt returns a boolean if a field has been set.
 UnsetExpiresAt ensures that no value is present for ExpiresAt, not even an explicit nil
 ### GetReport
 
-`func (o *CreateAlertRequest) GetReport() CreateAlertRequestReport`
+`func (o *CreateAlertRequest) GetReport() Report1`
 
 GetReport returns the Report field if non-nil, zero value otherwise.
 
 ### GetReportOk
 
-`func (o *CreateAlertRequest) GetReportOk() (*CreateAlertRequestReport, bool)`
+`func (o *CreateAlertRequest) GetReportOk() (*Report1, bool)`
 
 GetReportOk returns a tuple with the Report field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetReport
 
-`func (o *CreateAlertRequest) SetReport(v CreateAlertRequestReport)`
+`func (o *CreateAlertRequest) SetReport(v Report1)`
 
 SetReport sets Report field to given value.
 

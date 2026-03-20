@@ -1,6 +1,6 @@
 # \DistributionAPI
 
-All URIs are relative to *https://api.asknews.app*
+All URIs are relative to *https://api.asknews.dev*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------

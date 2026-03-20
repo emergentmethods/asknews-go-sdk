@@ -4,14 +4,14 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Identifier** | **string** |  | 
+**Identifier** | Pointer to **string** |  | [optional] [default to "bluesky"]
 **Params** | Pointer to [**NullableBlueskySourceParams**](BlueskySourceParams.md) |  | [optional] 
 
 ## Methods
 
 ### NewBlueskySource
 
-`func NewBlueskySource(identifier string, ) *BlueskySource`
+`func NewBlueskySource() *BlueskySource`
 
 NewBlueskySource instantiates a new BlueskySource object
 This constructor will assign default values to properties that have it defined,
@@ -45,6 +45,11 @@ and a boolean to check if the value has been set.
 
 SetIdentifier sets Identifier field to given value.
 
+### HasIdentifier
+
+`func (o *BlueskySource) HasIdentifier() bool`
+
+HasIdentifier returns a boolean if a field has been set.
 
 ### GetParams
 

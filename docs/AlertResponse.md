@@ -13,8 +13,8 @@ Name | Type | Description | Notes
 **Cron** | **string** |  | 
 **Model** | **NullableString** |  | 
 **ShareLink** | Pointer to **NullableString** |  | [optional] 
-**Sources** | **[]map[string]interface{}** |  | 
-**Report** | Pointer to **map[string]interface{}** |  | [optional] 
+**Sources** | Pointer to **[]map[string]interface{}** |  | [optional] 
+**Report** | Pointer to [**NullableReport**](Report.md) |  | [optional] 
 **Triggers** | **[]map[string]interface{}** |  | 
 **AlwaysTrigger** | Pointer to **bool** |  | [optional] [default to false]
 **Repeat** | Pointer to **bool** |  | [optional] [default to true]
@@ -26,7 +26,7 @@ Name | Type | Description | Notes
 
 ### NewAlertResponse
 
-`func NewAlertResponse(id string, userId string, cron string, model NullableString, sources []*map[string]interface{}, triggers []*map[string]interface{}, ) *AlertResponse`
+`func NewAlertResponse(id string, userId string, cron string, model NullableString, triggers []*map[string]interface{}, ) *AlertResponse`
 
 NewAlertResponse instantiates a new AlertResponse object
 This constructor will assign default values to properties that have it defined,
@@ -325,23 +325,38 @@ and a boolean to check if the value has been set.
 
 SetSources sets Sources field to given value.
 
+### HasSources
 
+`func (o *AlertResponse) HasSources() bool`
+
+HasSources returns a boolean if a field has been set.
+
+### SetSourcesNil
+
+`func (o *AlertResponse) SetSourcesNil(b bool)`
+
+ SetSourcesNil sets the value for Sources to be an explicit nil
+
+### UnsetSources
+`func (o *AlertResponse) UnsetSources()`
+
+UnsetSources ensures that no value is present for Sources, not even an explicit nil
 ### GetReport
 
-`func (o *AlertResponse) GetReport() map[string]interface{}`
+`func (o *AlertResponse) GetReport() Report`
 
 GetReport returns the Report field if non-nil, zero value otherwise.
 
 ### GetReportOk
 
-`func (o *AlertResponse) GetReportOk() (*map[string]interface{}, bool)`
+`func (o *AlertResponse) GetReportOk() (*Report, bool)`
 
 GetReportOk returns a tuple with the Report field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetReport
 
-`func (o *AlertResponse) SetReport(v map[string]interface{})`
+`func (o *AlertResponse) SetReport(v Report)`
 
 SetReport sets Report field to given value.
 
