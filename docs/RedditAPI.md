@@ -1,6 +1,6 @@
 # \RedditAPI
 
-All URIs are relative to *https://api.asknews.dev*
+All URIs are relative to *https://api.asknews.app*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------

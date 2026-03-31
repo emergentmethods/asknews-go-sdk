@@ -2,9 +2,9 @@ openapi: 3.1.0
 info:
   description: "AskNews API [![status](https://status.asknews.app/api/badge/2/status?style=for-the-badge)](https://status.asknews.app/status/prod)"
   title: AskNews API
-  version: 0.24.51
+  version: 0.24.54
 servers:
-- url: https://api.asknews.dev
+- url: https://api.asknews.app
 paths:
   /v1/news/search:
     get:
