@@ -305,7 +305,7 @@ Name | Type | Description  | Notes
 
 ## GetAlerts
 
-> PaginatedResponseAlertResponse GetAlerts(ctx).Page(page).PerPage(perPage).All(all).Execute()
+> PaginatedResponseAlertResponse GetAlerts(ctx).UserId(userId).Page(page).PerPage(perPage).All(all).Execute()
 
 Get all created alerts
 
@@ -324,13 +324,14 @@ import (
 )
 
 func main() {
+	userId := "38400000-8cf0-11bd-b23e-10b96e4ef00d" // string | The ID of the user to get alerts for (optional)
 	page := int32(56) // int32 | The page number to get (optional) (default to 1)
 	perPage := int32(56) // int32 | The number of items per page (optional) (default to 10)
 	all := true // bool | Whether to get all the alerts (optional) (default to false)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.AlertsAPI.GetAlerts(context.Background()).Page(page).PerPage(perPage).All(all).Execute()
+	resp, r, err := apiClient.AlertsAPI.GetAlerts(context.Background()).UserId(userId).Page(page).PerPage(perPage).All(all).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `AlertsAPI.GetAlerts``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -351,6 +352,7 @@ Other parameters are passed through a pointer to a apiGetAlertsRequest struct vi
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
+ **userId** | **string** | The ID of the user to get alerts for | 
  **page** | **int32** | The page number to get | [default to 1]
  **perPage** | **int32** | The number of items per page | [default to 10]
  **all** | **bool** | Whether to get all the alerts | [default to false]

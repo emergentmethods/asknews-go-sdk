@@ -21,6 +21,7 @@ Name | Type | Description | Notes
 **Active** | Pointer to **bool** |  | [optional] [default to true]
 **AlertType** | Pointer to **NullableString** |  | [optional] 
 **Title** | Pointer to **NullableString** |  | [optional] 
+**SeatId** | Pointer to **NullableString** |  | [optional] 
 
 ## Methods
 
@@ -541,6 +542,41 @@ HasTitle returns a boolean if a field has been set.
 `func (o *AlertResponse) UnsetTitle()`
 
 UnsetTitle ensures that no value is present for Title, not even an explicit nil
+### GetSeatId
+
+`func (o *AlertResponse) GetSeatId() string`
+
+GetSeatId returns the SeatId field if non-nil, zero value otherwise.
+
+### GetSeatIdOk
+
+`func (o *AlertResponse) GetSeatIdOk() (*string, bool)`
+
+GetSeatIdOk returns a tuple with the SeatId field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetSeatId
+
+`func (o *AlertResponse) SetSeatId(v string)`
+
+SetSeatId sets SeatId field to given value.
+
+### HasSeatId
+
+`func (o *AlertResponse) HasSeatId() bool`
+
+HasSeatId returns a boolean if a field has been set.
+
+### SetSeatIdNil
+
+`func (o *AlertResponse) SetSeatIdNil(b bool)`
+
+ SetSeatIdNil sets the value for SeatId to be an explicit nil
+
+### UnsetSeatId
+`func (o *AlertResponse) UnsetSeatId()`
+
+UnsetSeatId ensures that no value is present for SeatId, not even an explicit nil
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

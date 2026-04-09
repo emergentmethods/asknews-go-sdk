@@ -103,7 +103,7 @@ import (
 )
 
 func main() {
-	articleIds := []string{"Inner_example"} // []string | Article UUIDs to fetch.
+	articleIds := []*string{"Inner_example"} // []*string | Article UUIDs to fetch.
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
