@@ -84,7 +84,7 @@ Name | Type | Description  | Notes
 
 ## GetArticles
 
-> []SearchResponseDictItem GetArticles(ctx).ArticleIds(articleIds).Execute()
+> []SearchResponseDictItem GetArticles(ctx).ArticleIds(articleIds).FullText(fullText).Execute()
 
 Get multiple articles by UUID
 
@@ -104,10 +104,11 @@ import (
 
 func main() {
 	articleIds := []*string{"Inner_example"} // []*string | Article UUIDs to fetch.
+	fullText := true // bool | Whether to return the full text of the articles. (optional) (default to false)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.NewsAPI.GetArticles(context.Background()).ArticleIds(articleIds).Execute()
+	resp, r, err := apiClient.NewsAPI.GetArticles(context.Background()).ArticleIds(articleIds).FullText(fullText).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `NewsAPI.GetArticles``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -129,6 +130,7 @@ Other parameters are passed through a pointer to a apiGetArticlesRequest struct 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **articleIds** | **[]string** | Article UUIDs to fetch. | 
+ **fullText** | **bool** | Whether to return the full text of the articles. | [default to false]
 
 ### Return type
 

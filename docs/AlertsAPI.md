@@ -305,7 +305,7 @@ Name | Type | Description  | Notes
 
 ## GetAlerts
 
-> PaginatedResponseAlertResponse GetAlerts(ctx).UserId(userId).Page(page).PerPage(perPage).All(all).Execute()
+> PaginatedResponseAlertResponse GetAlerts(ctx).UserId(userId).Page(page).PerPage(perPage).All(all).IncludeDeleted(includeDeleted).Execute()
 
 Get all created alerts
 
@@ -328,10 +328,11 @@ func main() {
 	page := int32(56) // int32 | The page number to get (optional) (default to 1)
 	perPage := int32(56) // int32 | The number of items per page (optional) (default to 10)
 	all := true // bool | Whether to get all the alerts (optional) (default to false)
+	includeDeleted := true // bool | Whether to include soft-deleted alerts (optional) (default to false)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.AlertsAPI.GetAlerts(context.Background()).UserId(userId).Page(page).PerPage(perPage).All(all).Execute()
+	resp, r, err := apiClient.AlertsAPI.GetAlerts(context.Background()).UserId(userId).Page(page).PerPage(perPage).All(all).IncludeDeleted(includeDeleted).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `AlertsAPI.GetAlerts``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -356,6 +357,7 @@ Name | Type | Description  | Notes
  **page** | **int32** | The page number to get | [default to 1]
  **perPage** | **int32** | The number of items per page | [default to 10]
  **all** | **bool** | Whether to get all the alerts | [default to false]
+ **includeDeleted** | **bool** | Whether to include soft-deleted alerts | [default to false]
 
 ### Return type
 

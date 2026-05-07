@@ -2,7 +2,7 @@ openapi: 3.1.0
 info:
   description: "AskNews API [![status](https://status.asknews.app/api/badge/2/status?style=for-the-badge)](https://status.asknews.app/status/prod)"
   title: AskNews API
-  version: 0.24.22
+  version: 0.24.66
 servers:
 - url: https://api.asknews.app
 paths:
@@ -710,7 +710,8 @@ paths:
                 $ref: '#/components/schemas/asknews_api__errors__APIErrorModel'
           description: Internal Server Error
       security:
-      - APIKey: []
+      - APIKey:
+        - news
       summary: Search for enriched real-time news context
       tags:
       - news
@@ -775,7 +776,8 @@ paths:
                 $ref: '#/components/schemas/asknews_api__errors__APIErrorModel'
           description: Internal Server Error
       security:
-      - APIKey: []
+      - APIKey:
+        - news
       summary: Build a custom mega-news-knowledge graph
       tags:
       - graph
@@ -833,7 +835,8 @@ paths:
                 $ref: '#/components/schemas/asknews_api__errors__APIErrorModel'
           description: Internal Server Error
       security:
-      - APIKey: []
+      - APIKey:
+        - news
       summary: Index a list of URLs into AskNews
       tags:
       - index_urls
@@ -854,6 +857,17 @@ paths:
             nullable: true
             type: string
           type: array
+        style: form
+      - description: Whether to return the full text of the articles.
+        explode: true
+        in: query
+        name: full_text
+        required: false
+        schema:
+          default: false
+          description: Whether to return the full text of the articles.
+          title: Full Text
+          type: boolean
         style: form
       responses:
         "200":
@@ -901,7 +915,8 @@ paths:
                 $ref: '#/components/schemas/asknews_api__errors__APIErrorModel'
           description: Internal Server Error
       security:
-      - APIKey: []
+      - APIKey:
+        - news
       summary: Get multiple articles by UUID
       tags:
       - news
@@ -964,7 +979,8 @@ paths:
                 $ref: '#/components/schemas/asknews_api__errors__APIErrorModel'
           description: Internal Server Error
       security:
-      - APIKey: []
+      - APIKey:
+        - news
       summary: Get an article by its UUID
       tags:
       - news
@@ -1086,7 +1102,8 @@ paths:
                 $ref: '#/components/schemas/asknews_api__errors__APIErrorModel'
           description: Internal Server Error
       security:
-      - APIKey: []
+      - APIKey:
+        - news
       summary: Get the sources underlying AskNews
       tags:
       - news
@@ -1488,7 +1505,8 @@ paths:
                 $ref: '#/components/schemas/asknews_api__errors__APIErrorModel'
           description: Internal Server Error
       security:
-      - APIKey: []
+      - APIKey:
+        - news
       summary: Get the index counts underlying AskNews
       tags:
       - news
@@ -1558,7 +1576,8 @@ paths:
                 $ref: '#/components/schemas/asknews_api__errors__APIErrorModel'
           description: Internal Server Error
       security:
-      - APIKey: []
+      - APIKey:
+        - chat
       summary: Get chat completions from a news-infused AI assistant
       tags:
       - chat
@@ -1579,7 +1598,7 @@ paths:
                 $ref: '#/components/schemas/CreateDeepNewsResponse_1'
             text/event-stream:
               schema:
-                $ref: '#/components/schemas/CreateDeepNewsResponseStreamChunk_1'
+                $ref: '#/components/schemas/deep_news_200_response'
           description: Deep news research.
         "422":
           content:
@@ -1618,7 +1637,8 @@ paths:
                 $ref: '#/components/schemas/asknews_api__errors__APIErrorModel'
           description: Internal Server Error
       security:
-      - APIKey: []
+      - APIKey:
+        - chat
       summary: "Deep research into real-time news, archive news, and Google."
       tags:
       - chat
@@ -1636,6 +1656,120 @@ paths:
       summary: List available DeepNews models
       tags:
       - chat
+  /v1/chat/byok/{provider}:
+    delete:
+      description: |-
+        Delete a stored BYOK API key for a provider.
+        Bring your own key is reserved for enterprise clients.
+        If you want to use this feature, please contact us at contact@asknews.app
+      operationId: delete_byok_key
+      parameters:
+      - description: The BYOK provider
+        explode: false
+        in: path
+        name: provider
+        required: true
+        schema:
+          description: The BYOK provider
+          title: Provider
+          type: string
+        style: simple
+      responses:
+        "204":
+          description: Successful Response
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      security:
+      - APIKey:
+        - chat
+        - internal
+      summary: Delete a stored BYOK API key for a provider
+      tags:
+      - byok
+    get:
+      description: |-
+        Get the stored BYOK API key hint for a provider.
+        Bring your own key is reserved for enterprise clients.
+        If you want to use this feature, please contact us at contact@asknews.app
+      operationId: get_byok_key
+      parameters:
+      - description: The BYOK provider
+        explode: false
+        in: path
+        name: provider
+        required: true
+        schema:
+          description: The BYOK provider
+          title: Provider
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiKeyResponse'
+          description: Stored API key hint.
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      security:
+      - APIKey:
+        - chat
+        - internal
+      summary: Get a stored BYOK API key hint for a provider
+      tags:
+      - byok
+    put:
+      description: |-
+        Store a BYOK API key for a provider.
+        Bring your own key is reserved for enterprise clients.
+        If you want to use this feature, please contact us at contact@asknews.app
+      operationId: upsert_byok_key
+      parameters:
+      - description: The BYOK provider
+        explode: false
+        in: path
+        name: provider
+        required: true
+        schema:
+          description: The BYOK provider
+          title: Provider
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpsertApiKeyRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiKeyResponse'
+          description: Stored API key hint.
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      security:
+      - APIKey:
+        - chat
+        - internal
+      summary: Store a BYOK API key for a provider
+      tags:
+      - byok
   /v1/chat/forecast:
     get:
       description: |-
@@ -1798,7 +1932,8 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
       security:
-      - APIKey: []
+      - APIKey:
+        - chat
       summary: Make an expert forecast for a news event.
       tags:
       - forecast
@@ -1884,7 +2019,8 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
       security:
-      - APIKey: []
+      - APIKey:
+        - chat
       summary: Run a live websearch.
       tags:
       - websearch
@@ -1924,7 +2060,8 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
       security:
-      - APIKey: []
+      - APIKey:
+        - chat
       summary: Generate filter params for AskNews endpoints
       tags:
       - autofilter
@@ -1976,6 +2113,17 @@ paths:
           title: All
           type: boolean
         style: form
+      - description: Whether to include soft-deleted alerts
+        explode: true
+        in: query
+        name: include_deleted
+        required: false
+        schema:
+          default: false
+          description: Whether to include soft-deleted alerts
+          title: Include Deleted
+          type: boolean
+        style: form
       responses:
         "200":
           content:
@@ -1990,7 +2138,8 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
       security:
-      - APIKey: []
+      - APIKey:
+        - chat
       summary: Get all created alerts
       tags:
       - alerts
@@ -2017,7 +2166,8 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
       security:
-      - APIKey: []
+      - APIKey:
+        - chat
       summary: Create an alert
       tags:
       - alerts
@@ -2111,7 +2261,8 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
       security:
-      - APIKey: []
+      - APIKey:
+        - chat
       summary: Get all alert logs
       tags:
       - alerts
@@ -2141,7 +2292,8 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
       security:
-      - APIKey: []
+      - APIKey:
+        - chat
       summary: Delete an alert
       tags:
       - alerts
@@ -2184,7 +2336,8 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
       security:
-      - APIKey: []
+      - APIKey:
+        - chat
       summary: Get an alert
       tags:
       - alerts
@@ -2223,7 +2376,8 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
       security:
-      - APIKey: []
+      - APIKey:
+        - chat
       summary: Update an alert
       tags:
       - alerts
@@ -2278,7 +2432,8 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
       security:
-      - APIKey: []
+      - APIKey:
+        - chat
       summary: Run an existing alert
       tags:
       - alerts
@@ -2373,7 +2528,8 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
       security:
-      - APIKey: []
+      - APIKey:
+        - chat
       summary: Get alert logs
       tags:
       - alerts
@@ -2395,7 +2551,8 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
       security:
-      - APIKey: []
+      - APIKey:
+        - chat
       summary: Get all created newsletters
       tags:
       - newsletters
@@ -2422,7 +2579,8 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
       security:
-      - APIKey: []
+      - APIKey:
+        - chat
       summary: Create a newsletter
       tags:
       - newsletters
@@ -2478,7 +2636,8 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
       security:
-      - APIKey: []
+      - APIKey:
+        - chat
       summary: Get all public newsletters
       tags:
       - newsletters
@@ -2508,7 +2667,8 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
       security:
-      - APIKey: []
+      - APIKey:
+        - chat
       summary: Delete a newsletter
       tags:
       - newsletters
@@ -2541,7 +2701,8 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
       security:
-      - APIKey: []
+      - APIKey:
+        - chat
       summary: Get a newsletter
       tags:
       - newsletters
@@ -2580,7 +2741,8 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
       security:
-      - APIKey: []
+      - APIKey:
+        - chat
       summary: Update a newsletter
       tags:
       - newsletters
@@ -2610,7 +2772,9 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
       security:
-      - APIKey: []
+      - APIKey:
+        - chat
+        - internal
       summary: Unsubscribe from a newsletter
       tags:
       - newsletters
@@ -2646,7 +2810,8 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
       security:
-      - APIKey: []
+      - APIKey:
+        - chat
       summary: Get newsletter contacts
       tags:
       - newsletters
@@ -2685,7 +2850,8 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
       security:
-      - APIKey: []
+      - APIKey:
+        - chat
       summary: Create a newsletter contact
       tags:
       - newsletters
@@ -2725,7 +2891,8 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
       security:
-      - APIKey: []
+      - APIKey:
+        - chat
       summary: Delete a newsletter contact
       tags:
       - newsletters
@@ -2768,7 +2935,8 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
       security:
-      - APIKey: []
+      - APIKey:
+        - chat
       summary: Get a newsletter contact
       tags:
       - newsletters
@@ -2817,7 +2985,8 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
       security:
-      - APIKey: []
+      - APIKey:
+        - chat
       summary: Update a newsletter contact
       tags:
       - newsletters
@@ -2845,7 +3014,8 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
       security:
-      - APIKey: []
+      - APIKey:
+        - chat
       summary: Create a chart
       tags:
       - charts
@@ -2984,7 +3154,8 @@ paths:
                 $ref: '#/components/schemas/asknews_api__errors__APIErrorModel'
           description: Internal Server Error
       security:
-      - APIKey: []
+      - APIKey:
+        - stories
       summary: Get a story containing updates
       tags:
       - stories
@@ -3335,7 +3506,8 @@ paths:
                 $ref: '#/components/schemas/asknews_api__errors__APIErrorModel'
           description: Internal Server Error
       security:
-      - APIKey: []
+      - APIKey:
+        - stories
       summary: Filter and search for top news narratives
       tags:
       - stories
@@ -3461,7 +3633,8 @@ paths:
                 $ref: '#/components/schemas/asknews_api__errors__APIErrorModel'
           description: Internal Server Error
       security:
-      - APIKey: []
+      - APIKey:
+        - analytics
       summary: Get a timeseries of finance news sentiment for assets
       tags:
       - analytics
@@ -3513,8 +3686,62 @@ paths:
                 $ref: '#/components/schemas/asknews_api__errors__APIErrorModel'
           description: Internal Server Error
       security:
-      - APIKey: []
+      - APIKey:
+        - profile
       summary: Get the current user's profile
+      tags:
+      - profile
+  /v1/profiles/me/limits:
+    get:
+      description: Return the caller's current rate-limit and concurrency-limit state
+        without consuming any tokens.
+      operationId: get_rate_limit_status
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RateLimitStatusResponse'
+          description: Current rate limit and concurrency state
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorModel'
+          description: Unprocessable Entity
+        "405":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/abc__APIErrorModel__53'
+          description: Method Not Allowed
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/abc__APIErrorModel__54'
+          description: Forbidden
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/abc__APIErrorModel__55'
+          description: Unauthorized
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/abc__APIErrorModel__56'
+          description: Bad Request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/asknews_api__errors__APIErrorModel'
+          description: Internal Server Error
+      security:
+      - APIKey: []
+      summary: Get the current user's rate limit status
       tags:
       - profile
   /v1/reddit/search:
@@ -3651,25 +3878,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__53'
+                $ref: '#/components/schemas/abc__APIErrorModel__57'
           description: Method Not Allowed
         "403":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__54'
+                $ref: '#/components/schemas/abc__APIErrorModel__58'
           description: Forbidden
         "401":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__55'
+                $ref: '#/components/schemas/abc__APIErrorModel__59'
           description: Unauthorized
         "400":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__56'
+                $ref: '#/components/schemas/abc__APIErrorModel__60'
           description: Bad Request
         "500":
           content:
@@ -3678,7 +3905,8 @@ paths:
                 $ref: '#/components/schemas/asknews_api__errors__APIErrorModel'
           description: Internal Server Error
       security:
-      - APIKey: []
+      - APIKey:
+        - news
       summary: "Search Reddit, summarize threads, and return analysis."
       tags:
       - reddit
@@ -3746,25 +3974,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__57'
+                $ref: '#/components/schemas/abc__APIErrorModel__61'
           description: Method Not Allowed
         "403":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__58'
+                $ref: '#/components/schemas/abc__APIErrorModel__62'
           description: Forbidden
         "401":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__59'
+                $ref: '#/components/schemas/abc__APIErrorModel__63'
           description: Unauthorized
         "400":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__60'
+                $ref: '#/components/schemas/abc__APIErrorModel__64'
           description: Bad Request
         "500":
           content:
@@ -3773,7 +4001,8 @@ paths:
                 $ref: '#/components/schemas/asknews_api__errors__APIErrorModel'
           description: Internal Server Error
       security:
-      - APIKey: []
+      - APIKey:
+        - distribution
       summary: Get the top N domains by hits
       tags:
       - distribution
@@ -3853,25 +4082,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__61'
+                $ref: '#/components/schemas/abc__APIErrorModel__65'
           description: Method Not Allowed
         "403":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__62'
+                $ref: '#/components/schemas/abc__APIErrorModel__66'
           description: Forbidden
         "401":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__63'
+                $ref: '#/components/schemas/abc__APIErrorModel__67'
           description: Unauthorized
         "400":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__64'
+                $ref: '#/components/schemas/abc__APIErrorModel__68'
           description: Bad Request
         "500":
           content:
@@ -3880,7 +4109,8 @@ paths:
                 $ref: '#/components/schemas/asknews_api__errors__APIErrorModel'
           description: Internal Server Error
       security:
-      - APIKey: []
+      - APIKey:
+        - distribution
       summary: Find domains
       tags:
       - distribution
@@ -3914,25 +4144,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__65'
+                $ref: '#/components/schemas/abc__APIErrorModel__69'
           description: Method Not Allowed
         "403":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__66'
+                $ref: '#/components/schemas/abc__APIErrorModel__70'
           description: Forbidden
         "401":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__67'
+                $ref: '#/components/schemas/abc__APIErrorModel__71'
           description: Unauthorized
         "400":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__68'
+                $ref: '#/components/schemas/abc__APIErrorModel__72'
           description: Bad Request
         "500":
           content:
@@ -3941,7 +4171,9 @@ paths:
                 $ref: '#/components/schemas/asknews_api__errors__APIErrorModel'
           description: Internal Server Error
       security:
-      - APIKey: []
+      - APIKey:
+        - distribution
+        - internal
       summary: Get a domain by name
       tags:
       - distribution
@@ -3980,25 +4212,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__69'
+                $ref: '#/components/schemas/abc__APIErrorModel__73'
           description: Method Not Allowed
         "403":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__70'
+                $ref: '#/components/schemas/abc__APIErrorModel__74'
           description: Forbidden
         "401":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__71'
+                $ref: '#/components/schemas/abc__APIErrorModel__75'
           description: Unauthorized
         "400":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__72'
+                $ref: '#/components/schemas/abc__APIErrorModel__76'
           description: Bad Request
         "500":
           content:
@@ -4007,7 +4239,9 @@ paths:
                 $ref: '#/components/schemas/asknews_api__errors__APIErrorModel'
           description: Internal Server Error
       security:
-      - APIKey: []
+      - APIKey:
+        - distribution
+        - internal
       summary: Update an existing domain
       tags:
       - distribution
@@ -4076,25 +4310,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__73'
+                $ref: '#/components/schemas/abc__APIErrorModel__77'
           description: Method Not Allowed
         "403":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__74'
+                $ref: '#/components/schemas/abc__APIErrorModel__78'
           description: Forbidden
         "401":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__75'
+                $ref: '#/components/schemas/abc__APIErrorModel__79'
           description: Unauthorized
         "400":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__76'
+                $ref: '#/components/schemas/abc__APIErrorModel__80'
           description: Bad Request
         "500":
           content:
@@ -4103,7 +4337,9 @@ paths:
                 $ref: '#/components/schemas/asknews_api__errors__APIErrorModel'
           description: Internal Server Error
       security:
-      - APIKey: []
+      - APIKey:
+        - distribution
+        - internal
       summary: Get the top N articles by hits for domains
       tags:
       - distribution
@@ -4171,25 +4407,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__77'
+                $ref: '#/components/schemas/abc__APIErrorModel__81'
           description: Method Not Allowed
         "403":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__78'
+                $ref: '#/components/schemas/abc__APIErrorModel__82'
           description: Forbidden
         "401":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__79'
+                $ref: '#/components/schemas/abc__APIErrorModel__83'
           description: Unauthorized
         "400":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__80'
+                $ref: '#/components/schemas/abc__APIErrorModel__84'
           description: Bad Request
         "500":
           content:
@@ -4198,7 +4434,9 @@ paths:
                 $ref: '#/components/schemas/asknews_api__errors__APIErrorModel'
           description: Internal Server Error
       security:
-      - APIKey: []
+      - APIKey:
+        - distribution
+        - internal
       summary: Get the top N articles by hits for domain with daily breakdown
       tags:
       - distribution
@@ -4266,25 +4504,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__81'
+                $ref: '#/components/schemas/abc__APIErrorModel__85'
           description: Method Not Allowed
         "403":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__82'
+                $ref: '#/components/schemas/abc__APIErrorModel__86'
           description: Forbidden
         "401":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__83'
+                $ref: '#/components/schemas/abc__APIErrorModel__87'
           description: Unauthorized
         "400":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__84'
+                $ref: '#/components/schemas/abc__APIErrorModel__88'
           description: Bad Request
         "500":
           content:
@@ -4293,7 +4531,9 @@ paths:
                 $ref: '#/components/schemas/asknews_api__errors__APIErrorModel'
           description: Internal Server Error
       security:
-      - APIKey: []
+      - APIKey:
+        - distribution
+        - internal
       summary: Get the top N articles by hits
       tags:
       - distribution
@@ -4359,25 +4599,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__85'
+                $ref: '#/components/schemas/abc__APIErrorModel__89'
           description: Method Not Allowed
         "403":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__86'
+                $ref: '#/components/schemas/abc__APIErrorModel__90'
           description: Forbidden
         "401":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__87'
+                $ref: '#/components/schemas/abc__APIErrorModel__91'
           description: Unauthorized
         "400":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__88'
+                $ref: '#/components/schemas/abc__APIErrorModel__92'
           description: Bad Request
         "500":
           content:
@@ -4386,7 +4626,9 @@ paths:
                 $ref: '#/components/schemas/asknews_api__errors__APIErrorModel'
           description: Internal Server Error
       security:
-      - APIKey: []
+      - APIKey:
+        - distribution
+        - internal
       summary: Get queries that surfaced domain articles
       tags:
       - distribution
@@ -4448,25 +4690,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__89'
+                $ref: '#/components/schemas/abc__APIErrorModel__93'
           description: Method Not Allowed
         "403":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__90'
+                $ref: '#/components/schemas/abc__APIErrorModel__94'
           description: Forbidden
         "401":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__91'
+                $ref: '#/components/schemas/abc__APIErrorModel__95'
           description: Unauthorized
         "400":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__92'
+                $ref: '#/components/schemas/abc__APIErrorModel__96'
           description: Bad Request
         "500":
           content:
@@ -4475,7 +4717,9 @@ paths:
                 $ref: '#/components/schemas/asknews_api__errors__APIErrorModel'
           description: Internal Server Error
       security:
-      - APIKey: []
+      - APIKey:
+        - distribution
+        - internal
       summary: Get total hits and surfaced articles for domains
       tags:
       - distribution
@@ -4536,25 +4780,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__93'
+                $ref: '#/components/schemas/abc__APIErrorModel__97'
           description: Method Not Allowed
         "403":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__94'
+                $ref: '#/components/schemas/abc__APIErrorModel__98'
           description: Forbidden
         "401":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__95'
+                $ref: '#/components/schemas/abc__APIErrorModel__99'
           description: Unauthorized
         "400":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__96'
+                $ref: '#/components/schemas/abc__APIErrorModel__100'
           description: Bad Request
         "500":
           content:
@@ -4563,7 +4807,9 @@ paths:
                 $ref: '#/components/schemas/asknews_api__errors__APIErrorModel'
           description: Internal Server Error
       security:
-      - APIKey: []
+      - APIKey:
+        - distribution
+        - internal
       summary: Get hits and surfaced articles per day for domains
       tags:
       - distribution
@@ -4629,25 +4875,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__97'
+                $ref: '#/components/schemas/abc__APIErrorModel__101'
           description: Method Not Allowed
         "403":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__98'
+                $ref: '#/components/schemas/abc__APIErrorModel__102'
           description: Forbidden
         "401":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__99'
+                $ref: '#/components/schemas/abc__APIErrorModel__103'
           description: Unauthorized
         "400":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__100'
+                $ref: '#/components/schemas/abc__APIErrorModel__104'
           description: Bad Request
         "500":
           content:
@@ -4656,7 +4902,9 @@ paths:
                 $ref: '#/components/schemas/asknews_api__errors__APIErrorModel'
           description: Internal Server Error
       security:
-      - APIKey: []
+      - APIKey:
+        - distribution
+        - internal
       summary: Get the hit share for a list of domains in a time period
       tags:
       - distribution
@@ -4710,25 +4958,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__101'
+                $ref: '#/components/schemas/abc__APIErrorModel__105'
           description: Method Not Allowed
         "403":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__102'
+                $ref: '#/components/schemas/abc__APIErrorModel__106'
           description: Forbidden
         "401":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__103'
+                $ref: '#/components/schemas/abc__APIErrorModel__107'
           description: Unauthorized
         "400":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__104'
+                $ref: '#/components/schemas/abc__APIErrorModel__108'
           description: Bad Request
         "500":
           content:
@@ -4737,7 +4985,9 @@ paths:
                 $ref: '#/components/schemas/asknews_api__errors__APIErrorModel'
           description: Internal Server Error
       security:
-      - APIKey: []
+      - APIKey:
+        - distribution
+        - internal
       summary: Get article hits
       tags:
       - distribution
@@ -4859,25 +5109,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__105'
+                $ref: '#/components/schemas/abc__APIErrorModel__109'
           description: Method Not Allowed
         "403":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__106'
+                $ref: '#/components/schemas/abc__APIErrorModel__110'
           description: Forbidden
         "401":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__107'
+                $ref: '#/components/schemas/abc__APIErrorModel__111'
           description: Unauthorized
         "400":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__108'
+                $ref: '#/components/schemas/abc__APIErrorModel__112'
           description: Bad Request
         "500":
           content:
@@ -4886,7 +5136,8 @@ paths:
                 $ref: '#/components/schemas/asknews_api__errors__APIErrorModel'
           description: Internal Server Error
       security:
-      - APIKey: []
+      - APIKey:
+        - news
       summary: Search for Wikipedia context with natural language
       tags:
       - wiki
@@ -5073,6 +5324,111 @@ components:
       - triggers
       - user_id
       title: AlertResponse
+    AnthropicInputJsonDelta:
+      properties:
+        type:
+          default: input_json_delta
+          enum:
+          - input_json_delta
+          title: Type
+          type: string
+        partial_json:
+          title: Partial Json
+          type: string
+      required:
+      - partial_json
+      title: AnthropicInputJsonDelta
+    AnthropicTextBlock:
+      properties:
+        type:
+          default: text
+          enum:
+          - text
+          title: Type
+          type: string
+        text:
+          default: ""
+          title: Text
+          type: string
+      title: AnthropicTextBlock
+    AnthropicTextDelta:
+      properties:
+        type:
+          default: text_delta
+          enum:
+          - text_delta
+          title: Type
+          type: string
+        text:
+          title: Text
+          type: string
+      required:
+      - text
+      title: AnthropicTextDelta
+    AnthropicThinkingBlock:
+      properties:
+        type:
+          default: thinking
+          enum:
+          - thinking
+          title: Type
+          type: string
+        thinking:
+          default: ""
+          title: Thinking
+          type: string
+      title: AnthropicThinkingBlock
+    AnthropicThinkingDelta:
+      properties:
+        type:
+          default: thinking_delta
+          enum:
+          - thinking_delta
+          title: Type
+          type: string
+        thinking:
+          title: Thinking
+          type: string
+      required:
+      - thinking
+      title: AnthropicThinkingDelta
+    AnthropicToolUseBlock:
+      properties:
+        type:
+          default: tool_use
+          enum:
+          - tool_use
+          title: Type
+          type: string
+        id:
+          title: Id
+          type: string
+        name:
+          title: Name
+          type: string
+        input:
+          additionalProperties: true
+          title: Input
+          type: object
+      required:
+      - id
+      - name
+      title: AnthropicToolUseBlock
+    ApiKeyResponse:
+      example:
+        provider: provider
+        key_hint: key_hint
+      properties:
+        provider:
+          title: Provider
+          type: string
+        key_hint:
+          title: Key Hint
+          type: string
+      required:
+      - key_hint
+      - provider
+      title: ApiKeyResponse
     Article:
       example:
         continent: Africa
@@ -5919,6 +6275,54 @@ components:
       - version
       - wikibase_item
       title: CirrusMetadata
+    ContentBlockDeltaEvent:
+      properties:
+        type:
+          default: content_block_delta
+          enum:
+          - content_block_delta
+          title: Type
+          type: string
+        index:
+          title: Index
+          type: integer
+        delta:
+          $ref: '#/components/schemas/Delta_1'
+      required:
+      - delta
+      - index
+      title: ContentBlockDeltaEvent
+    ContentBlockStartEvent:
+      properties:
+        type:
+          default: content_block_start
+          enum:
+          - content_block_start
+          title: Type
+          type: string
+        index:
+          title: Index
+          type: integer
+        content_block:
+          $ref: '#/components/schemas/Content_Block_1'
+      required:
+      - content_block
+      - index
+      title: ContentBlockStartEvent
+    ContentBlockStopEvent:
+      properties:
+        type:
+          default: content_block_stop
+          enum:
+          - content_block_stop
+          title: Type
+          type: string
+        index:
+          title: Index
+          type: integer
+      required:
+      - index
+      title: ContentBlockStopEvent
     CountResponse:
       example:
         count: 0
@@ -6400,20 +6804,21 @@ components:
       additionalProperties: {}
       example:
         include_coordinates: false
+        cutoff_datetime: 2000-01-23T04:56:07.000+00:00
         sources: asknews
         append_references: true
-        max_depth: 60
+        max_depth: 120
         presence_penalty: 9
         conversational_awareness: true
         return_sources: true
         journalist_mode: true
         top_p: 5.637376656633329
-        search_depth: 5
+        search_depth: 16
         thread_id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
         frequency_penalty: 3
         stream: false
         max_parallel_tool_calls: 1
-        engine: v1
+        engine: v1.5
         temperature: 5.962133916683182
         filter_params:
           key: ""
@@ -6430,6 +6835,7 @@ components:
         - content: What are the latest developments in AI regulation?
           role: user
         inline_citations: markdown_link
+        enable_source_pruning: false
         user: User_1
       properties:
         messages:
@@ -6451,13 +6857,13 @@ components:
           default: 2
           description: The search depth for deep research. Higher values mean more
             thorough research.
-          maximum: 60.0
+          maximum: 190.0
           minimum: 1.0
           title: Search Depth
         max_depth:
           default: 6
           description: The maximum research depth allowed.
-          maximum: 100.0
+          maximum: 200.0
           minimum: 1.0
           title: Max Depth
         sources:
@@ -6564,11 +6970,29 @@ components:
           minimum: 1.0
           title: Max Parallel Tool Calls
         engine:
-          default: v1
+          default: v1.5
+          description: "The engine to use for the DeepNews agent. 'v1' is deprecated\
+            \ while 'v1.5' is our next-generation research agent with access to more\
+            \ tools, better contextual understanding, and improved reasoning capabilities.'v1.5'\
+            \ streams thinking and tool use using tags <think> </think>, <tool_a>\
+            \ </tool_a> Meanwhile, 'v2.0' is the same underlying agent as 'v1.5',\
+            \ but the thinking and tool use chunks are typed content_block_delta's\
+            \ streamed between content_block_start and content_block_stop events,\
+            \ mimicking Anthropic's approach to streaming tool use/thinking events."
           enum:
           - v1
           - v1.5
+          - v2.0
           title: Engine
+        enable_source_pruning:
+          default: false
+          description: "Whether to enable source pruning, which removes sources that\
+            \ are deemed irrelevant to the final response. This can help reduce noise\
+            \ in the sources and improve the quality of the response, but may also\
+            \ remove some relevant sources if not used carefully."
+          title: Enable Source Pruning
+        cutoff_datetime:
+          $ref: '#/components/schemas/Cutoff_Datetime'
       required:
       - messages
       title: CreateDeepNewsRequest
@@ -6678,6 +7102,48 @@ components:
       - delta
       - index
       title: CreateDeepNewsResponseStreamChunkChoice
+    CreateDeepNewsResponseStreamChunkChoiceV2:
+      properties:
+        index:
+          title: Index
+          type: integer
+        delta:
+          $ref: '#/components/schemas/Delta_2'
+        finish_reason:
+          nullable: true
+          type: string
+      required:
+      - delta
+      - index
+      title: CreateDeepNewsResponseStreamChunkChoiceV2
+    CreateDeepNewsResponseStreamChunkV2:
+      properties:
+        id:
+          title: Id
+          type: string
+        created:
+          title: Created
+          type: integer
+        object:
+          default: chat.completion.chunk
+          title: Object
+          type: string
+        model:
+          default: claude-sonnet-4-6
+          title: Model
+          type: string
+        usage:
+          $ref: '#/components/schemas/CreateDeepNewsResponseUsage'
+        choices:
+          items:
+            $ref: '#/components/schemas/CreateDeepNewsResponseStreamChunkChoiceV2'
+          type: array
+      required:
+      - choices
+      - created
+      - id
+      - usage
+      title: CreateDeepNewsResponseStreamChunkV2
     CreateDeepNewsResponseStreamSource:
       properties:
         id:
@@ -6691,7 +7157,7 @@ components:
           title: Object
           type: string
         source:
-          $ref: '#/components/schemas/Source'
+          $ref: '#/components/schemas/Source_1'
       required:
       - created
       - id
@@ -6763,6 +7229,10 @@ components:
         total_tokens:
           title: Total Tokens
           type: integer
+        tool_usage:
+          additionalProperties:
+            type: integer
+          nullable: true
       required:
       - completion_tokens
       - prompt_tokens
@@ -6945,7 +7415,7 @@ components:
           title: Include Coordinates
           type: boolean
         engine:
-          default: v1
+          default: v1.5
           description: Legacy vs new DeepNews engine
           enum:
           - v1
@@ -6959,20 +7429,32 @@ components:
           minimum: 1.0
           title: Max Parallel Tool Calls
           type: integer
+        enable_source_pruning:
+          default: false
+          description: "Whether to enable source pruning, which removes sources that\
+            \ are deemed irrelevant to the final report. This can help reduce noise\
+            \ in the sources and improve the quality of the report, but may also remove\
+            \ some relevant sources if not used carefully."
+          title: Enable Source Pruning
+          type: boolean
+        cutoff_datetime:
+          format: date-time
+          nullable: true
+          type: string
         model:
           $ref: '#/components/schemas/DeepNewsModel'
         search_depth:
           default: 2
           description: The search depth for deep research. Higher values mean more
             thorough research. Defaults to 2.
-          maximum: 80.0
+          maximum: 190.0
           minimum: 1.0
           title: Search Depth
           type: integer
         max_depth:
           default: 4
           description: The maximum research depth allowed. Defaults to 4.
-          maximum: 100.0
+          maximum: 200.0
           minimum: 1.0
           title: Max Depth
           type: integer
@@ -7085,7 +7567,7 @@ components:
           title: Include Coordinates
           type: boolean
         engine:
-          default: v1
+          default: v1.5
           description: Legacy vs new DeepNews engine
           enum:
           - v1
@@ -7099,6 +7581,18 @@ components:
           minimum: 1.0
           title: Max Parallel Tool Calls
           type: integer
+        enable_source_pruning:
+          default: false
+          description: "Whether to enable source pruning, which removes sources that\
+            \ are deemed irrelevant to the final report. This can help reduce noise\
+            \ in the sources and improve the quality of the report, but may also remove\
+            \ some relevant sources if not used carefully."
+          title: Enable Source Pruning
+          type: boolean
+        cutoff_datetime:
+          format: date-time
+          nullable: true
+          type: string
         model:
           $ref: '#/components/schemas/DeepNewsModel'
         search_depth:
@@ -8887,11 +9381,15 @@ components:
           loc:
           - ValidationError_loc_inner
           - ValidationError_loc_inner
+          input: ""
+          ctx: "{}"
           type: type
         - msg: msg
           loc:
           - ValidationError_loc_inner
           - ValidationError_loc_inner
+          input: ""
+          ctx: "{}"
           type: type
       properties:
         detail:
@@ -9302,6 +9800,30 @@ components:
           nullable: true
           type: string
       title: MCPFilterParams
+    MessageStartEvent:
+      properties:
+        type:
+          default: message_start
+          enum:
+          - message_start
+          title: Type
+          type: string
+        role:
+          default: assistant
+          enum:
+          - assistant
+          title: Role
+          type: string
+      title: MessageStartEvent
+    MessageStopEvent:
+      properties:
+        type:
+          default: message_stop
+          enum:
+          - message_stop
+          title: Type
+          type: string
+      title: MessageStopEvent
     NewsletterContactCreateResponse:
       example:
         id: id
@@ -9826,6 +10348,46 @@ components:
       required:
       - profile
       title: ProfileResponse
+    RateLimitStatusResponse:
+      example:
+        request_rate_capacity: 6.027456183070403
+        request_rate_remaining: 1.4658129805029452
+        concurrency_limit: 5
+        concurrency_remaining: 2
+        retry_after: 5.962133916683182
+        request_rate: 0.8008281904610115
+      properties:
+        request_rate:
+          description: Configured tokens replenished per second
+          title: Request Rate
+          type: number
+        request_rate_capacity:
+          description: Maximum burst token capacity
+          title: Request Rate Capacity
+          type: number
+        request_rate_remaining:
+          description: Effective available tokens right now (accounts for time elapsed
+            since last request)
+          title: Request Rate Remaining
+          type: number
+        retry_after:
+          nullable: true
+          type: number
+        concurrency_limit:
+          description: Maximum allowed concurrent requests
+          title: Concurrency Limit
+          type: integer
+        concurrency_remaining:
+          description: Available concurrent request slots right now
+          title: Concurrency Remaining
+          type: integer
+      required:
+      - concurrency_limit
+      - concurrency_remaining
+      - request_rate
+      - request_rate_capacity
+      - request_rate_remaining
+      title: RateLimitStatusResponse
     ReadDomainResponse:
       example:
         owner: owner
@@ -17833,6 +18395,17 @@ components:
           nullable: true
           type: string
       title: UpdateNewsletterRequest
+    UpsertApiKeyRequest:
+      example:
+        api_key: api_key
+      properties:
+        api_key:
+          minLength: 10
+          title: Api Key
+          type: string
+      required:
+      - api_key
+      title: UpsertApiKeyRequest
     UserProfile:
       example:
         organization:
@@ -17914,6 +18487,8 @@ components:
         loc:
         - ValidationError_loc_inner
         - ValidationError_loc_inner
+        input: ""
+        ctx: "{}"
         type: type
       properties:
         loc:
@@ -17926,6 +18501,10 @@ components:
         type:
           title: Error Type
           type: string
+        input: {}
+        ctx:
+          title: Context
+          type: object
       required:
       - loc
       - msg
@@ -18399,9 +18978,69 @@ components:
       - code
       - detail
       title: APIErrorModel
+    abc__APIErrorModel__109:
+      example:
+        code: 0
+        detail: detail
+      properties:
+        code:
+          title: Code
+          type: integer
+        detail:
+          title: Detail
+          type: string
+      required:
+      - code
+      - detail
+      title: APIErrorModel
     abc__APIErrorModel__11:
       example:
         code: 1
+        detail: detail
+      properties:
+        code:
+          title: Code
+          type: integer
+        detail:
+          title: Detail
+          type: string
+      required:
+      - code
+      - detail
+      title: APIErrorModel
+    abc__APIErrorModel__110:
+      example:
+        code: 6
+        detail: detail
+      properties:
+        code:
+          title: Code
+          type: integer
+        detail:
+          title: Detail
+          type: string
+      required:
+      - code
+      - detail
+      title: APIErrorModel
+    abc__APIErrorModel__111:
+      example:
+        code: 1
+        detail: detail
+      properties:
+        code:
+          title: Code
+          type: integer
+        detail:
+          title: Detail
+          type: string
+      required:
+      - code
+      - detail
+      title: APIErrorModel
+    abc__APIErrorModel__112:
+      example:
+        code: 5
         detail: detail
       properties:
         code:
@@ -20330,6 +20969,8 @@ components:
       example:
         completion_tokens: 1
         prompt_tokens: 6
+        tool_usage:
+          key: 5
         total_tokens: 5
       properties:
         prompt_tokens:
@@ -20341,6 +20982,11 @@ components:
         total_tokens:
           title: Total Tokens
           type: integer
+        tool_usage:
+          additionalProperties:
+            nullable: true
+            type: integer
+          nullable: true
       required:
       - completion_tokens
       - prompt_tokens
@@ -20373,7 +21019,7 @@ components:
     CreateDeepNewsResponseChoice_1:
       example:
         finish_reason: finish_reason
-        index: 5
+        index: 2
         message:
           role: role
           function_call:
@@ -20645,8 +21291,8 @@ components:
       example:
         metadata:
           key: ""
-        latitude: 2.027123023002322
-        longitude: 4.145608029883936
+        latitude: 4.145608029883936
+        longitude: 7.386281948385884
       properties:
         latitude:
           title: Latitude
@@ -20704,7 +21350,7 @@ components:
       example:
         continent: Africa
         country: country
-        sentiment: 7
+        sentiment: 9
         keywords:
         - keywords
         - keywords
@@ -20729,8 +21375,8 @@ components:
           key:
             metadata:
               key: ""
-            latitude: 2.027123023002322
-            longitude: 4.145608029883936
+            latitude: 4.145608029883936
+            longitude: 7.386281948385884
         social_embeds:
         - social_embeds
         - social_embeds
@@ -20750,9 +21396,9 @@ components:
         classification:
         - Classification
         - Classification
-        centroid_distance: 9.301444243932576
-        cluster_probability: 3.616076749251911
-        page_rank: 2
+        centroid_distance: 3.616076749251911
+        cluster_probability: 2.027123023002322
+        page_rank: 7
         original_language_summary: original_language_summary
         entities:
           Space:
@@ -21052,7 +21698,7 @@ components:
         news:
         - continent: Africa
           country: country
-          sentiment: 7
+          sentiment: 9
           keywords:
           - keywords
           - keywords
@@ -21077,8 +21723,8 @@ components:
             key:
               metadata:
                 key: ""
-              latitude: 2.027123023002322
-              longitude: 4.145608029883936
+              latitude: 4.145608029883936
+              longitude: 7.386281948385884
           social_embeds:
           - social_embeds
           - social_embeds
@@ -21098,9 +21744,9 @@ components:
           classification:
           - Classification
           - Classification
-          centroid_distance: 9.301444243932576
-          cluster_probability: 3.616076749251911
-          page_rank: 2
+          centroid_distance: 3.616076749251911
+          cluster_probability: 2.027123023002322
+          page_rank: 7
           original_language_summary: original_language_summary
           entities:
             Space:
@@ -21188,7 +21834,7 @@ components:
             url: url
         - continent: Africa
           country: country
-          sentiment: 7
+          sentiment: 9
           keywords:
           - keywords
           - keywords
@@ -21213,8 +21859,8 @@ components:
             key:
               metadata:
                 key: ""
-              latitude: 2.027123023002322
-              longitude: 4.145608029883936
+              latitude: 4.145608029883936
+              longitude: 7.386281948385884
           social_embeds:
           - social_embeds
           - social_embeds
@@ -21234,9 +21880,9 @@ components:
           classification:
           - Classification
           - Classification
-          centroid_distance: 9.301444243932576
-          cluster_probability: 3.616076749251911
-          page_rank: 2
+          centroid_distance: 3.616076749251911
+          cluster_probability: 2.027123023002322
+          page_rank: 7
           original_language_summary: original_language_summary
           entities:
             Space:
@@ -21362,12 +22008,15 @@ components:
       - items:
           $ref: '#/components/schemas/CreateDeepNewsResponseStreamChunk'
         type: array
+      - items:
+          $ref: '#/components/schemas/CreateDeepNewsResponseStreamChunkV2'
+        type: array
       example:
         sources:
           news:
           - continent: Africa
             country: country
-            sentiment: 7
+            sentiment: 9
             keywords:
             - keywords
             - keywords
@@ -21392,8 +22041,8 @@ components:
               key:
                 metadata:
                   key: ""
-                latitude: 2.027123023002322
-                longitude: 4.145608029883936
+                latitude: 4.145608029883936
+                longitude: 7.386281948385884
             social_embeds:
             - social_embeds
             - social_embeds
@@ -21413,9 +22062,9 @@ components:
             classification:
             - Classification
             - Classification
-            centroid_distance: 9.301444243932576
-            cluster_probability: 3.616076749251911
-            page_rank: 2
+            centroid_distance: 3.616076749251911
+            cluster_probability: 2.027123023002322
+            page_rank: 7
             original_language_summary: original_language_summary
             entities:
               Space:
@@ -21503,7 +22152,7 @@ components:
               url: url
           - continent: Africa
             country: country
-            sentiment: 7
+            sentiment: 9
             keywords:
             - keywords
             - keywords
@@ -21528,8 +22177,8 @@ components:
               key:
                 metadata:
                   key: ""
-                latitude: 2.027123023002322
-                longitude: 4.145608029883936
+                latitude: 4.145608029883936
+                longitude: 7.386281948385884
             social_embeds:
             - social_embeds
             - social_embeds
@@ -21549,9 +22198,9 @@ components:
             classification:
             - Classification
             - Classification
-            centroid_distance: 9.301444243932576
-            cluster_probability: 3.616076749251911
-            page_rank: 2
+            centroid_distance: 3.616076749251911
+            cluster_probability: 2.027123023002322
+            page_rank: 7
             original_language_summary: original_language_summary
             entities:
               Space:
@@ -21660,12 +22309,14 @@ components:
         usage:
           completion_tokens: 1
           prompt_tokens: 6
+          tool_usage:
+            key: 5
           total_tokens: 5
         model: claude-sonnet-4-6
         id: id
         choices:
         - finish_reason: finish_reason
-          index: 5
+          index: 2
           message:
             role: role
             function_call:
@@ -21673,7 +22324,7 @@ components:
             name: name
             content: content
         - finish_reason: finish_reason
-          index: 5
+          index: 2
           message:
             role: role
             function_call:
@@ -21823,6 +22474,13 @@ components:
             total_tokens:
               type: integer
               title: Total Tokens
+            tool_usage:
+              anyOf:
+              - additionalProperties:
+                  type: integer
+                type: object
+              - type: "null"
+              title: Tool Usage
           type: object
           required:
           - prompt_tokens
@@ -22992,6 +23650,26 @@ components:
           - published
           - key_points
           title: WebSearchResult
+    CreateDeepNewsResponseUsage_2:
+      properties:
+        prompt_tokens:
+          title: Prompt Tokens
+          type: integer
+        completion_tokens:
+          title: Completion Tokens
+          type: integer
+        total_tokens:
+          title: Total Tokens
+          type: integer
+        tool_usage:
+          additionalProperties:
+            type: integer
+          nullable: true
+      required:
+      - completion_tokens
+      - prompt_tokens
+      - total_tokens
+      title: CreateDeepNewsResponseUsage
     CreateDeepNewsResponseStreamChunkChoice_1:
       properties:
         index:
@@ -23023,7 +23701,7 @@ components:
           title: Model
           type: string
         usage:
-          $ref: '#/components/schemas/CreateDeepNewsResponseUsage_1'
+          $ref: '#/components/schemas/CreateDeepNewsResponseUsage_2'
         choices:
           items:
             $ref: '#/components/schemas/CreateDeepNewsResponseStreamChunkChoice_1'
@@ -23109,12 +23787,3315 @@ components:
             total_tokens:
               type: integer
               title: Total Tokens
+            tool_usage:
+              anyOf:
+              - additionalProperties:
+                  type: integer
+                type: object
+              - type: "null"
+              title: Tool Usage
           type: object
           required:
           - prompt_tokens
           - completion_tokens
           - total_tokens
           title: CreateDeepNewsResponseUsage
+    MessageStartEvent_1:
+      properties:
+        type:
+          default: message_start
+          enum:
+          - message_start
+          title: Type
+          type: string
+        role:
+          default: assistant
+          enum:
+          - assistant
+          title: Role
+          type: string
+      title: MessageStartEvent
+    AnthropicTextBlock_1:
+      properties:
+        type:
+          default: text
+          enum:
+          - text
+          title: Type
+          type: string
+        text:
+          default: ""
+          title: Text
+          type: string
+      title: AnthropicTextBlock
+    AnthropicThinkingBlock_1:
+      properties:
+        type:
+          default: thinking
+          enum:
+          - thinking
+          title: Type
+          type: string
+        thinking:
+          default: ""
+          title: Thinking
+          type: string
+      title: AnthropicThinkingBlock
+    AnthropicToolUseBlock_1:
+      properties:
+        type:
+          default: tool_use
+          enum:
+          - tool_use
+          title: Type
+          type: string
+        id:
+          title: Id
+          type: string
+        name:
+          title: Name
+          type: string
+        input:
+          additionalProperties: {}
+          title: Input
+      required:
+      - id
+      - name
+      title: AnthropicToolUseBlock
+    Content_Block:
+      oneOf:
+      - $ref: '#/components/schemas/AnthropicTextBlock_1'
+      - $ref: '#/components/schemas/AnthropicThinkingBlock_1'
+      - $ref: '#/components/schemas/AnthropicToolUseBlock_1'
+      title: Content Block
+    ContentBlockStartEvent_1:
+      properties:
+        type:
+          default: content_block_start
+          enum:
+          - content_block_start
+          title: Type
+          type: string
+        index:
+          title: Index
+          type: integer
+        content_block:
+          $ref: '#/components/schemas/Content_Block'
+      required:
+      - content_block
+      - index
+      title: ContentBlockStartEvent
+    AnthropicTextDelta_1:
+      properties:
+        type:
+          default: text_delta
+          enum:
+          - text_delta
+          title: Type
+          type: string
+        text:
+          title: Text
+          type: string
+      required:
+      - text
+      title: AnthropicTextDelta
+    AnthropicThinkingDelta_1:
+      properties:
+        type:
+          default: thinking_delta
+          enum:
+          - thinking_delta
+          title: Type
+          type: string
+        thinking:
+          title: Thinking
+          type: string
+      required:
+      - thinking
+      title: AnthropicThinkingDelta
+    AnthropicInputJsonDelta_1:
+      properties:
+        type:
+          default: input_json_delta
+          enum:
+          - input_json_delta
+          title: Type
+          type: string
+        partial_json:
+          title: Partial Json
+          type: string
+      required:
+      - partial_json
+      title: AnthropicInputJsonDelta
+    Delta:
+      oneOf:
+      - $ref: '#/components/schemas/MessageStartEvent_1'
+      - $ref: '#/components/schemas/ContentBlockStartEvent_1'
+      - $ref: '#/components/schemas/ContentBlockDeltaEvent_1'
+      - $ref: '#/components/schemas/ContentBlockStopEvent_1'
+      - $ref: '#/components/schemas/MessageStopEvent_1'
+      title: Delta
+    ContentBlockDeltaEvent_1:
+      properties:
+        type:
+          default: content_block_delta
+          enum:
+          - content_block_delta
+          title: Type
+          type: string
+        index:
+          title: Index
+          type: integer
+        delta:
+          $ref: '#/components/schemas/Delta'
+      required:
+      - delta
+      - index
+      title: ContentBlockDeltaEvent
+    ContentBlockStopEvent_1:
+      properties:
+        type:
+          default: content_block_stop
+          enum:
+          - content_block_stop
+          title: Type
+          type: string
+        index:
+          title: Index
+          type: integer
+      required:
+      - index
+      title: ContentBlockStopEvent
+    MessageStopEvent_1:
+      properties:
+        type:
+          default: message_stop
+          enum:
+          - message_stop
+          title: Type
+          type: string
+      title: MessageStopEvent
+    CreateDeepNewsResponseStreamChunkChoiceV2_1:
+      properties:
+        index:
+          title: Index
+          type: integer
+        delta:
+          $ref: '#/components/schemas/Delta'
+        finish_reason:
+          nullable: true
+          type: string
+      required:
+      - delta
+      - index
+      title: CreateDeepNewsResponseStreamChunkChoiceV2
+    CreateDeepNewsResponseStreamChunkV2_1:
+      properties:
+        id:
+          title: Id
+          type: string
+        created:
+          title: Created
+          type: integer
+        object:
+          default: chat.completion.chunk
+          title: Object
+          type: string
+        model:
+          default: claude-sonnet-4-6
+          title: Model
+          type: string
+        usage:
+          $ref: '#/components/schemas/CreateDeepNewsResponseUsage_2'
+        choices:
+          items:
+            $ref: '#/components/schemas/CreateDeepNewsResponseStreamChunkChoiceV2_1'
+          type: array
+      required:
+      - choices
+      - created
+      - id
+      - usage
+      title: CreateDeepNewsResponseStreamChunkV2
+      $defs:
+        AnthropicInputJsonDelta:
+          properties:
+            type:
+              type: string
+              const: input_json_delta
+              title: Type
+              default: input_json_delta
+            partial_json:
+              type: string
+              title: Partial Json
+          type: object
+          required:
+          - partial_json
+          title: AnthropicInputJsonDelta
+        AnthropicTextBlock:
+          properties:
+            type:
+              type: string
+              const: text
+              title: Type
+              default: text
+            text:
+              type: string
+              title: Text
+              default: ""
+          type: object
+          title: AnthropicTextBlock
+        AnthropicTextDelta:
+          properties:
+            type:
+              type: string
+              const: text_delta
+              title: Type
+              default: text_delta
+            text:
+              type: string
+              title: Text
+          type: object
+          required:
+          - text
+          title: AnthropicTextDelta
+        AnthropicThinkingBlock:
+          properties:
+            type:
+              type: string
+              const: thinking
+              title: Type
+              default: thinking
+            thinking:
+              type: string
+              title: Thinking
+              default: ""
+          type: object
+          title: AnthropicThinkingBlock
+        AnthropicThinkingDelta:
+          properties:
+            type:
+              type: string
+              const: thinking_delta
+              title: Type
+              default: thinking_delta
+            thinking:
+              type: string
+              title: Thinking
+          type: object
+          required:
+          - thinking
+          title: AnthropicThinkingDelta
+        AnthropicToolUseBlock:
+          properties:
+            type:
+              type: string
+              const: tool_use
+              title: Type
+              default: tool_use
+            id:
+              type: string
+              title: Id
+            name:
+              type: string
+              title: Name
+            input:
+              additionalProperties: true
+              type: object
+              title: Input
+          type: object
+          required:
+          - id
+          - name
+          title: AnthropicToolUseBlock
+        ContentBlockDeltaEvent:
+          properties:
+            type:
+              type: string
+              const: content_block_delta
+              title: Type
+              default: content_block_delta
+            index:
+              type: integer
+              title: Index
+            delta:
+              oneOf:
+              - properties:
+                  type:
+                    type: string
+                    const: text_delta
+                    title: Type
+                    default: text_delta
+                  text:
+                    type: string
+                    title: Text
+                type: object
+                required:
+                - text
+                title: AnthropicTextDelta
+              - properties:
+                  type:
+                    type: string
+                    const: thinking_delta
+                    title: Type
+                    default: thinking_delta
+                  thinking:
+                    type: string
+                    title: Thinking
+                type: object
+                required:
+                - thinking
+                title: AnthropicThinkingDelta
+              - properties:
+                  type:
+                    type: string
+                    const: input_json_delta
+                    title: Type
+                    default: input_json_delta
+                  partial_json:
+                    type: string
+                    title: Partial Json
+                type: object
+                required:
+                - partial_json
+                title: AnthropicInputJsonDelta
+              title: Delta
+          type: object
+          required:
+          - index
+          - delta
+          title: ContentBlockDeltaEvent
+        ContentBlockStartEvent:
+          properties:
+            type:
+              type: string
+              const: content_block_start
+              title: Type
+              default: content_block_start
+            index:
+              type: integer
+              title: Index
+            content_block:
+              oneOf:
+              - properties:
+                  type:
+                    type: string
+                    const: text
+                    title: Type
+                    default: text
+                  text:
+                    type: string
+                    title: Text
+                    default: ""
+                type: object
+                title: AnthropicTextBlock
+              - properties:
+                  type:
+                    type: string
+                    const: thinking
+                    title: Type
+                    default: thinking
+                  thinking:
+                    type: string
+                    title: Thinking
+                    default: ""
+                type: object
+                title: AnthropicThinkingBlock
+              - properties:
+                  type:
+                    type: string
+                    const: tool_use
+                    title: Type
+                    default: tool_use
+                  id:
+                    type: string
+                    title: Id
+                  name:
+                    type: string
+                    title: Name
+                  input:
+                    additionalProperties: true
+                    type: object
+                    title: Input
+                type: object
+                required:
+                - id
+                - name
+                title: AnthropicToolUseBlock
+              title: Content Block
+          type: object
+          required:
+          - index
+          - content_block
+          title: ContentBlockStartEvent
+        ContentBlockStopEvent:
+          properties:
+            type:
+              type: string
+              const: content_block_stop
+              title: Type
+              default: content_block_stop
+            index:
+              type: integer
+              title: Index
+          type: object
+          required:
+          - index
+          title: ContentBlockStopEvent
+        CreateDeepNewsResponseStreamChunkChoiceV2:
+          properties:
+            index:
+              type: integer
+              title: Index
+            delta:
+              oneOf:
+              - properties:
+                  type:
+                    type: string
+                    const: message_start
+                    title: Type
+                    default: message_start
+                  role:
+                    type: string
+                    const: assistant
+                    title: Role
+                    default: assistant
+                type: object
+                title: MessageStartEvent
+              - properties:
+                  type:
+                    type: string
+                    const: content_block_start
+                    title: Type
+                    default: content_block_start
+                  index:
+                    type: integer
+                    title: Index
+                  content_block:
+                    oneOf:
+                    - properties:
+                        type:
+                          type: string
+                          const: text
+                          title: Type
+                          default: text
+                        text:
+                          type: string
+                          title: Text
+                          default: ""
+                      type: object
+                      title: AnthropicTextBlock
+                    - properties:
+                        type:
+                          type: string
+                          const: thinking
+                          title: Type
+                          default: thinking
+                        thinking:
+                          type: string
+                          title: Thinking
+                          default: ""
+                      type: object
+                      title: AnthropicThinkingBlock
+                    - properties:
+                        type:
+                          type: string
+                          const: tool_use
+                          title: Type
+                          default: tool_use
+                        id:
+                          type: string
+                          title: Id
+                        name:
+                          type: string
+                          title: Name
+                        input:
+                          additionalProperties: true
+                          type: object
+                          title: Input
+                      type: object
+                      required:
+                      - id
+                      - name
+                      title: AnthropicToolUseBlock
+                    title: Content Block
+                type: object
+                required:
+                - index
+                - content_block
+                title: ContentBlockStartEvent
+              - properties:
+                  type:
+                    type: string
+                    const: content_block_delta
+                    title: Type
+                    default: content_block_delta
+                  index:
+                    type: integer
+                    title: Index
+                  delta:
+                    oneOf:
+                    - properties:
+                        type:
+                          type: string
+                          const: text_delta
+                          title: Type
+                          default: text_delta
+                        text:
+                          type: string
+                          title: Text
+                      type: object
+                      required:
+                      - text
+                      title: AnthropicTextDelta
+                    - properties:
+                        type:
+                          type: string
+                          const: thinking_delta
+                          title: Type
+                          default: thinking_delta
+                        thinking:
+                          type: string
+                          title: Thinking
+                      type: object
+                      required:
+                      - thinking
+                      title: AnthropicThinkingDelta
+                    - properties:
+                        type:
+                          type: string
+                          const: input_json_delta
+                          title: Type
+                          default: input_json_delta
+                        partial_json:
+                          type: string
+                          title: Partial Json
+                      type: object
+                      required:
+                      - partial_json
+                      title: AnthropicInputJsonDelta
+                    title: Delta
+                type: object
+                required:
+                - index
+                - delta
+                title: ContentBlockDeltaEvent
+              - properties:
+                  type:
+                    type: string
+                    const: content_block_stop
+                    title: Type
+                    default: content_block_stop
+                  index:
+                    type: integer
+                    title: Index
+                type: object
+                required:
+                - index
+                title: ContentBlockStopEvent
+              - properties:
+                  type:
+                    type: string
+                    const: message_stop
+                    title: Type
+                    default: message_stop
+                type: object
+                title: MessageStopEvent
+              title: Delta
+            finish_reason:
+              anyOf:
+              - type: string
+              - type: "null"
+              title: Finish Reason
+          type: object
+          required:
+          - index
+          - delta
+          title: CreateDeepNewsResponseStreamChunkChoiceV2
+        CreateDeepNewsResponseUsage:
+          properties:
+            prompt_tokens:
+              type: integer
+              title: Prompt Tokens
+            completion_tokens:
+              type: integer
+              title: Completion Tokens
+            total_tokens:
+              type: integer
+              title: Total Tokens
+            tool_usage:
+              anyOf:
+              - additionalProperties:
+                  type: integer
+                type: object
+              - type: "null"
+              title: Tool Usage
+          type: object
+          required:
+          - prompt_tokens
+          - completion_tokens
+          - total_tokens
+          title: CreateDeepNewsResponseUsage
+        MessageStartEvent:
+          properties:
+            type:
+              type: string
+              const: message_start
+              title: Type
+              default: message_start
+            role:
+              type: string
+              const: assistant
+              title: Role
+              default: assistant
+          type: object
+          title: MessageStartEvent
+        MessageStopEvent:
+          properties:
+            type:
+              type: string
+              const: message_stop
+              title: Type
+              default: message_stop
+          type: object
+          title: MessageStopEvent
+    CreateDeepNewsResponseStreamSourcesNewsSource_1:
+      properties:
+        kind:
+          default: news
+          enum:
+          - news
+          title: Kind
+          type: string
+        data:
+          $ref: '#/components/schemas/SearchResponseDictItem_1'
+      required:
+      - data
+      title: CreateDeepNewsResponseStreamSourcesNewsSource
+    WebSearchResult_2:
+      example:
+        raw_text: ""
+        source: source
+        published: published
+        title: title
+        as_string_key: as_string_key
+        url: https://openapi-generator.tech
+        key_points:
+        - key_points
+        - key_points
+      properties:
+        title:
+          title: Title
+          type: string
+        url:
+          format: uri
+          maxLength: 2083
+          minLength: 1
+          title: Url
+          type: string
+        source:
+          title: Source
+          type: string
+        published:
+          title: Published
+          type: string
+        key_points:
+          items:
+            type: string
+          type: array
+        raw_text:
+          default: ""
+          title: Raw Text
+          type: string
+        as_string_key:
+          nullable: true
+          type: string
+      required:
+      - key_points
+      - published
+      - source
+      - title
+      - url
+      title: WebSearchResult
+    CreateDeepNewsResponseStreamSourcesWebSource_1:
+      properties:
+        kind:
+          default: web
+          enum:
+          - web
+          title: Kind
+          type: string
+        data:
+          $ref: '#/components/schemas/WebSearchResult_2'
+      required:
+      - data
+      title: CreateDeepNewsResponseStreamSourcesWebSource
+    CreateDeepNewsResponseStreamSourcesGraphSource_1:
+      properties:
+        kind:
+          default: graph
+          enum:
+          - graph
+          title: Kind
+          type: string
+        data:
+          format: uri
+          minLength: 1
+          title: Data
+          type: string
+      required:
+      - data
+      title: CreateDeepNewsResponseStreamSourcesGraphSource
+    SeriesConfig_1:
+      example:
+        sentiment: sentiment
+        provocative: provocative
+        entity_guarantee_op: entity_guarantee_op
+        languages:
+        - languages
+        - languages
+        start_datetime: 2000-01-23T04:56:07.000+00:00
+        end_datetime: 2000-01-23T04:56:07.000+00:00
+        sampling: sampling
+        entity_guarantee:
+        - entity_guarantee
+        - entity_guarantee
+        domains:
+        - domains
+        - domains
+        countries:
+        - countries
+        - countries
+        continents:
+        - continents
+        - continents
+        page_rank: 0
+        reporting_voice:
+        - reporting_voice
+        - reporting_voice
+        string_guarantee:
+        - string_guarantee
+        - string_guarantee
+        reverse_string_guarantee:
+        - reverse_string_guarantee
+        - reverse_string_guarantee
+        name: name
+        time_filter: time_filter
+        categories:
+        - categories
+        - categories
+        string_guarantee_op: string_guarantee_op
+        countries_blacklist:
+        - countries_blacklist
+        - countries_blacklist
+        bad_domain_url:
+        - bad_domain_url
+        - bad_domain_url
+      properties:
+        name:
+          title: Name
+          type: string
+        start_datetime:
+          format: date-time
+          title: Start Datetime
+          type: string
+        end_datetime:
+          format: date-time
+          title: End Datetime
+          type: string
+        sampling:
+          nullable: true
+          type: string
+        time_filter:
+          nullable: true
+          type: string
+        categories:
+          items:
+            type: string
+          nullable: true
+          type: array
+        domains:
+          items:
+            type: string
+          nullable: true
+          type: array
+        bad_domain_url:
+          items:
+            type: string
+          nullable: true
+          type: array
+        page_rank:
+          nullable: true
+          type: integer
+        string_guarantee:
+          items:
+            type: string
+          nullable: true
+          type: array
+        string_guarantee_op:
+          nullable: true
+          type: string
+        reverse_string_guarantee:
+          items:
+            type: string
+          nullable: true
+          type: array
+        entity_guarantee:
+          items:
+            type: string
+          nullable: true
+          type: array
+        entity_guarantee_op:
+          nullable: true
+          type: string
+        countries:
+          items:
+            type: string
+          nullable: true
+          type: array
+        countries_blacklist:
+          items:
+            type: string
+          nullable: true
+          type: array
+        continents:
+          items:
+            type: string
+          nullable: true
+          type: array
+        languages:
+          items:
+            type: string
+          nullable: true
+          type: array
+        sentiment:
+          nullable: true
+          type: string
+        reporting_voice:
+          items:
+            type: string
+          nullable: true
+          type: array
+        provocative:
+          nullable: true
+          type: string
+      required:
+      - end_datetime
+      - name
+      - start_datetime
+      title: SeriesConfig
+    ChartParameters_1:
+      nullable: true
+      properties:
+        chart_type:
+          description: The type of chart to create
+          enum:
+          - line
+          - bar
+          - bar_pct
+          title: Chart Type
+          type: string
+        title:
+          nullable: true
+          type: string
+        series:
+          description: The series configurations for the chart
+          items:
+            $ref: '#/components/schemas/SeriesConfig_1'
+          type: array
+      required:
+      - chart_type
+      - series
+      title: ChartParameters
+    ChartResponse_1:
+      properties:
+        success:
+          title: Success
+          type: boolean
+        chart_json:
+          additionalProperties: {}
+          description: The plotly fig.to_json() JSON representation of the chart
+          title: Chart Json
+        query:
+          nullable: true
+          type: string
+        reasoning:
+          nullable: true
+          type: string
+        parameters:
+          $ref: '#/components/schemas/ChartParameters_1'
+        context:
+          additionalProperties: {}
+          nullable: true
+        iterations_used:
+          nullable: true
+          type: integer
+        last_reasoning:
+          nullable: true
+          type: string
+        last_parameters:
+          $ref: '#/components/schemas/ChartParameters_1'
+        png_data:
+          nullable: true
+          type: string
+        png_url:
+          nullable: true
+          type: string
+        chart_url:
+          nullable: true
+          type: string
+      required:
+      - chart_json
+      - success
+      title: ChartResponse
+    CreateDeepNewsResponseStreamSourcesChartSource_1:
+      properties:
+        kind:
+          default: chart
+          enum:
+          - chart
+          title: Kind
+          type: string
+        data:
+          $ref: '#/components/schemas/ChartResponse_1'
+      required:
+      - data
+      title: CreateDeepNewsResponseStreamSourcesChartSource
+    Source:
+      anyOf:
+      - $ref: '#/components/schemas/CreateDeepNewsResponseStreamSourcesNewsSource_1'
+      - $ref: '#/components/schemas/CreateDeepNewsResponseStreamSourcesWebSource_1'
+      - $ref: '#/components/schemas/CreateDeepNewsResponseStreamSourcesGraphSource_1'
+      - $ref: '#/components/schemas/CreateDeepNewsResponseStreamSourcesChartSource_1'
+      title: Source
+    CreateDeepNewsResponseStreamSource_1:
+      properties:
+        id:
+          title: Id
+          type: string
+        created:
+          title: Created
+          type: integer
+        object:
+          default: chat.completion.source
+          title: Object
+          type: string
+        source:
+          $ref: '#/components/schemas/Source'
+      required:
+      - created
+      - id
+      - source
+      title: CreateDeepNewsResponseStreamSource
+      $defs:
+        Assets:
+          properties:
+            images:
+              anyOf:
+              - items:
+                  type: string
+                type: array
+              - type: "null"
+              title: Images
+            videos:
+              anyOf:
+              - items:
+                  type: string
+                type: array
+              - type: "null"
+              title: Videos
+          type: object
+          title: Assets
+        Author:
+          properties:
+            email:
+              anyOf:
+              - type: string
+              - type: "null"
+              title: Email
+            name:
+              anyOf:
+              - type: string
+              - type: "null"
+              title: Name
+            url:
+              anyOf:
+              - type: string
+              - type: "null"
+              title: Url
+          type: object
+          title: Author
+        ChartParameters:
+          properties:
+            chart_type:
+              type: string
+              enum:
+              - line
+              - bar
+              - bar_pct
+              title: Chart Type
+              description: The type of chart to create
+            title:
+              anyOf:
+              - type: string
+              - type: "null"
+              title: Title
+              description: The title of the chart
+            series:
+              items:
+                properties:
+                  name:
+                    type: string
+                    title: Name
+                  start_datetime:
+                    type: string
+                    format: date-time
+                    title: Start Datetime
+                  end_datetime:
+                    type: string
+                    format: date-time
+                    title: End Datetime
+                  sampling:
+                    anyOf:
+                    - type: string
+                    - type: "null"
+                    title: Sampling
+                    default: 1d
+                  time_filter:
+                    anyOf:
+                    - type: string
+                    - type: "null"
+                    title: Time Filter
+                    default: pub_date
+                  categories:
+                    anyOf:
+                    - items:
+                        type: string
+                      type: array
+                    - type: "null"
+                    title: Categories
+                  domains:
+                    anyOf:
+                    - items:
+                        type: string
+                      type: array
+                    - type: "null"
+                    title: Domains
+                  bad_domain_url:
+                    anyOf:
+                    - items:
+                        type: string
+                      type: array
+                    - type: "null"
+                    title: Bad Domain Url
+                  page_rank:
+                    anyOf:
+                    - type: integer
+                    - type: "null"
+                    title: Page Rank
+                  string_guarantee:
+                    anyOf:
+                    - items:
+                        type: string
+                      type: array
+                    - type: "null"
+                    title: String Guarantee
+                  string_guarantee_op:
+                    anyOf:
+                    - type: string
+                    - type: "null"
+                    title: String Guarantee Op
+                    default: OR
+                  reverse_string_guarantee:
+                    anyOf:
+                    - items:
+                        type: string
+                      type: array
+                    - type: "null"
+                    title: Reverse String Guarantee
+                  entity_guarantee:
+                    anyOf:
+                    - items:
+                        type: string
+                      type: array
+                    - type: "null"
+                    title: Entity Guarantee
+                  entity_guarantee_op:
+                    anyOf:
+                    - type: string
+                    - type: "null"
+                    title: Entity Guarantee Op
+                    default: OR
+                  countries:
+                    anyOf:
+                    - items:
+                        type: string
+                      type: array
+                    - type: "null"
+                    title: Countries
+                  countries_blacklist:
+                    anyOf:
+                    - items:
+                        type: string
+                      type: array
+                    - type: "null"
+                    title: Countries Blacklist
+                  continents:
+                    anyOf:
+                    - items:
+                        type: string
+                      type: array
+                    - type: "null"
+                    title: Continents
+                  languages:
+                    anyOf:
+                    - items:
+                        type: string
+                      type: array
+                    - type: "null"
+                    title: Languages
+                  sentiment:
+                    anyOf:
+                    - type: string
+                    - type: "null"
+                    title: Sentiment
+                  reporting_voice:
+                    anyOf:
+                    - items:
+                        type: string
+                      type: array
+                    - type: "null"
+                    title: Reporting Voice
+                  provocative:
+                    anyOf:
+                    - type: string
+                    - type: "null"
+                    title: Provocative
+                    default: all
+                type: object
+                required:
+                - name
+                - start_datetime
+                - end_datetime
+                title: SeriesConfig
+              type: array
+              title: Series
+              description: The series configurations for the chart
+          type: object
+          required:
+          - chart_type
+          - series
+          title: ChartParameters
+        ChartResponse:
+          properties:
+            success:
+              type: boolean
+              title: Success
+            chart_json:
+              additionalProperties: true
+              type: object
+              title: Chart Json
+              description: The plotly fig.to_json() JSON representation of the chart
+            query:
+              anyOf:
+              - type: string
+              - type: "null"
+              title: Query
+            reasoning:
+              anyOf:
+              - type: string
+              - type: "null"
+              title: Reasoning
+            parameters:
+              anyOf:
+              - properties:
+                  chart_type:
+                    type: string
+                    enum:
+                    - line
+                    - bar
+                    - bar_pct
+                    title: Chart Type
+                    description: The type of chart to create
+                  title:
+                    anyOf:
+                    - type: string
+                    - type: "null"
+                    title: Title
+                    description: The title of the chart
+                  series:
+                    items:
+                      properties:
+                        name:
+                          type: string
+                          title: Name
+                        start_datetime:
+                          type: string
+                          format: date-time
+                          title: Start Datetime
+                        end_datetime:
+                          type: string
+                          format: date-time
+                          title: End Datetime
+                        sampling:
+                          anyOf:
+                          - type: string
+                          - type: "null"
+                          title: Sampling
+                          default: 1d
+                        time_filter:
+                          anyOf:
+                          - type: string
+                          - type: "null"
+                          title: Time Filter
+                          default: pub_date
+                        categories:
+                          anyOf:
+                          - items:
+                              type: string
+                            type: array
+                          - type: "null"
+                          title: Categories
+                        domains:
+                          anyOf:
+                          - items:
+                              type: string
+                            type: array
+                          - type: "null"
+                          title: Domains
+                        bad_domain_url:
+                          anyOf:
+                          - items:
+                              type: string
+                            type: array
+                          - type: "null"
+                          title: Bad Domain Url
+                        page_rank:
+                          anyOf:
+                          - type: integer
+                          - type: "null"
+                          title: Page Rank
+                        string_guarantee:
+                          anyOf:
+                          - items:
+                              type: string
+                            type: array
+                          - type: "null"
+                          title: String Guarantee
+                        string_guarantee_op:
+                          anyOf:
+                          - type: string
+                          - type: "null"
+                          title: String Guarantee Op
+                          default: OR
+                        reverse_string_guarantee:
+                          anyOf:
+                          - items:
+                              type: string
+                            type: array
+                          - type: "null"
+                          title: Reverse String Guarantee
+                        entity_guarantee:
+                          anyOf:
+                          - items:
+                              type: string
+                            type: array
+                          - type: "null"
+                          title: Entity Guarantee
+                        entity_guarantee_op:
+                          anyOf:
+                          - type: string
+                          - type: "null"
+                          title: Entity Guarantee Op
+                          default: OR
+                        countries:
+                          anyOf:
+                          - items:
+                              type: string
+                            type: array
+                          - type: "null"
+                          title: Countries
+                        countries_blacklist:
+                          anyOf:
+                          - items:
+                              type: string
+                            type: array
+                          - type: "null"
+                          title: Countries Blacklist
+                        continents:
+                          anyOf:
+                          - items:
+                              type: string
+                            type: array
+                          - type: "null"
+                          title: Continents
+                        languages:
+                          anyOf:
+                          - items:
+                              type: string
+                            type: array
+                          - type: "null"
+                          title: Languages
+                        sentiment:
+                          anyOf:
+                          - type: string
+                          - type: "null"
+                          title: Sentiment
+                        reporting_voice:
+                          anyOf:
+                          - items:
+                              type: string
+                            type: array
+                          - type: "null"
+                          title: Reporting Voice
+                        provocative:
+                          anyOf:
+                          - type: string
+                          - type: "null"
+                          title: Provocative
+                          default: all
+                      type: object
+                      required:
+                      - name
+                      - start_datetime
+                      - end_datetime
+                      title: SeriesConfig
+                    type: array
+                    title: Series
+                    description: The series configurations for the chart
+                type: object
+                required:
+                - chart_type
+                - series
+                title: ChartParameters
+              - type: "null"
+            context:
+              anyOf:
+              - additionalProperties: true
+                type: object
+              - type: "null"
+              title: Context
+            iterations_used:
+              anyOf:
+              - type: integer
+              - type: "null"
+              title: Iterations Used
+            last_reasoning:
+              anyOf:
+              - type: string
+              - type: "null"
+              title: Last Reasoning
+            last_parameters:
+              anyOf:
+              - properties:
+                  chart_type:
+                    type: string
+                    enum:
+                    - line
+                    - bar
+                    - bar_pct
+                    title: Chart Type
+                    description: The type of chart to create
+                  title:
+                    anyOf:
+                    - type: string
+                    - type: "null"
+                    title: Title
+                    description: The title of the chart
+                  series:
+                    items:
+                      properties:
+                        name:
+                          type: string
+                          title: Name
+                        start_datetime:
+                          type: string
+                          format: date-time
+                          title: Start Datetime
+                        end_datetime:
+                          type: string
+                          format: date-time
+                          title: End Datetime
+                        sampling:
+                          anyOf:
+                          - type: string
+                          - type: "null"
+                          title: Sampling
+                          default: 1d
+                        time_filter:
+                          anyOf:
+                          - type: string
+                          - type: "null"
+                          title: Time Filter
+                          default: pub_date
+                        categories:
+                          anyOf:
+                          - items:
+                              type: string
+                            type: array
+                          - type: "null"
+                          title: Categories
+                        domains:
+                          anyOf:
+                          - items:
+                              type: string
+                            type: array
+                          - type: "null"
+                          title: Domains
+                        bad_domain_url:
+                          anyOf:
+                          - items:
+                              type: string
+                            type: array
+                          - type: "null"
+                          title: Bad Domain Url
+                        page_rank:
+                          anyOf:
+                          - type: integer
+                          - type: "null"
+                          title: Page Rank
+                        string_guarantee:
+                          anyOf:
+                          - items:
+                              type: string
+                            type: array
+                          - type: "null"
+                          title: String Guarantee
+                        string_guarantee_op:
+                          anyOf:
+                          - type: string
+                          - type: "null"
+                          title: String Guarantee Op
+                          default: OR
+                        reverse_string_guarantee:
+                          anyOf:
+                          - items:
+                              type: string
+                            type: array
+                          - type: "null"
+                          title: Reverse String Guarantee
+                        entity_guarantee:
+                          anyOf:
+                          - items:
+                              type: string
+                            type: array
+                          - type: "null"
+                          title: Entity Guarantee
+                        entity_guarantee_op:
+                          anyOf:
+                          - type: string
+                          - type: "null"
+                          title: Entity Guarantee Op
+                          default: OR
+                        countries:
+                          anyOf:
+                          - items:
+                              type: string
+                            type: array
+                          - type: "null"
+                          title: Countries
+                        countries_blacklist:
+                          anyOf:
+                          - items:
+                              type: string
+                            type: array
+                          - type: "null"
+                          title: Countries Blacklist
+                        continents:
+                          anyOf:
+                          - items:
+                              type: string
+                            type: array
+                          - type: "null"
+                          title: Continents
+                        languages:
+                          anyOf:
+                          - items:
+                              type: string
+                            type: array
+                          - type: "null"
+                          title: Languages
+                        sentiment:
+                          anyOf:
+                          - type: string
+                          - type: "null"
+                          title: Sentiment
+                        reporting_voice:
+                          anyOf:
+                          - items:
+                              type: string
+                            type: array
+                          - type: "null"
+                          title: Reporting Voice
+                        provocative:
+                          anyOf:
+                          - type: string
+                          - type: "null"
+                          title: Provocative
+                          default: all
+                      type: object
+                      required:
+                      - name
+                      - start_datetime
+                      - end_datetime
+                      title: SeriesConfig
+                    type: array
+                    title: Series
+                    description: The series configurations for the chart
+                type: object
+                required:
+                - chart_type
+                - series
+                title: ChartParameters
+              - type: "null"
+            png_data:
+              anyOf:
+              - type: string
+              - type: "null"
+              title: Png Data
+              description: Base64-encoded PNG image data of the chart
+            png_url:
+              anyOf:
+              - type: string
+              - type: "null"
+              title: Png Url
+              description: URL to the PNG image of the chart
+            chart_url:
+              anyOf:
+              - type: string
+              - type: "null"
+              title: Chart Url
+              description: URL to the chart JSON object in S3
+          type: object
+          required:
+          - success
+          - chart_json
+          title: ChartResponse
+        CreateDeepNewsResponseStreamSourcesChartSource:
+          properties:
+            kind:
+              type: string
+              const: chart
+              title: Kind
+              default: chart
+            data:
+              properties:
+                success:
+                  type: boolean
+                  title: Success
+                chart_json:
+                  additionalProperties: true
+                  type: object
+                  title: Chart Json
+                  description: The plotly fig.to_json() JSON representation of the
+                    chart
+                query:
+                  anyOf:
+                  - type: string
+                  - type: "null"
+                  title: Query
+                reasoning:
+                  anyOf:
+                  - type: string
+                  - type: "null"
+                  title: Reasoning
+                parameters:
+                  anyOf:
+                  - properties:
+                      chart_type:
+                        type: string
+                        enum:
+                        - line
+                        - bar
+                        - bar_pct
+                        title: Chart Type
+                        description: The type of chart to create
+                      title:
+                        anyOf:
+                        - type: string
+                        - type: "null"
+                        title: Title
+                        description: The title of the chart
+                      series:
+                        items:
+                          properties:
+                            name:
+                              type: string
+                              title: Name
+                            start_datetime:
+                              type: string
+                              format: date-time
+                              title: Start Datetime
+                            end_datetime:
+                              type: string
+                              format: date-time
+                              title: End Datetime
+                            sampling:
+                              anyOf:
+                              - type: string
+                              - type: "null"
+                              title: Sampling
+                              default: 1d
+                            time_filter:
+                              anyOf:
+                              - type: string
+                              - type: "null"
+                              title: Time Filter
+                              default: pub_date
+                            categories:
+                              anyOf:
+                              - items:
+                                  type: string
+                                type: array
+                              - type: "null"
+                              title: Categories
+                            domains:
+                              anyOf:
+                              - items:
+                                  type: string
+                                type: array
+                              - type: "null"
+                              title: Domains
+                            bad_domain_url:
+                              anyOf:
+                              - items:
+                                  type: string
+                                type: array
+                              - type: "null"
+                              title: Bad Domain Url
+                            page_rank:
+                              anyOf:
+                              - type: integer
+                              - type: "null"
+                              title: Page Rank
+                            string_guarantee:
+                              anyOf:
+                              - items:
+                                  type: string
+                                type: array
+                              - type: "null"
+                              title: String Guarantee
+                            string_guarantee_op:
+                              anyOf:
+                              - type: string
+                              - type: "null"
+                              title: String Guarantee Op
+                              default: OR
+                            reverse_string_guarantee:
+                              anyOf:
+                              - items:
+                                  type: string
+                                type: array
+                              - type: "null"
+                              title: Reverse String Guarantee
+                            entity_guarantee:
+                              anyOf:
+                              - items:
+                                  type: string
+                                type: array
+                              - type: "null"
+                              title: Entity Guarantee
+                            entity_guarantee_op:
+                              anyOf:
+                              - type: string
+                              - type: "null"
+                              title: Entity Guarantee Op
+                              default: OR
+                            countries:
+                              anyOf:
+                              - items:
+                                  type: string
+                                type: array
+                              - type: "null"
+                              title: Countries
+                            countries_blacklist:
+                              anyOf:
+                              - items:
+                                  type: string
+                                type: array
+                              - type: "null"
+                              title: Countries Blacklist
+                            continents:
+                              anyOf:
+                              - items:
+                                  type: string
+                                type: array
+                              - type: "null"
+                              title: Continents
+                            languages:
+                              anyOf:
+                              - items:
+                                  type: string
+                                type: array
+                              - type: "null"
+                              title: Languages
+                            sentiment:
+                              anyOf:
+                              - type: string
+                              - type: "null"
+                              title: Sentiment
+                            reporting_voice:
+                              anyOf:
+                              - items:
+                                  type: string
+                                type: array
+                              - type: "null"
+                              title: Reporting Voice
+                            provocative:
+                              anyOf:
+                              - type: string
+                              - type: "null"
+                              title: Provocative
+                              default: all
+                          type: object
+                          required:
+                          - name
+                          - start_datetime
+                          - end_datetime
+                          title: SeriesConfig
+                        type: array
+                        title: Series
+                        description: The series configurations for the chart
+                    type: object
+                    required:
+                    - chart_type
+                    - series
+                    title: ChartParameters
+                  - type: "null"
+                context:
+                  anyOf:
+                  - additionalProperties: true
+                    type: object
+                  - type: "null"
+                  title: Context
+                iterations_used:
+                  anyOf:
+                  - type: integer
+                  - type: "null"
+                  title: Iterations Used
+                last_reasoning:
+                  anyOf:
+                  - type: string
+                  - type: "null"
+                  title: Last Reasoning
+                last_parameters:
+                  anyOf:
+                  - properties:
+                      chart_type:
+                        type: string
+                        enum:
+                        - line
+                        - bar
+                        - bar_pct
+                        title: Chart Type
+                        description: The type of chart to create
+                      title:
+                        anyOf:
+                        - type: string
+                        - type: "null"
+                        title: Title
+                        description: The title of the chart
+                      series:
+                        items:
+                          properties:
+                            name:
+                              type: string
+                              title: Name
+                            start_datetime:
+                              type: string
+                              format: date-time
+                              title: Start Datetime
+                            end_datetime:
+                              type: string
+                              format: date-time
+                              title: End Datetime
+                            sampling:
+                              anyOf:
+                              - type: string
+                              - type: "null"
+                              title: Sampling
+                              default: 1d
+                            time_filter:
+                              anyOf:
+                              - type: string
+                              - type: "null"
+                              title: Time Filter
+                              default: pub_date
+                            categories:
+                              anyOf:
+                              - items:
+                                  type: string
+                                type: array
+                              - type: "null"
+                              title: Categories
+                            domains:
+                              anyOf:
+                              - items:
+                                  type: string
+                                type: array
+                              - type: "null"
+                              title: Domains
+                            bad_domain_url:
+                              anyOf:
+                              - items:
+                                  type: string
+                                type: array
+                              - type: "null"
+                              title: Bad Domain Url
+                            page_rank:
+                              anyOf:
+                              - type: integer
+                              - type: "null"
+                              title: Page Rank
+                            string_guarantee:
+                              anyOf:
+                              - items:
+                                  type: string
+                                type: array
+                              - type: "null"
+                              title: String Guarantee
+                            string_guarantee_op:
+                              anyOf:
+                              - type: string
+                              - type: "null"
+                              title: String Guarantee Op
+                              default: OR
+                            reverse_string_guarantee:
+                              anyOf:
+                              - items:
+                                  type: string
+                                type: array
+                              - type: "null"
+                              title: Reverse String Guarantee
+                            entity_guarantee:
+                              anyOf:
+                              - items:
+                                  type: string
+                                type: array
+                              - type: "null"
+                              title: Entity Guarantee
+                            entity_guarantee_op:
+                              anyOf:
+                              - type: string
+                              - type: "null"
+                              title: Entity Guarantee Op
+                              default: OR
+                            countries:
+                              anyOf:
+                              - items:
+                                  type: string
+                                type: array
+                              - type: "null"
+                              title: Countries
+                            countries_blacklist:
+                              anyOf:
+                              - items:
+                                  type: string
+                                type: array
+                              - type: "null"
+                              title: Countries Blacklist
+                            continents:
+                              anyOf:
+                              - items:
+                                  type: string
+                                type: array
+                              - type: "null"
+                              title: Continents
+                            languages:
+                              anyOf:
+                              - items:
+                                  type: string
+                                type: array
+                              - type: "null"
+                              title: Languages
+                            sentiment:
+                              anyOf:
+                              - type: string
+                              - type: "null"
+                              title: Sentiment
+                            reporting_voice:
+                              anyOf:
+                              - items:
+                                  type: string
+                                type: array
+                              - type: "null"
+                              title: Reporting Voice
+                            provocative:
+                              anyOf:
+                              - type: string
+                              - type: "null"
+                              title: Provocative
+                              default: all
+                          type: object
+                          required:
+                          - name
+                          - start_datetime
+                          - end_datetime
+                          title: SeriesConfig
+                        type: array
+                        title: Series
+                        description: The series configurations for the chart
+                    type: object
+                    required:
+                    - chart_type
+                    - series
+                    title: ChartParameters
+                  - type: "null"
+                png_data:
+                  anyOf:
+                  - type: string
+                  - type: "null"
+                  title: Png Data
+                  description: Base64-encoded PNG image data of the chart
+                png_url:
+                  anyOf:
+                  - type: string
+                  - type: "null"
+                  title: Png Url
+                  description: URL to the PNG image of the chart
+                chart_url:
+                  anyOf:
+                  - type: string
+                  - type: "null"
+                  title: Chart Url
+                  description: URL to the chart JSON object in S3
+              type: object
+              required:
+              - success
+              - chart_json
+              title: ChartResponse
+          type: object
+          required:
+          - data
+          title: CreateDeepNewsResponseStreamSourcesChartSource
+        CreateDeepNewsResponseStreamSourcesGraphSource:
+          properties:
+            kind:
+              type: string
+              const: graph
+              title: Kind
+              default: graph
+            data:
+              type: string
+              minLength: 1
+              format: uri
+              title: Data
+          type: object
+          required:
+          - data
+          title: CreateDeepNewsResponseStreamSourcesGraphSource
+        CreateDeepNewsResponseStreamSourcesNewsSource:
+          properties:
+            kind:
+              type: string
+              const: news
+              title: Kind
+              default: news
+            data:
+              properties:
+                article_url:
+                  type: string
+                  maxLength: 2083
+                  minLength: 1
+                  format: uri
+                  title: Article Url
+                article_id:
+                  type: string
+                  format: uuid
+                  title: Article Id
+                classification:
+                  anyOf:
+                  - items:
+                      type: string
+                    type: array
+                  - type: string
+                  title: Classification
+                country:
+                  type: string
+                  title: Country
+                source_id:
+                  type: string
+                  title: Source Id
+                page_rank:
+                  type: integer
+                  title: Page Rank
+                domain_url:
+                  type: string
+                  title: Domain Url
+                eng_title:
+                  type: string
+                  title: Eng Title
+                entities:
+                  properties:
+                    Person:
+                      items:
+                        type: string
+                      type: array
+                      title: Person
+                      default: []
+                    Organization:
+                      items:
+                        type: string
+                      type: array
+                      title: Organization
+                      default: []
+                    Location:
+                      items:
+                        type: string
+                      type: array
+                      title: Location
+                      default: []
+                    Nationality:
+                      items:
+                        type: string
+                      type: array
+                      title: Nationality
+                      default: []
+                    Date:
+                      items:
+                        type: string
+                      type: array
+                      title: Date
+                      default: []
+                    Event:
+                      items:
+                        type: string
+                      type: array
+                      title: Event
+                      default: []
+                    Money:
+                      items:
+                        type: string
+                      type: array
+                      title: Money
+                      default: []
+                    Law:
+                      items:
+                        type: string
+                      type: array
+                      title: Law
+                      default: []
+                    Quantity:
+                      items:
+                        type: string
+                      type: array
+                      title: Quantity
+                      default: []
+                    Time:
+                      items:
+                        type: string
+                      type: array
+                      title: Time
+                      default: []
+                    Sports:
+                      items:
+                        type: string
+                      type: array
+                      title: Sports
+                      default: []
+                    Politics:
+                      items:
+                        type: string
+                      type: array
+                      title: Politics
+                      default: []
+                    Title:
+                      items:
+                        type: string
+                      type: array
+                      title: Title
+                      default: []
+                    Number:
+                      items:
+                        type: string
+                      type: array
+                      title: Number
+                      default: []
+                    Arms:
+                      items:
+                        type: string
+                      type: array
+                      title: Arms
+                      default: []
+                    Product:
+                      items:
+                        type: string
+                      type: array
+                      title: Product
+                      default: []
+                    Media:
+                      items:
+                        type: string
+                      type: array
+                      title: Media
+                      default: []
+                    Transportation:
+                      items:
+                        type: string
+                      type: array
+                      title: Transportation
+                      default: []
+                    Religion:
+                      items:
+                        type: string
+                      type: array
+                      title: Religion
+                      default: []
+                    Technology:
+                      items:
+                        type: string
+                      type: array
+                      title: Technology
+                      default: []
+                    Space:
+                      items:
+                        type: string
+                      type: array
+                      title: Space
+                      default: []
+                    Medicine:
+                      items:
+                        type: string
+                      type: array
+                      title: Medicine
+                      default: []
+                    Language:
+                      items:
+                        type: string
+                      type: array
+                      title: Language
+                      default: []
+                    Science:
+                      items:
+                        type: string
+                      type: array
+                      title: Science
+                      default: []
+                  type: object
+                  title: Entities
+                image_url:
+                  anyOf:
+                  - type: string
+                  - type: "null"
+                  title: Image Url
+                keywords:
+                  items:
+                    type: string
+                  type: array
+                  title: Keywords
+                language:
+                  type: string
+                  title: Language
+                pub_date:
+                  type: string
+                  format: date-time
+                  title: Pub Date
+                summary:
+                  type: string
+                  title: Summary
+                key_points:
+                  anyOf:
+                  - items:
+                      type: string
+                    type: array
+                  - type: "null"
+                  title: Key Points
+                title:
+                  type: string
+                  title: Title
+                sentiment:
+                  type: integer
+                  title: Sentiment
+                centroid_distance:
+                  type: number
+                  title: Centroid Distance
+                cluster_probability:
+                  type: number
+                  title: Cluster Probability
+                markdown_citation:
+                  type: string
+                  title: Markdown Citation
+                  default: ""
+                provocative:
+                  type: string
+                  enum:
+                  - unknown
+                  - low
+                  - medium
+                  - high
+                  title: Provocative
+                  default: unknown
+                reporting_voice:
+                  anyOf:
+                  - type: string
+                    enum:
+                    - Objective
+                    - Subjective
+                    - Investigative
+                    - Narrative
+                    - Analytical
+                    - Advocacy
+                    - Conversational
+                    - Satirical
+                    - Emotive
+                    - Explanatory
+                    - UnknownPersuasive
+                    - Sensational
+                  - type: string
+                  title: Reporting Voice
+                  default: Unknown
+                entity_relation_graph:
+                  anyOf:
+                  - properties:
+                      nodes:
+                        items:
+                          additionalProperties:
+                            type: string
+                          propertyNames:
+                            enum:
+                            - id
+                            - type
+                            - detailed_type
+                            - ner_type
+                          type: object
+                        type: array
+                        title: Nodes
+                        default: []
+                      edges:
+                        items:
+                          additionalProperties:
+                            type: string
+                          propertyNames:
+                            enum:
+                            - from
+                            - to
+                            - label
+                          type: object
+                        type: array
+                        title: Edges
+                        default: []
+                    type: object
+                    title: GraphRelationships
+                  - type: "null"
+                geo_coordinates:
+                  anyOf:
+                  - additionalProperties:
+                      properties:
+                        latitude:
+                          type: number
+                          title: Latitude
+                        longitude:
+                          type: number
+                          title: Longitude
+                        metadata:
+                          additionalProperties: true
+                          type: object
+                          title: Metadata
+                      type: object
+                      required:
+                      - latitude
+                      - longitude
+                      - metadata
+                      title: GeoCoordinate
+                    type: object
+                  - type: "null"
+                  title: Geo Coordinates
+                continent:
+                  anyOf:
+                  - type: string
+                    enum:
+                    - Africa
+                    - Asia
+                    - Europe
+                    - Middle East
+                    - North America
+                    - South America
+                    - Oceania
+                  - type: "null"
+                  title: Continent
+                assets:
+                  anyOf:
+                  - properties:
+                      images:
+                        anyOf:
+                        - items:
+                            type: string
+                          type: array
+                        - type: "null"
+                        title: Images
+                      videos:
+                        anyOf:
+                        - items:
+                            type: string
+                          type: array
+                        - type: "null"
+                        title: Videos
+                    type: object
+                    title: Assets
+                  - type: "null"
+                social_embeds:
+                  anyOf:
+                  - items:
+                      type: string
+                    type: array
+                  - type: "null"
+                  title: Social Embeds
+                bias:
+                  anyOf:
+                  - type: string
+                    enum:
+                    - Political
+                    - Gender
+                    - Cultural
+                    - Age
+                    - Religious
+                    - Statement
+                    - Illogical Claims
+                    - Slant
+                    - Source Selection
+                    - Omission of Source Attribution
+                    - Spin
+                    - Sensationalism
+                    - Negativity
+                    - Subjective Adjectives
+                    - Ad Hominem
+                    - Mind Reading
+                    - Opinion-as-Fact
+                    - None
+                    - Unknown
+                  - type: "null"
+                  title: Bias
+                authors:
+                  anyOf:
+                  - items:
+                      properties:
+                        email:
+                          anyOf:
+                          - type: string
+                          - type: "null"
+                          title: Email
+                        name:
+                          anyOf:
+                          - type: string
+                          - type: "null"
+                          title: Name
+                        url:
+                          anyOf:
+                          - type: string
+                          - type: "null"
+                          title: Url
+                      type: object
+                      title: Author
+                    type: array
+                  - type: "null"
+                  title: Authors
+                full_text:
+                  anyOf:
+                  - type: string
+                  - type: "null"
+                  title: Full Text
+                original_language_summary:
+                  anyOf:
+                  - type: string
+                  - type: "null"
+                  title: Original Language Summary
+                image_description:
+                  anyOf:
+                  - type: string
+                  - type: "null"
+                  title: Image Description
+                as_string_key:
+                  type: string
+                  title: As String Key
+              type: object
+              required:
+              - article_url
+              - article_id
+              - classification
+              - country
+              - source_id
+              - page_rank
+              - domain_url
+              - eng_title
+              - entities
+              - keywords
+              - language
+              - pub_date
+              - summary
+              - title
+              - sentiment
+              - centroid_distance
+              - cluster_probability
+              - as_string_key
+              title: SearchResponseDictItem
+          type: object
+          required:
+          - data
+          title: CreateDeepNewsResponseStreamSourcesNewsSource
+        CreateDeepNewsResponseStreamSourcesWebSource:
+          properties:
+            kind:
+              type: string
+              const: web
+              title: Kind
+              default: web
+            data:
+              properties:
+                title:
+                  type: string
+                  title: Title
+                url:
+                  type: string
+                  maxLength: 2083
+                  minLength: 1
+                  format: uri
+                  title: Url
+                source:
+                  type: string
+                  title: Source
+                published:
+                  type: string
+                  title: Published
+                key_points:
+                  items:
+                    type: string
+                  type: array
+                  title: Key Points
+                raw_text:
+                  type: string
+                  title: Raw Text
+                  default: ""
+                as_string_key:
+                  anyOf:
+                  - type: string
+                  - type: "null"
+                  title: As String Key
+              type: object
+              required:
+              - title
+              - url
+              - source
+              - published
+              - key_points
+              title: WebSearchResult
+          type: object
+          required:
+          - data
+          title: CreateDeepNewsResponseStreamSourcesWebSource
+        Entities:
+          properties:
+            Person:
+              items:
+                type: string
+              type: array
+              title: Person
+              default: []
+            Organization:
+              items:
+                type: string
+              type: array
+              title: Organization
+              default: []
+            Location:
+              items:
+                type: string
+              type: array
+              title: Location
+              default: []
+            Nationality:
+              items:
+                type: string
+              type: array
+              title: Nationality
+              default: []
+            Date:
+              items:
+                type: string
+              type: array
+              title: Date
+              default: []
+            Event:
+              items:
+                type: string
+              type: array
+              title: Event
+              default: []
+            Money:
+              items:
+                type: string
+              type: array
+              title: Money
+              default: []
+            Law:
+              items:
+                type: string
+              type: array
+              title: Law
+              default: []
+            Quantity:
+              items:
+                type: string
+              type: array
+              title: Quantity
+              default: []
+            Time:
+              items:
+                type: string
+              type: array
+              title: Time
+              default: []
+            Sports:
+              items:
+                type: string
+              type: array
+              title: Sports
+              default: []
+            Politics:
+              items:
+                type: string
+              type: array
+              title: Politics
+              default: []
+            Title:
+              items:
+                type: string
+              type: array
+              title: Title
+              default: []
+            Number:
+              items:
+                type: string
+              type: array
+              title: Number
+              default: []
+            Arms:
+              items:
+                type: string
+              type: array
+              title: Arms
+              default: []
+            Product:
+              items:
+                type: string
+              type: array
+              title: Product
+              default: []
+            Media:
+              items:
+                type: string
+              type: array
+              title: Media
+              default: []
+            Transportation:
+              items:
+                type: string
+              type: array
+              title: Transportation
+              default: []
+            Religion:
+              items:
+                type: string
+              type: array
+              title: Religion
+              default: []
+            Technology:
+              items:
+                type: string
+              type: array
+              title: Technology
+              default: []
+            Space:
+              items:
+                type: string
+              type: array
+              title: Space
+              default: []
+            Medicine:
+              items:
+                type: string
+              type: array
+              title: Medicine
+              default: []
+            Language:
+              items:
+                type: string
+              type: array
+              title: Language
+              default: []
+            Science:
+              items:
+                type: string
+              type: array
+              title: Science
+              default: []
+          type: object
+          title: Entities
+        GeoCoordinate:
+          properties:
+            latitude:
+              type: number
+              title: Latitude
+            longitude:
+              type: number
+              title: Longitude
+            metadata:
+              additionalProperties: true
+              type: object
+              title: Metadata
+          type: object
+          required:
+          - latitude
+          - longitude
+          - metadata
+          title: GeoCoordinate
+        GraphRelationships:
+          properties:
+            nodes:
+              items:
+                additionalProperties:
+                  type: string
+                propertyNames:
+                  enum:
+                  - id
+                  - type
+                  - detailed_type
+                  - ner_type
+                type: object
+              type: array
+              title: Nodes
+              default: []
+            edges:
+              items:
+                additionalProperties:
+                  type: string
+                propertyNames:
+                  enum:
+                  - from
+                  - to
+                  - label
+                type: object
+              type: array
+              title: Edges
+              default: []
+          type: object
+          title: GraphRelationships
+        SearchResponseDictItem:
+          properties:
+            article_url:
+              type: string
+              maxLength: 2083
+              minLength: 1
+              format: uri
+              title: Article Url
+            article_id:
+              type: string
+              format: uuid
+              title: Article Id
+            classification:
+              anyOf:
+              - items:
+                  type: string
+                type: array
+              - type: string
+              title: Classification
+            country:
+              type: string
+              title: Country
+            source_id:
+              type: string
+              title: Source Id
+            page_rank:
+              type: integer
+              title: Page Rank
+            domain_url:
+              type: string
+              title: Domain Url
+            eng_title:
+              type: string
+              title: Eng Title
+            entities:
+              properties:
+                Person:
+                  items:
+                    type: string
+                  type: array
+                  title: Person
+                  default: []
+                Organization:
+                  items:
+                    type: string
+                  type: array
+                  title: Organization
+                  default: []
+                Location:
+                  items:
+                    type: string
+                  type: array
+                  title: Location
+                  default: []
+                Nationality:
+                  items:
+                    type: string
+                  type: array
+                  title: Nationality
+                  default: []
+                Date:
+                  items:
+                    type: string
+                  type: array
+                  title: Date
+                  default: []
+                Event:
+                  items:
+                    type: string
+                  type: array
+                  title: Event
+                  default: []
+                Money:
+                  items:
+                    type: string
+                  type: array
+                  title: Money
+                  default: []
+                Law:
+                  items:
+                    type: string
+                  type: array
+                  title: Law
+                  default: []
+                Quantity:
+                  items:
+                    type: string
+                  type: array
+                  title: Quantity
+                  default: []
+                Time:
+                  items:
+                    type: string
+                  type: array
+                  title: Time
+                  default: []
+                Sports:
+                  items:
+                    type: string
+                  type: array
+                  title: Sports
+                  default: []
+                Politics:
+                  items:
+                    type: string
+                  type: array
+                  title: Politics
+                  default: []
+                Title:
+                  items:
+                    type: string
+                  type: array
+                  title: Title
+                  default: []
+                Number:
+                  items:
+                    type: string
+                  type: array
+                  title: Number
+                  default: []
+                Arms:
+                  items:
+                    type: string
+                  type: array
+                  title: Arms
+                  default: []
+                Product:
+                  items:
+                    type: string
+                  type: array
+                  title: Product
+                  default: []
+                Media:
+                  items:
+                    type: string
+                  type: array
+                  title: Media
+                  default: []
+                Transportation:
+                  items:
+                    type: string
+                  type: array
+                  title: Transportation
+                  default: []
+                Religion:
+                  items:
+                    type: string
+                  type: array
+                  title: Religion
+                  default: []
+                Technology:
+                  items:
+                    type: string
+                  type: array
+                  title: Technology
+                  default: []
+                Space:
+                  items:
+                    type: string
+                  type: array
+                  title: Space
+                  default: []
+                Medicine:
+                  items:
+                    type: string
+                  type: array
+                  title: Medicine
+                  default: []
+                Language:
+                  items:
+                    type: string
+                  type: array
+                  title: Language
+                  default: []
+                Science:
+                  items:
+                    type: string
+                  type: array
+                  title: Science
+                  default: []
+              type: object
+              title: Entities
+            image_url:
+              anyOf:
+              - type: string
+              - type: "null"
+              title: Image Url
+            keywords:
+              items:
+                type: string
+              type: array
+              title: Keywords
+            language:
+              type: string
+              title: Language
+            pub_date:
+              type: string
+              format: date-time
+              title: Pub Date
+            summary:
+              type: string
+              title: Summary
+            key_points:
+              anyOf:
+              - items:
+                  type: string
+                type: array
+              - type: "null"
+              title: Key Points
+            title:
+              type: string
+              title: Title
+            sentiment:
+              type: integer
+              title: Sentiment
+            centroid_distance:
+              type: number
+              title: Centroid Distance
+            cluster_probability:
+              type: number
+              title: Cluster Probability
+            markdown_citation:
+              type: string
+              title: Markdown Citation
+              default: ""
+            provocative:
+              type: string
+              enum:
+              - unknown
+              - low
+              - medium
+              - high
+              title: Provocative
+              default: unknown
+            reporting_voice:
+              anyOf:
+              - type: string
+                enum:
+                - Objective
+                - Subjective
+                - Investigative
+                - Narrative
+                - Analytical
+                - Advocacy
+                - Conversational
+                - Satirical
+                - Emotive
+                - Explanatory
+                - UnknownPersuasive
+                - Sensational
+              - type: string
+              title: Reporting Voice
+              default: Unknown
+            entity_relation_graph:
+              anyOf:
+              - properties:
+                  nodes:
+                    items:
+                      additionalProperties:
+                        type: string
+                      propertyNames:
+                        enum:
+                        - id
+                        - type
+                        - detailed_type
+                        - ner_type
+                      type: object
+                    type: array
+                    title: Nodes
+                    default: []
+                  edges:
+                    items:
+                      additionalProperties:
+                        type: string
+                      propertyNames:
+                        enum:
+                        - from
+                        - to
+                        - label
+                      type: object
+                    type: array
+                    title: Edges
+                    default: []
+                type: object
+                title: GraphRelationships
+              - type: "null"
+            geo_coordinates:
+              anyOf:
+              - additionalProperties:
+                  properties:
+                    latitude:
+                      type: number
+                      title: Latitude
+                    longitude:
+                      type: number
+                      title: Longitude
+                    metadata:
+                      additionalProperties: true
+                      type: object
+                      title: Metadata
+                  type: object
+                  required:
+                  - latitude
+                  - longitude
+                  - metadata
+                  title: GeoCoordinate
+                type: object
+              - type: "null"
+              title: Geo Coordinates
+            continent:
+              anyOf:
+              - type: string
+                enum:
+                - Africa
+                - Asia
+                - Europe
+                - Middle East
+                - North America
+                - South America
+                - Oceania
+              - type: "null"
+              title: Continent
+            assets:
+              anyOf:
+              - properties:
+                  images:
+                    anyOf:
+                    - items:
+                        type: string
+                      type: array
+                    - type: "null"
+                    title: Images
+                  videos:
+                    anyOf:
+                    - items:
+                        type: string
+                      type: array
+                    - type: "null"
+                    title: Videos
+                type: object
+                title: Assets
+              - type: "null"
+            social_embeds:
+              anyOf:
+              - items:
+                  type: string
+                type: array
+              - type: "null"
+              title: Social Embeds
+            bias:
+              anyOf:
+              - type: string
+                enum:
+                - Political
+                - Gender
+                - Cultural
+                - Age
+                - Religious
+                - Statement
+                - Illogical Claims
+                - Slant
+                - Source Selection
+                - Omission of Source Attribution
+                - Spin
+                - Sensationalism
+                - Negativity
+                - Subjective Adjectives
+                - Ad Hominem
+                - Mind Reading
+                - Opinion-as-Fact
+                - None
+                - Unknown
+              - type: "null"
+              title: Bias
+            authors:
+              anyOf:
+              - items:
+                  properties:
+                    email:
+                      anyOf:
+                      - type: string
+                      - type: "null"
+                      title: Email
+                    name:
+                      anyOf:
+                      - type: string
+                      - type: "null"
+                      title: Name
+                    url:
+                      anyOf:
+                      - type: string
+                      - type: "null"
+                      title: Url
+                  type: object
+                  title: Author
+                type: array
+              - type: "null"
+              title: Authors
+            full_text:
+              anyOf:
+              - type: string
+              - type: "null"
+              title: Full Text
+            original_language_summary:
+              anyOf:
+              - type: string
+              - type: "null"
+              title: Original Language Summary
+            image_description:
+              anyOf:
+              - type: string
+              - type: "null"
+              title: Image Description
+            as_string_key:
+              type: string
+              title: As String Key
+          type: object
+          required:
+          - article_url
+          - article_id
+          - classification
+          - country
+          - source_id
+          - page_rank
+          - domain_url
+          - eng_title
+          - entities
+          - keywords
+          - language
+          - pub_date
+          - summary
+          - title
+          - sentiment
+          - centroid_distance
+          - cluster_probability
+          - as_string_key
+          title: SearchResponseDictItem
+        SeriesConfig:
+          properties:
+            name:
+              type: string
+              title: Name
+            start_datetime:
+              type: string
+              format: date-time
+              title: Start Datetime
+            end_datetime:
+              type: string
+              format: date-time
+              title: End Datetime
+            sampling:
+              anyOf:
+              - type: string
+              - type: "null"
+              title: Sampling
+              default: 1d
+            time_filter:
+              anyOf:
+              - type: string
+              - type: "null"
+              title: Time Filter
+              default: pub_date
+            categories:
+              anyOf:
+              - items:
+                  type: string
+                type: array
+              - type: "null"
+              title: Categories
+            domains:
+              anyOf:
+              - items:
+                  type: string
+                type: array
+              - type: "null"
+              title: Domains
+            bad_domain_url:
+              anyOf:
+              - items:
+                  type: string
+                type: array
+              - type: "null"
+              title: Bad Domain Url
+            page_rank:
+              anyOf:
+              - type: integer
+              - type: "null"
+              title: Page Rank
+            string_guarantee:
+              anyOf:
+              - items:
+                  type: string
+                type: array
+              - type: "null"
+              title: String Guarantee
+            string_guarantee_op:
+              anyOf:
+              - type: string
+              - type: "null"
+              title: String Guarantee Op
+              default: OR
+            reverse_string_guarantee:
+              anyOf:
+              - items:
+                  type: string
+                type: array
+              - type: "null"
+              title: Reverse String Guarantee
+            entity_guarantee:
+              anyOf:
+              - items:
+                  type: string
+                type: array
+              - type: "null"
+              title: Entity Guarantee
+            entity_guarantee_op:
+              anyOf:
+              - type: string
+              - type: "null"
+              title: Entity Guarantee Op
+              default: OR
+            countries:
+              anyOf:
+              - items:
+                  type: string
+                type: array
+              - type: "null"
+              title: Countries
+            countries_blacklist:
+              anyOf:
+              - items:
+                  type: string
+                type: array
+              - type: "null"
+              title: Countries Blacklist
+            continents:
+              anyOf:
+              - items:
+                  type: string
+                type: array
+              - type: "null"
+              title: Continents
+            languages:
+              anyOf:
+              - items:
+                  type: string
+                type: array
+              - type: "null"
+              title: Languages
+            sentiment:
+              anyOf:
+              - type: string
+              - type: "null"
+              title: Sentiment
+            reporting_voice:
+              anyOf:
+              - items:
+                  type: string
+                type: array
+              - type: "null"
+              title: Reporting Voice
+            provocative:
+              anyOf:
+              - type: string
+              - type: "null"
+              title: Provocative
+              default: all
+          type: object
+          required:
+          - name
+          - start_datetime
+          - end_datetime
+          title: SeriesConfig
+        WebSearchResult:
+          properties:
+            title:
+              type: string
+              title: Title
+            url:
+              type: string
+              maxLength: 2083
+              minLength: 1
+              format: uri
+              title: Url
+            source:
+              type: string
+              title: Source
+            published:
+              type: string
+              title: Published
+            key_points:
+              items:
+                type: string
+              type: array
+              title: Key Points
+            raw_text:
+              type: string
+              title: Raw Text
+              default: ""
+            as_string_key:
+              anyOf:
+              - type: string
+              - type: "null"
+              title: As String Key
+          type: object
+          required:
+          - title
+          - url
+          - source
+          - published
+          - key_points
+          title: WebSearchResult
+    deep_news_200_response:
+      oneOf:
+      - $ref: '#/components/schemas/CreateDeepNewsResponseStreamChunk_1'
+      - $ref: '#/components/schemas/CreateDeepNewsResponseStreamChunkV2_1'
+      - $ref: '#/components/schemas/CreateDeepNewsResponseStreamSource_1'
     Continent:
       anyOf:
       - items:
@@ -23153,6 +27134,18 @@ components:
         type: array
       nullable: true
       title: Report
+    Delta_1:
+      oneOf:
+      - $ref: '#/components/schemas/AnthropicTextDelta'
+      - $ref: '#/components/schemas/AnthropicThinkingDelta'
+      - $ref: '#/components/schemas/AnthropicInputJsonDelta'
+      title: Delta
+    Content_Block_1:
+      oneOf:
+      - $ref: '#/components/schemas/AnthropicTextBlock'
+      - $ref: '#/components/schemas/AnthropicThinkingBlock'
+      - $ref: '#/components/schemas/AnthropicToolUseBlock'
+      title: Content Block
     Report_1_anyOf:
       discriminator:
         mapping:
@@ -23226,6 +27219,7 @@ components:
         - reddit
         - charts
         - email
+        - full_text_discovery
       - items:
           enum:
           - asknews
@@ -23236,10 +27230,11 @@ components:
           - reddit
           - charts
           - email
+          - full_text_discovery
       default: asknews
       description: "Which data sources DeepNews should use. Can be a single source\
         \ or a list. Available sources are: asknews, google, graph, wiki, x, reddit,\
-        \ charts, email"
+        \ charts, email, full_text_discovery"
       title: Sources
     Stop_1:
       anyOf:
@@ -23261,7 +27256,22 @@ components:
       - {}
       description: ID of an existing thread to continue the conversation.
       title: Thread Id
-    Source:
+    Cutoff_Datetime:
+      anyOf:
+      - format: date-time
+      - {}
+      description: The knowledge cutoff datetime for the agent prompt and all tool
+        calls.
+      title: Cutoff Datetime
+    Delta_2:
+      oneOf:
+      - $ref: '#/components/schemas/MessageStartEvent'
+      - $ref: '#/components/schemas/ContentBlockStartEvent'
+      - $ref: '#/components/schemas/ContentBlockDeltaEvent'
+      - $ref: '#/components/schemas/ContentBlockStopEvent'
+      - $ref: '#/components/schemas/MessageStopEvent'
+      title: Delta
+    Source_1:
       anyOf:
       - $ref: '#/components/schemas/CreateDeepNewsResponseStreamSourcesNewsSource'
       - $ref: '#/components/schemas/CreateDeepNewsResponseStreamSourcesWebSource'
@@ -23279,6 +27289,7 @@ components:
         - reddit
         - charts
         - email
+        - full_text_discovery
         type: string
       - items:
           enum:
@@ -23290,6 +27301,7 @@ components:
           - reddit
           - charts
           - email
+          - full_text_discovery
           type: string
         type: array
       default:
@@ -23299,7 +27311,8 @@ components:
       - x
       description: "Which data sources DeepNews should use. Can be a single source\
         \ or a list. Available sources are: asknews, google, graph, wiki, x, reddit,\
-        \ charts, email. Defaults to ['asknews', 'google', 'wiki', 'x']."
+        \ charts, email, full_text_discovery. Defaults to ['asknews', 'google', 'wiki',\
+        \ 'x']."
       title: Sources
     Offset_2:
       anyOf:

@@ -7,13 +7,13 @@ Name | Type | Description | Notes
 **Id** | **string** |  | 
 **Created** | **int32** |  | 
 **Object** | Pointer to **string** |  | [optional] [default to "chat.completion.source"]
-**Source** | [**Source**](Source.md) |  | 
+**Source** | [**Source1**](Source1.md) |  | 
 
 ## Methods
 
 ### NewCreateDeepNewsResponseStreamSource
 
-`func NewCreateDeepNewsResponseStreamSource(id string, created int32, source Source, ) *CreateDeepNewsResponseStreamSource`
+`func NewCreateDeepNewsResponseStreamSource(id string, created int32, source Source1, ) *CreateDeepNewsResponseStreamSource`
 
 NewCreateDeepNewsResponseStreamSource instantiates a new CreateDeepNewsResponseStreamSource object
 This constructor will assign default values to properties that have it defined,
@@ -95,20 +95,20 @@ HasObject returns a boolean if a field has been set.
 
 ### GetSource
 
-`func (o *CreateDeepNewsResponseStreamSource) GetSource() Source`
+`func (o *CreateDeepNewsResponseStreamSource) GetSource() Source1`
 
 GetSource returns the Source field if non-nil, zero value otherwise.
 
 ### GetSourceOk
 
-`func (o *CreateDeepNewsResponseStreamSource) GetSourceOk() (*Source, bool)`
+`func (o *CreateDeepNewsResponseStreamSource) GetSourceOk() (*Source1, bool)`
 
 GetSourceOk returns a tuple with the Source field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetSource
 
-`func (o *CreateDeepNewsResponseStreamSource) SetSource(v Source)`
+`func (o *CreateDeepNewsResponseStreamSource) SetSource(v Source1)`
 
 SetSource sets Source field to given value.
 

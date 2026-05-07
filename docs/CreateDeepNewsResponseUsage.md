@@ -7,6 +7,7 @@ Name | Type | Description | Notes
 **PromptTokens** | **int32** |  | 
 **CompletionTokens** | **int32** |  | 
 **TotalTokens** | **int32** |  | 
+**ToolUsage** | Pointer to **map[string]int32** |  | [optional] 
 
 ## Methods
 
@@ -87,6 +88,41 @@ and a boolean to check if the value has been set.
 SetTotalTokens sets TotalTokens field to given value.
 
 
+### GetToolUsage
+
+`func (o *CreateDeepNewsResponseUsage) GetToolUsage() map[string]int32`
+
+GetToolUsage returns the ToolUsage field if non-nil, zero value otherwise.
+
+### GetToolUsageOk
+
+`func (o *CreateDeepNewsResponseUsage) GetToolUsageOk() (*map[string]int32, bool)`
+
+GetToolUsageOk returns a tuple with the ToolUsage field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetToolUsage
+
+`func (o *CreateDeepNewsResponseUsage) SetToolUsage(v map[string]int32)`
+
+SetToolUsage sets ToolUsage field to given value.
+
+### HasToolUsage
+
+`func (o *CreateDeepNewsResponseUsage) HasToolUsage() bool`
+
+HasToolUsage returns a boolean if a field has been set.
+
+### SetToolUsageNil
+
+`func (o *CreateDeepNewsResponseUsage) SetToolUsageNil(b bool)`
+
+ SetToolUsageNil sets the value for ToolUsage to be an explicit nil
+
+### UnsetToolUsage
+`func (o *CreateDeepNewsResponseUsage) UnsetToolUsage()`
+
+UnsetToolUsage ensures that no value is present for ToolUsage, not even an explicit nil
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

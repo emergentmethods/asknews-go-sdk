@@ -8,14 +8,14 @@ Name | Type | Description | Notes
 **Created** | **int32** |  | 
 **Object** | Pointer to **string** |  | [optional] [default to "chat.completion.chunk"]
 **Model** | Pointer to **string** |  | [optional] [default to "claude-sonnet-4-6"]
-**Usage** | [**CreateDeepNewsResponseUsage1**](CreateDeepNewsResponseUsage1.md) |  | 
+**Usage** | [**CreateDeepNewsResponseUsage2**](CreateDeepNewsResponseUsage2.md) |  | 
 **Choices** | [**[]CreateDeepNewsResponseStreamChunkChoice1**](CreateDeepNewsResponseStreamChunkChoice1.md) |  | 
 
 ## Methods
 
 ### NewCreateDeepNewsResponseStreamChunk1
 
-`func NewCreateDeepNewsResponseStreamChunk1(id string, created int32, usage CreateDeepNewsResponseUsage1, choices []CreateDeepNewsResponseStreamChunkChoice1, ) *CreateDeepNewsResponseStreamChunk1`
+`func NewCreateDeepNewsResponseStreamChunk1(id string, created int32, usage CreateDeepNewsResponseUsage2, choices []CreateDeepNewsResponseStreamChunkChoice1, ) *CreateDeepNewsResponseStreamChunk1`
 
 NewCreateDeepNewsResponseStreamChunk1 instantiates a new CreateDeepNewsResponseStreamChunk1 object
 This constructor will assign default values to properties that have it defined,
@@ -122,20 +122,20 @@ HasModel returns a boolean if a field has been set.
 
 ### GetUsage
 
-`func (o *CreateDeepNewsResponseStreamChunk1) GetUsage() CreateDeepNewsResponseUsage1`
+`func (o *CreateDeepNewsResponseStreamChunk1) GetUsage() CreateDeepNewsResponseUsage2`
 
 GetUsage returns the Usage field if non-nil, zero value otherwise.
 
 ### GetUsageOk
 
-`func (o *CreateDeepNewsResponseStreamChunk1) GetUsageOk() (*CreateDeepNewsResponseUsage1, bool)`
+`func (o *CreateDeepNewsResponseStreamChunk1) GetUsageOk() (*CreateDeepNewsResponseUsage2, bool)`
 
 GetUsageOk returns a tuple with the Usage field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetUsage
 
-`func (o *CreateDeepNewsResponseStreamChunk1) SetUsage(v CreateDeepNewsResponseUsage1)`
+`func (o *CreateDeepNewsResponseStreamChunk1) SetUsage(v CreateDeepNewsResponseUsage2)`
 
 SetUsage sets Usage field to given value.
 

@@ -9,8 +9,10 @@ Name | Type | Description | Notes
 **IncludeEntities** | Pointer to **bool** | Whether to provide extracted entities to the agent. Defaults to True. | [optional] [default to true]
 **IncludeGraphs** | Pointer to **bool** | Whether to provide knowledge graphs to the agent. Defaults to False. | [optional] [default to false]
 **IncludeCoordinates** | Pointer to **bool** | Whether to provide geo coordinates to the agent. Defaults to False. | [optional] [default to false]
-**Engine** | Pointer to **string** | Legacy vs new DeepNews engine | [optional] [default to "v1"]
+**Engine** | Pointer to **string** | Legacy vs new DeepNews engine | [optional] [default to "v1.5"]
 **MaxParallelToolCalls** | Pointer to **int32** | The number of tool calls the agent can run in parallel. | [optional] [default to 1]
+**EnableSourcePruning** | Pointer to **bool** | Whether to enable source pruning, which removes sources that are deemed irrelevant to the final report. This can help reduce noise in the sources and improve the quality of the report, but may also remove some relevant sources if not used carefully. | [optional] [default to false]
+**CutoffDatetime** | Pointer to **NullableTime** |  | [optional] 
 **Model** | Pointer to [**NullableDeepNewsModel**](DeepNewsModel.md) |  | [optional] 
 **SearchDepth** | Pointer to **int32** | The search depth for deep research. Higher values mean more thorough research. Defaults to 1. | [optional] [default to 1]
 **MaxDepth** | Pointer to **int32** | The maximum research depth allowed. Defaults to 4. | [optional] [default to 4]
@@ -219,6 +221,66 @@ SetMaxParallelToolCalls sets MaxParallelToolCalls field to given value.
 
 HasMaxParallelToolCalls returns a boolean if a field has been set.
 
+### GetEnableSourcePruning
+
+`func (o *DeepNewsSourceParams) GetEnableSourcePruning() bool`
+
+GetEnableSourcePruning returns the EnableSourcePruning field if non-nil, zero value otherwise.
+
+### GetEnableSourcePruningOk
+
+`func (o *DeepNewsSourceParams) GetEnableSourcePruningOk() (*bool, bool)`
+
+GetEnableSourcePruningOk returns a tuple with the EnableSourcePruning field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetEnableSourcePruning
+
+`func (o *DeepNewsSourceParams) SetEnableSourcePruning(v bool)`
+
+SetEnableSourcePruning sets EnableSourcePruning field to given value.
+
+### HasEnableSourcePruning
+
+`func (o *DeepNewsSourceParams) HasEnableSourcePruning() bool`
+
+HasEnableSourcePruning returns a boolean if a field has been set.
+
+### GetCutoffDatetime
+
+`func (o *DeepNewsSourceParams) GetCutoffDatetime() time.Time`
+
+GetCutoffDatetime returns the CutoffDatetime field if non-nil, zero value otherwise.
+
+### GetCutoffDatetimeOk
+
+`func (o *DeepNewsSourceParams) GetCutoffDatetimeOk() (*time.Time, bool)`
+
+GetCutoffDatetimeOk returns a tuple with the CutoffDatetime field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetCutoffDatetime
+
+`func (o *DeepNewsSourceParams) SetCutoffDatetime(v time.Time)`
+
+SetCutoffDatetime sets CutoffDatetime field to given value.
+
+### HasCutoffDatetime
+
+`func (o *DeepNewsSourceParams) HasCutoffDatetime() bool`
+
+HasCutoffDatetime returns a boolean if a field has been set.
+
+### SetCutoffDatetimeNil
+
+`func (o *DeepNewsSourceParams) SetCutoffDatetimeNil(b bool)`
+
+ SetCutoffDatetimeNil sets the value for CutoffDatetime to be an explicit nil
+
+### UnsetCutoffDatetime
+`func (o *DeepNewsSourceParams) UnsetCutoffDatetime()`
+
+UnsetCutoffDatetime ensures that no value is present for CutoffDatetime, not even an explicit nil
 ### GetModel
 
 `func (o *DeepNewsSourceParams) GetModel() DeepNewsModel`

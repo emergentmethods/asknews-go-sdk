@@ -5,13 +5,13 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Kind** | Pointer to **string** |  | [optional] [default to "chart"]
-**Data** | [**ChartResponse**](ChartResponse.md) |  | 
+**Data** | [**ChartResponse1**](ChartResponse1.md) |  | 
 
 ## Methods
 
 ### NewSource
 
-`func NewSource(data ChartResponse, ) *Source`
+`func NewSource(data ChartResponse1, ) *Source`
 
 NewSource instantiates a new Source object
 This constructor will assign default values to properties that have it defined,
@@ -53,20 +53,20 @@ HasKind returns a boolean if a field has been set.
 
 ### GetData
 
-`func (o *Source) GetData() ChartResponse`
+`func (o *Source) GetData() ChartResponse1`
 
 GetData returns the Data field if non-nil, zero value otherwise.
 
 ### GetDataOk
 
-`func (o *Source) GetDataOk() (*ChartResponse, bool)`
+`func (o *Source) GetDataOk() (*ChartResponse1, bool)`
 
 GetDataOk returns a tuple with the Data field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetData
 
-`func (o *Source) SetData(v ChartResponse)`
+`func (o *Source) SetData(v ChartResponse1)`
 
 SetData sets Data field to given value.
 

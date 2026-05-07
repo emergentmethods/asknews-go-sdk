@@ -32,7 +32,9 @@ Name | Type | Description | Notes
 **User** | Pointer to [**User1**](User1.md) |  | [optional] 
 **ThreadId** | Pointer to [**ThreadId1**](ThreadId1.md) |  | [optional] 
 **MaxParallelToolCalls** | Pointer to **int32** | Maximum number of parallel tool calls (e.g., searches) the agent can make during generation. Higher values may speed up responses, but may reduce on-the-fly adaptivity. | [optional] [default to 1]
-**Engine** | Pointer to **string** |  | [optional] [default to "v1"]
+**Engine** | Pointer to **string** | The engine to use for the DeepNews agent. &#39;v1&#39; is deprecated while &#39;v1.5&#39; is our next-generation research agent with access to more tools, better contextual understanding, and improved reasoning capabilities.&#39;v1.5&#39; streams thinking and tool use using tags &lt;think&gt; &lt;/think&gt;, &lt;tool_a&gt; &lt;/tool_a&gt; Meanwhile, &#39;v2.0&#39; is the same underlying agent as &#39;v1.5&#39;, but the thinking and tool use chunks are typed content_block_delta&#39;s streamed between content_block_start and content_block_stop events, mimicking Anthropic&#39;s approach to streaming tool use/thinking events. | [optional] [default to "v1.5"]
+**EnableSourcePruning** | Pointer to **bool** | Whether to enable source pruning, which removes sources that are deemed irrelevant to the final response. This can help reduce noise in the sources and improve the quality of the response, but may also remove some relevant sources if not used carefully. | [optional] [default to false]
+**CutoffDatetime** | Pointer to [**CutoffDatetime**](CutoffDatetime.md) |  | [optional] 
 
 ## Methods
 
@@ -772,6 +774,56 @@ SetEngine sets Engine field to given value.
 `func (o *CreateDeepNewsRequest) HasEngine() bool`
 
 HasEngine returns a boolean if a field has been set.
+
+### GetEnableSourcePruning
+
+`func (o *CreateDeepNewsRequest) GetEnableSourcePruning() bool`
+
+GetEnableSourcePruning returns the EnableSourcePruning field if non-nil, zero value otherwise.
+
+### GetEnableSourcePruningOk
+
+`func (o *CreateDeepNewsRequest) GetEnableSourcePruningOk() (*bool, bool)`
+
+GetEnableSourcePruningOk returns a tuple with the EnableSourcePruning field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetEnableSourcePruning
+
+`func (o *CreateDeepNewsRequest) SetEnableSourcePruning(v bool)`
+
+SetEnableSourcePruning sets EnableSourcePruning field to given value.
+
+### HasEnableSourcePruning
+
+`func (o *CreateDeepNewsRequest) HasEnableSourcePruning() bool`
+
+HasEnableSourcePruning returns a boolean if a field has been set.
+
+### GetCutoffDatetime
+
+`func (o *CreateDeepNewsRequest) GetCutoffDatetime() CutoffDatetime`
+
+GetCutoffDatetime returns the CutoffDatetime field if non-nil, zero value otherwise.
+
+### GetCutoffDatetimeOk
+
+`func (o *CreateDeepNewsRequest) GetCutoffDatetimeOk() (*CutoffDatetime, bool)`
+
+GetCutoffDatetimeOk returns a tuple with the CutoffDatetime field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetCutoffDatetime
+
+`func (o *CreateDeepNewsRequest) SetCutoffDatetime(v CutoffDatetime)`
+
+SetCutoffDatetime sets CutoffDatetime field to given value.
+
+### HasCutoffDatetime
+
+`func (o *CreateDeepNewsRequest) HasCutoffDatetime() bool`
+
+HasCutoffDatetime returns a boolean if a field has been set.
 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
