@@ -22,6 +22,7 @@ Name | Type | Description | Notes
 **AlertType** | Pointer to **NullableString** |  | [optional] 
 **Title** | Pointer to **NullableString** |  | [optional] 
 **SeatId** | Pointer to **NullableString** |  | [optional] 
+**ApiKeyId** | Pointer to **NullableString** |  | [optional] 
 
 ## Methods
 
@@ -577,6 +578,41 @@ HasSeatId returns a boolean if a field has been set.
 `func (o *AlertResponse) UnsetSeatId()`
 
 UnsetSeatId ensures that no value is present for SeatId, not even an explicit nil
+### GetApiKeyId
+
+`func (o *AlertResponse) GetApiKeyId() string`
+
+GetApiKeyId returns the ApiKeyId field if non-nil, zero value otherwise.
+
+### GetApiKeyIdOk
+
+`func (o *AlertResponse) GetApiKeyIdOk() (*string, bool)`
+
+GetApiKeyIdOk returns a tuple with the ApiKeyId field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetApiKeyId
+
+`func (o *AlertResponse) SetApiKeyId(v string)`
+
+SetApiKeyId sets ApiKeyId field to given value.
+
+### HasApiKeyId
+
+`func (o *AlertResponse) HasApiKeyId() bool`
+
+HasApiKeyId returns a boolean if a field has been set.
+
+### SetApiKeyIdNil
+
+`func (o *AlertResponse) SetApiKeyIdNil(b bool)`
+
+ SetApiKeyIdNil sets the value for ApiKeyId to be an explicit nil
+
+### UnsetApiKeyId
+`func (o *AlertResponse) UnsetApiKeyId()`
+
+UnsetApiKeyId ensures that no value is present for ApiKeyId, not even an explicit nil
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

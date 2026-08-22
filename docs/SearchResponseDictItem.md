@@ -36,6 +36,8 @@ Name | Type | Description | Notes
 **FullText** | Pointer to **NullableString** |  | [optional] 
 **OriginalLanguageSummary** | Pointer to **NullableString** |  | [optional] 
 **ImageDescription** | Pointer to **NullableString** |  | [optional] 
+**CrawlDate** | Pointer to **NullableTime** |  | [optional] 
+**ContentType** | Pointer to **NullableString** |  | [optional] 
 **AsStringKey** | **string** |  | 
 
 ## Methods
@@ -892,6 +894,76 @@ HasImageDescription returns a boolean if a field has been set.
 `func (o *SearchResponseDictItem) UnsetImageDescription()`
 
 UnsetImageDescription ensures that no value is present for ImageDescription, not even an explicit nil
+### GetCrawlDate
+
+`func (o *SearchResponseDictItem) GetCrawlDate() time.Time`
+
+GetCrawlDate returns the CrawlDate field if non-nil, zero value otherwise.
+
+### GetCrawlDateOk
+
+`func (o *SearchResponseDictItem) GetCrawlDateOk() (*time.Time, bool)`
+
+GetCrawlDateOk returns a tuple with the CrawlDate field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetCrawlDate
+
+`func (o *SearchResponseDictItem) SetCrawlDate(v time.Time)`
+
+SetCrawlDate sets CrawlDate field to given value.
+
+### HasCrawlDate
+
+`func (o *SearchResponseDictItem) HasCrawlDate() bool`
+
+HasCrawlDate returns a boolean if a field has been set.
+
+### SetCrawlDateNil
+
+`func (o *SearchResponseDictItem) SetCrawlDateNil(b bool)`
+
+ SetCrawlDateNil sets the value for CrawlDate to be an explicit nil
+
+### UnsetCrawlDate
+`func (o *SearchResponseDictItem) UnsetCrawlDate()`
+
+UnsetCrawlDate ensures that no value is present for CrawlDate, not even an explicit nil
+### GetContentType
+
+`func (o *SearchResponseDictItem) GetContentType() string`
+
+GetContentType returns the ContentType field if non-nil, zero value otherwise.
+
+### GetContentTypeOk
+
+`func (o *SearchResponseDictItem) GetContentTypeOk() (*string, bool)`
+
+GetContentTypeOk returns a tuple with the ContentType field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetContentType
+
+`func (o *SearchResponseDictItem) SetContentType(v string)`
+
+SetContentType sets ContentType field to given value.
+
+### HasContentType
+
+`func (o *SearchResponseDictItem) HasContentType() bool`
+
+HasContentType returns a boolean if a field has been set.
+
+### SetContentTypeNil
+
+`func (o *SearchResponseDictItem) SetContentTypeNil(b bool)`
+
+ SetContentTypeNil sets the value for ContentType to be an explicit nil
+
+### UnsetContentType
+`func (o *SearchResponseDictItem) UnsetContentType()`
+
+UnsetContentType ensures that no value is present for ContentType, not even an explicit nil
 ### GetAsStringKey
 
 `func (o *SearchResponseDictItem) GetAsStringKey() string`

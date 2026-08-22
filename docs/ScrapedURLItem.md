@@ -6,6 +6,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Url** | **string** |  | 
 **Data** | Pointer to [**NullableScrapeDataItem**](ScrapeDataItem.md) |  | [optional] 
+**SkipDedupe** | Pointer to **bool** |  | [optional] [default to false]
 **Metadata** | Pointer to **map[string]interface{}** |  | [optional] 
 **Enrichments** | Pointer to **map[string]interface{}** |  | [optional] 
 
@@ -83,6 +84,31 @@ HasData returns a boolean if a field has been set.
 `func (o *ScrapedURLItem) UnsetData()`
 
 UnsetData ensures that no value is present for Data, not even an explicit nil
+### GetSkipDedupe
+
+`func (o *ScrapedURLItem) GetSkipDedupe() bool`
+
+GetSkipDedupe returns the SkipDedupe field if non-nil, zero value otherwise.
+
+### GetSkipDedupeOk
+
+`func (o *ScrapedURLItem) GetSkipDedupeOk() (*bool, bool)`
+
+GetSkipDedupeOk returns a tuple with the SkipDedupe field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetSkipDedupe
+
+`func (o *ScrapedURLItem) SetSkipDedupe(v bool)`
+
+SetSkipDedupe sets SkipDedupe field to given value.
+
+### HasSkipDedupe
+
+`func (o *ScrapedURLItem) HasSkipDedupe() bool`
+
+HasSkipDedupe returns a boolean if a field has been set.
+
 ### GetMetadata
 
 `func (o *ScrapedURLItem) GetMetadata() map[string]interface{}`

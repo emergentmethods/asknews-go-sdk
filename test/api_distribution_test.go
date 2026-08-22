@@ -96,6 +96,30 @@ func Test_asknews_DistributionAPIService(t *testing.T) {
 
 	})
 
+	t.Run("Test DistributionAPIService GetDomainMetrics", func(t *testing.T) {
+
+		t.Skip("skip test")  // remove to run test
+
+		resp, httpRes, err := apiClient.DistributionAPI.GetDomainMetrics(context.Background()).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
+	t.Run("Test DistributionAPIService GetDomainMetricsTimeseries", func(t *testing.T) {
+
+		t.Skip("skip test")  // remove to run test
+
+		resp, httpRes, err := apiClient.DistributionAPI.GetDomainMetricsTimeseries(context.Background()).Execute()
+
+		require.Nil(t, err)
+		require.NotNil(t, resp)
+		assert.Equal(t, 200, httpRes.StatusCode)
+
+	})
+
 	t.Run("Test DistributionAPIService GetDomainQueries", func(t *testing.T) {
 
 		t.Skip("skip test")  // remove to run test
@@ -149,20 +173,6 @@ func Test_asknews_DistributionAPIService(t *testing.T) {
 		t.Skip("skip test")  // remove to run test
 
 		resp, httpRes, err := apiClient.DistributionAPI.TopNDomainsByHits(context.Background()).Execute()
-
-		require.Nil(t, err)
-		require.NotNil(t, resp)
-		assert.Equal(t, 200, httpRes.StatusCode)
-
-	})
-
-	t.Run("Test DistributionAPIService UpdateDomain", func(t *testing.T) {
-
-		t.Skip("skip test")  // remove to run test
-
-		var name string
-
-		resp, httpRes, err := apiClient.DistributionAPI.UpdateDomain(context.Background(), name).Execute()
 
 		require.Nil(t, err)
 		require.NotNil(t, resp)

@@ -2,7 +2,7 @@ openapi: 3.1.0
 info:
   description: "AskNews API [![status](https://status.asknews.app/api/badge/2/status?style=for-the-badge)](https://status.asknews.app/status/prod)"
   title: AskNews API
-  version: 0.24.66
+  version: 0.31.0
 servers:
 - url: https://api.asknews.app
 paths:
@@ -191,6 +191,7 @@ paths:
             enum:
             - All
             - Business
+            - Economy
             - Crime
             - Politics
             - Science
@@ -272,6 +273,25 @@ paths:
         required: false
         schema:
           $ref: '#/components/schemas/Bad_Domain_Url'
+        style: form
+      - description: "Control whether podcasts are included in search results. 'include'\
+          \ searches news and podcasts, 'only' searches podcasts only, and 'none'\
+          \ excludes podcasts."
+        explode: true
+        in: query
+        name: podcasts
+        required: false
+        schema:
+          default: include
+          description: "Control whether podcasts are included in search results. 'include'\
+            \ searches news and podcasts, 'only' searches podcasts only, and 'none'\
+            \ excludes podcasts."
+          enum:
+          - include
+          - only
+          - none
+          title: Podcasts
+          type: string
         style: form
       - description: Maximum allowed page rank for returned articles.
         explode: true
@@ -1644,7 +1664,7 @@ paths:
       - chat
   /v1/chat/deepnews-models:
     get:
-      description: List the available DeepNews models with their type (rich/fast).
+      description: List the available DeepNews models with their public type (standard/lite/advanced).
       operationId: list_deepnews_models
       responses:
         "200":
@@ -1656,7 +1676,7 @@ paths:
       summary: List available DeepNews models
       tags:
       - chat
-  /v1/chat/byok/{provider}:
+  /v1/byok/{provider}:
     delete:
       description: |-
         Delete a stored BYOK API key for a provider.
@@ -1671,6 +1691,9 @@ paths:
         required: true
         schema:
           description: The BYOK provider
+          enum:
+          - anthropic
+          - google
           title: Provider
           type: string
         style: simple
@@ -1686,7 +1709,6 @@ paths:
       security:
       - APIKey:
         - chat
-        - internal
       summary: Delete a stored BYOK API key for a provider
       tags:
       - byok
@@ -1704,6 +1726,9 @@ paths:
         required: true
         schema:
           description: The BYOK provider
+          enum:
+          - anthropic
+          - google
           title: Provider
           type: string
         style: simple
@@ -1723,7 +1748,6 @@ paths:
       security:
       - APIKey:
         - chat
-        - internal
       summary: Get a stored BYOK API key hint for a provider
       tags:
       - byok
@@ -1741,6 +1765,9 @@ paths:
         required: true
         schema:
           description: The BYOK provider
+          enum:
+          - anthropic
+          - google
           title: Provider
           type: string
         style: simple
@@ -1766,7 +1793,6 @@ paths:
       security:
       - APIKey:
         - chat
-        - internal
       summary: Store a BYOK API key for a provider
       tags:
       - byok
@@ -1853,6 +1879,7 @@ paths:
           - claude-sonnet-4-5-20250929
           - claude-opus-4-6
           - claude-sonnet-4-6
+          - claude-sonnet-5
           - o1-mini
           - o3-mini
           - o3
@@ -1972,6 +1999,41 @@ paths:
           nullable: true
           type: integer
         style: form
+      - description: "Earliest acceptable publication datetime for results. For v1,\
+          \ acts like the existing lookback filter."
+        explode: true
+        in: query
+        name: start_datetime
+        required: false
+        schema:
+          format: date-time
+          nullable: true
+          type: string
+        style: form
+      - description: 'Latest acceptable publication datetime for results. '
+        explode: true
+        in: query
+        name: end_datetime
+        required: false
+        schema:
+          format: date-time
+          nullable: true
+          type: string
+        style: form
+      - description: Search engine version to use for live websearch results.
+        explode: true
+        in: query
+        name: engine
+        required: false
+        schema:
+          default: v1
+          description: Search engine version to use for live websearch results.
+          enum:
+          - v1
+          - v1.5
+          title: Engine
+          type: string
+        style: form
       - description: A list of domains to search.
         explode: true
         in: query
@@ -1996,14 +2058,15 @@ paths:
           title: Strict
           type: boolean
         style: form
-      - description: The number of results to offset for followup queries.
+      - description: The number of results to offset for followup queries. Numeric
+          for regular websearch; X (Twitter) searches return an opaque cursor string
+          in response.offset â€” pass it back here to paginate.
         explode: true
         in: query
         name: offset
         required: false
         schema:
-          nullable: true
-          type: integer
+          $ref: '#/components/schemas/Offset_1'
         style: form
       responses:
         "200":
@@ -3291,7 +3354,7 @@ paths:
         name: offset
         required: false
         schema:
-          $ref: '#/components/schemas/Offset_1'
+          $ref: '#/components/schemas/Offset_2'
         style: form
       - description: Limit to use
         explode: true
@@ -4003,6 +4066,7 @@ paths:
       security:
       - APIKey:
         - distribution
+        - internal
       summary: Get the top N domains by hits
       tags:
       - distribution
@@ -4065,6 +4129,15 @@ paths:
           nullable: true
           type: boolean
         style: form
+      - description: Filter by full-text opt-in status
+        explode: true
+        in: query
+        name: full_text
+        required: false
+        schema:
+          nullable: true
+          type: boolean
+        style: form
       responses:
         "200":
           content:
@@ -4111,6 +4184,7 @@ paths:
       security:
       - APIKey:
         - distribution
+        - internal
       summary: Find domains
       tags:
       - distribution
@@ -4177,31 +4251,73 @@ paths:
       summary: Get a domain by name
       tags:
       - distribution
-    put:
-      description: Update an existing domain.
-      operationId: update_domain
+  /v1/distribution/articles/top_n_for_domains:
+    get:
+      description: Get the top N domain articles by hits.
+      operationId: top_n_articles_for_domains
       parameters:
-      - explode: false
-        in: path
-        name: name
+      - description: Domain names to filter by
+        explode: true
+        in: query
+        name: domain_names
         required: true
         schema:
-          title: Name
-          type: string
-        style: simple
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UpdateDomainRequest'
-        required: true
+          description: Domain names to filter by
+          items:
+            nullable: true
+            type: string
+          type: array
+        style: form
+      - description: Number of top domain articles to return (page size)
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 10
+          description: Number of top domain articles to return (page size)
+          maximum: 100
+          minimum: 1
+          title: Limit
+          type: integer
+        style: form
+      - description: Page number (1-based; page size = limit)
+        explode: true
+        in: query
+        name: page
+        required: false
+        schema:
+          default: 1
+          description: Page number (1-based; page size = limit)
+          minimum: 1
+          title: Page
+          type: integer
+        style: form
+      - description: Start date to filter by (timestamp in seconds since epoch)
+        explode: true
+        in: query
+        name: start_date
+        required: false
+        schema:
+          nullable: true
+          type: integer
+        style: form
+      - description: End date to filter by (timestamp in seconds since epoch)
+        explode: true
+        in: query
+        name: end_date
+        required: false
+        schema:
+          nullable: true
+          type: integer
+        style: form
       responses:
         "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ReadDomainResponse'
-          description: Response for domain update
+                $ref: '#/components/schemas/TopNArticlesForDomainResponse'
+          description: A list of top domain articles with their hit counts
         "422":
           content:
             application/json:
@@ -4241,105 +4357,6 @@ paths:
       security:
       - APIKey:
         - distribution
-        - internal
-      summary: Update an existing domain
-      tags:
-      - distribution
-  /v1/distribution/articles/top_n_for_domains:
-    get:
-      description: Get the top N domain articles by hits.
-      operationId: top_n_articles_for_domains
-      parameters:
-      - description: Domain names to filter by
-        explode: true
-        in: query
-        name: domain_names
-        required: true
-        schema:
-          description: Domain names to filter by
-          items:
-            nullable: true
-            type: string
-          type: array
-        style: form
-      - description: Number of top domain articles to return
-        explode: true
-        in: query
-        name: limit
-        required: false
-        schema:
-          default: 10
-          description: Number of top domain articles to return
-          maximum: 1000
-          minimum: 1
-          title: Limit
-          type: integer
-        style: form
-      - description: Start date to filter by (timestamp in seconds since epoch)
-        explode: true
-        in: query
-        name: start_date
-        required: false
-        schema:
-          nullable: true
-          type: integer
-        style: form
-      - description: End date to filter by (timestamp in seconds since epoch)
-        explode: true
-        in: query
-        name: end_date
-        required: false
-        schema:
-          nullable: true
-          type: integer
-        style: form
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/TopNArticlesForDomainResponse'
-          description: A list of top domain articles with their hit counts
-        "422":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ValidationErrorModel'
-          description: Unprocessable Entity
-        "405":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__77'
-          description: Method Not Allowed
-        "403":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__78'
-          description: Forbidden
-        "401":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__79'
-          description: Unauthorized
-        "400":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__80'
-          description: Bad Request
-        "500":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/asknews_api__errors__APIErrorModel'
-          description: Internal Server Error
-      security:
-      - APIKey:
-        - distribution
-        - internal
       summary: Get the top N articles by hits for domains
       tags:
       - distribution
@@ -4407,25 +4424,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__81'
+                $ref: '#/components/schemas/abc__APIErrorModel__77'
           description: Method Not Allowed
         "403":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__82'
+                $ref: '#/components/schemas/abc__APIErrorModel__78'
           description: Forbidden
         "401":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__83'
+                $ref: '#/components/schemas/abc__APIErrorModel__79'
           description: Unauthorized
         "400":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__84'
+                $ref: '#/components/schemas/abc__APIErrorModel__80'
           description: Bad Request
         "500":
           content:
@@ -4445,17 +4462,29 @@ paths:
       description: Get the top N articles by hits.
       operationId: top_n_articles_by_hits
       parameters:
-      - description: Number of top domains to return
+      - description: Number of top articles to return (page size)
         explode: true
         in: query
         name: limit
         required: false
         schema:
           default: 10
-          description: Number of top domains to return
+          description: Number of top articles to return (page size)
           maximum: 100
           minimum: 1
           title: Limit
+          type: integer
+        style: form
+      - description: Page number (1-based; page size = limit)
+        explode: true
+        in: query
+        name: page
+        required: false
+        schema:
+          default: 1
+          description: Page number (1-based; page size = limit)
+          minimum: 1
+          title: Page
           type: integer
         style: form
       - description: Start date to filter by (timestamp in seconds since epoch)
@@ -4504,25 +4533,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__85'
+                $ref: '#/components/schemas/abc__APIErrorModel__81'
           description: Method Not Allowed
         "403":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__86'
+                $ref: '#/components/schemas/abc__APIErrorModel__82'
           description: Forbidden
         "401":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__87'
+                $ref: '#/components/schemas/abc__APIErrorModel__83'
           description: Unauthorized
         "400":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__88'
+                $ref: '#/components/schemas/abc__APIErrorModel__84'
           description: Bad Request
         "500":
           content:
@@ -4599,25 +4628,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__89'
+                $ref: '#/components/schemas/abc__APIErrorModel__85'
           description: Method Not Allowed
         "403":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__90'
+                $ref: '#/components/schemas/abc__APIErrorModel__86'
           description: Forbidden
         "401":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__91'
+                $ref: '#/components/schemas/abc__APIErrorModel__87'
           description: Unauthorized
         "400":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__92'
+                $ref: '#/components/schemas/abc__APIErrorModel__88'
           description: Bad Request
         "500":
           content:
@@ -4690,25 +4719,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__93'
+                $ref: '#/components/schemas/abc__APIErrorModel__89'
           description: Method Not Allowed
         "403":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__94'
+                $ref: '#/components/schemas/abc__APIErrorModel__90'
           description: Forbidden
         "401":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__95'
+                $ref: '#/components/schemas/abc__APIErrorModel__91'
           description: Unauthorized
         "400":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__96'
+                $ref: '#/components/schemas/abc__APIErrorModel__92'
           description: Bad Request
         "500":
           content:
@@ -4780,6 +4809,93 @@ paths:
           content:
             application/json:
               schema:
+                $ref: '#/components/schemas/abc__APIErrorModel__93'
+          description: Method Not Allowed
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/abc__APIErrorModel__94'
+          description: Forbidden
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/abc__APIErrorModel__95'
+          description: Unauthorized
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/abc__APIErrorModel__96'
+          description: Bad Request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/asknews_api__errors__APIErrorModel'
+          description: Internal Server Error
+      security:
+      - APIKey:
+        - distribution
+        - internal
+      summary: Get hits and surfaced articles per day for domains
+      tags:
+      - distribution
+  /v1/distribution/stats/metrics:
+    get:
+      description: |-
+        Get raw (unweighted) surface, citation, full_text and grounded publisher
+        metric event counts for a list of domains in a time period. Counts are 1 per
+        real event; revenue-share weighting stays in the distribution service.
+      operationId: get_domain_metrics
+      parameters:
+      - description: Domain names to filter by
+        explode: true
+        in: query
+        name: domain_names
+        required: true
+        schema:
+          description: Domain names to filter by
+          items:
+            type: string
+          type: array
+        style: form
+      - description: Start date to filter by (timestamp in seconds since epoch)
+        explode: true
+        in: query
+        name: start_date
+        required: false
+        schema:
+          nullable: true
+          type: integer
+        style: form
+      - description: End date to filter by (timestamp in seconds since epoch)
+        explode: true
+        in: query
+        name: end_date
+        required: false
+        schema:
+          nullable: true
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DomainMetricsResponse'
+          description: "Raw surface, citation, full_text and grounded event counts"
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorModel'
+          description: Unprocessable Entity
+        "405":
+          content:
+            application/json:
+              schema:
                 $ref: '#/components/schemas/abc__APIErrorModel__97'
           description: Method Not Allowed
         "403":
@@ -4810,7 +4926,94 @@ paths:
       - APIKey:
         - distribution
         - internal
-      summary: Get hits and surfaced articles per day for domains
+      summary: Get raw publisher metric event counts for domains
+      tags:
+      - distribution
+  /v1/distribution/stats/metrics_timeseries:
+    get:
+      description: |-
+        Get raw (unweighted) surface, citation, full_text and grounded publisher
+        metric event counts per day for a list of domains in a time period.
+      operationId: get_domain_metrics_timeseries
+      parameters:
+      - description: Domain names to filter by
+        explode: true
+        in: query
+        name: domain_names
+        required: true
+        schema:
+          description: Domain names to filter by
+          items:
+            type: string
+          type: array
+        style: form
+      - description: Start date to filter by (timestamp in seconds since epoch)
+        explode: true
+        in: query
+        name: start_date
+        required: false
+        schema:
+          nullable: true
+          type: integer
+        style: form
+      - description: End date to filter by (timestamp in seconds since epoch)
+        explode: true
+        in: query
+        name: end_date
+        required: false
+        schema:
+          nullable: true
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DomainMetricsTimeWindowResponse'
+          description: "Daily breakdown of surface, citation, full_text and grounded\
+            \ event counts"
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorModel'
+          description: Unprocessable Entity
+        "405":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/abc__APIErrorModel__101'
+          description: Method Not Allowed
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/abc__APIErrorModel__102'
+          description: Forbidden
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/abc__APIErrorModel__103'
+          description: Unauthorized
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/abc__APIErrorModel__104'
+          description: Bad Request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/asknews_api__errors__APIErrorModel'
+          description: Internal Server Error
+      security:
+      - APIKey:
+        - distribution
+        - internal
+      summary: Get raw publisher metric event counts per day for domains
       tags:
       - distribution
   /v1/distribution/stats/hit_share:
@@ -4875,25 +5078,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__101'
+                $ref: '#/components/schemas/abc__APIErrorModel__105'
           description: Method Not Allowed
         "403":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__102'
+                $ref: '#/components/schemas/abc__APIErrorModel__106'
           description: Forbidden
         "401":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__103'
+                $ref: '#/components/schemas/abc__APIErrorModel__107'
           description: Unauthorized
         "400":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__104'
+                $ref: '#/components/schemas/abc__APIErrorModel__108'
           description: Bad Request
         "500":
           content:
@@ -4904,7 +5107,6 @@ paths:
       security:
       - APIKey:
         - distribution
-        - internal
       summary: Get the hit share for a list of domains in a time period
       tags:
       - distribution
@@ -4958,25 +5160,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__105'
+                $ref: '#/components/schemas/abc__APIErrorModel__109'
           description: Method Not Allowed
         "403":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__106'
+                $ref: '#/components/schemas/abc__APIErrorModel__110'
           description: Forbidden
         "401":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__107'
+                $ref: '#/components/schemas/abc__APIErrorModel__111'
           description: Unauthorized
         "400":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__108'
+                $ref: '#/components/schemas/abc__APIErrorModel__112'
           description: Bad Request
         "500":
           content:
@@ -5109,25 +5311,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__109'
+                $ref: '#/components/schemas/abc__APIErrorModel__113'
           description: Method Not Allowed
         "403":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__110'
+                $ref: '#/components/schemas/abc__APIErrorModel__114'
           description: Forbidden
         "401":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__111'
+                $ref: '#/components/schemas/abc__APIErrorModel__115'
           description: Unauthorized
         "400":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/abc__APIErrorModel__112'
+                $ref: '#/components/schemas/abc__APIErrorModel__116'
           description: Bad Request
         "500":
           content:
@@ -5234,6 +5436,7 @@ components:
         - key: ""
         title: title
         alert_type: AlwaysAlertWhen
+        api_key_id: api_key_id
         share_link: share_link
         expires_at: 2000-01-23T04:56:07.000+00:00
         updated_at: 2000-01-23T04:56:07.000+00:00
@@ -5315,6 +5518,9 @@ components:
           type: string
         seat_id:
           format: uuid
+          nullable: true
+          type: string
+        api_key_id:
           nullable: true
           type: string
       required:
@@ -5416,10 +5622,13 @@ components:
       title: AnthropicToolUseBlock
     ApiKeyResponse:
       example:
-        provider: provider
+        provider: anthropic
         key_hint: key_hint
       properties:
         provider:
+          enum:
+          - anthropic
+          - google
           title: Provider
           type: string
         key_hint:
@@ -5451,6 +5660,7 @@ components:
           - videos
           - videos
         domain_url: domain_url
+        content_type: news
         full_text: full_text
         bias: Political
         geo_coordinates:
@@ -5474,6 +5684,7 @@ components:
         image_description: image_description
         eng_title: eng_title
         image_url: image_url
+        crawl_date: 2000-01-23T04:56:07.000+00:00
         article_url: https://openapi-generator.tech
         classification:
         - Classification
@@ -5704,6 +5915,28 @@ components:
           nullable: true
           type: string
         image_description:
+          nullable: true
+          type: string
+        crawl_date:
+          format: date-time
+          nullable: true
+          type: string
+        content_type:
+          enum:
+          - news
+          - opinion
+          - analysis
+          - review
+          - listicle
+          - guide
+          - interview
+          - profile
+          - forum
+          - liveblog
+          - fact-check
+          - press_release
+          - obituary
+          - data_journalism
           nullable: true
           type: string
       required:
@@ -6520,6 +6753,7 @@ components:
           - gpt-4.1-2025-04-14
           - gpt-4.1-nano-2025-04-14
           - gpt-4.1-mini-2025-04-14
+          - claude-sonnet-5
           example: gpt-4o-mini
           title: Model
           type: string
@@ -6822,7 +7056,7 @@ components:
         temperature: 5.962133916683182
         filter_params:
           key: ""
-        model: claude-sonnet-4-6
+        model: claude-sonnet-5
         asknews_watermark: true
         include_graphs: false
         max_tokens: 7
@@ -7028,7 +7262,7 @@ components:
           title: Object
           type: string
         model:
-          default: claude-sonnet-4-6
+          default: claude-sonnet-5
           title: Model
           type: string
         usage:
@@ -7073,7 +7307,7 @@ components:
           title: Object
           type: string
         model:
-          default: claude-sonnet-4-6
+          default: claude-sonnet-5
           title: Model
           type: string
         usage:
@@ -7129,7 +7363,7 @@ components:
           title: Object
           type: string
         model:
-          default: claude-sonnet-4-6
+          default: claude-sonnet-5
           title: Model
           type: string
         usage:
@@ -7351,7 +7585,13 @@ components:
       - claude-sonnet-4-5-20250929
       - claude-opus-4-5-20251101
       - claude-sonnet-4-6
+      - claude-sonnet-5
+      - claude-opus-4-8
+      - claude-opus-5
       - claude-opus-4-6
+      - claude-fable-5
+      - gpt-5.6-terra
+      - gpt-5.6-sol
       - deepseek
       - deepseek-basic
       - deepseek-r1-0528
@@ -7365,6 +7605,8 @@ components:
       - gemini-3-pro
       - gemini-3.1-pro
       - gemini-3-flash
+      - gemini-3.5-flash
+      - gemini-3.6-flash
       - open-source-best
       - kimi-k2p5
       title: DeepNewsModel
@@ -7372,14 +7614,15 @@ components:
     DeepNewsModelItem:
       example:
         model: o1-mini
-        type: rich
+        type: standard
       properties:
         model:
           $ref: '#/components/schemas/DeepNewsModel'
         type:
           enum:
-          - rich
-          - fast
+          - standard
+          - lite
+          - advanced
           title: Type
           type: string
       required:
@@ -7691,6 +7934,103 @@ components:
       - total_hits
       - total_surfaced
       title: DomainHitsSurfaceTimeWindowResponse
+    DomainMetricsDayItem:
+      example:
+        citations: 6
+        surfaces: 0
+        full_text: 1
+        grounded: 5
+        day: day
+      properties:
+        day:
+          title: Day
+          type: string
+        surfaces:
+          title: Surfaces
+          type: integer
+        citations:
+          title: Citations
+          type: integer
+        full_text:
+          title: Full Text
+          type: integer
+        grounded:
+          default: 0
+          title: Grounded
+          type: integer
+      required:
+      - citations
+      - day
+      - full_text
+      - surfaces
+      title: DomainMetricsDayItem
+    DomainMetricsResponse:
+      description: Raw (unweighted) publisher metric event counts â€” 1 per real event.
+      example:
+        citations: 6
+        surfaces: 0
+        full_text: 1
+        grounded: 5
+      properties:
+        surfaces:
+          title: Surfaces
+          type: integer
+        citations:
+          title: Citations
+          type: integer
+        full_text:
+          title: Full Text
+          type: integer
+        grounded:
+          default: 0
+          title: Grounded
+          type: integer
+      required:
+      - citations
+      - full_text
+      - surfaces
+      title: DomainMetricsResponse
+    DomainMetricsTimeWindowResponse:
+      example:
+        total_citations: 2
+        data:
+        - citations: 6
+          surfaces: 0
+          full_text: 1
+          grounded: 5
+          day: day
+        - citations: 6
+          surfaces: 0
+          full_text: 1
+          grounded: 5
+          day: day
+        total_grounded: 9
+        total_surfaces: 5
+        total_full_text: 7
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/DomainMetricsDayItem'
+          type: array
+        total_surfaces:
+          title: Total Surfaces
+          type: integer
+        total_citations:
+          title: Total Citations
+          type: integer
+        total_full_text:
+          title: Total Full Text
+          type: integer
+        total_grounded:
+          default: 0
+          title: Total Grounded
+          type: integer
+      required:
+      - data
+      - total_citations
+      - total_full_text
+      - total_surfaces
+      title: DomainMetricsTimeWindowResponse
     DomainQueriesResponse:
       example:
         data:
@@ -8222,7 +8562,7 @@ components:
           title: Similarity Score Threshold
           type: number
         offset:
-          $ref: '#/components/schemas/Offset_2'
+          $ref: '#/components/schemas/Offset_3'
         categories:
           default:
           - All
@@ -8606,6 +8946,7 @@ components:
             - videos
             - videos
           domain_url: domain_url
+          content_type: news
           full_text: full_text
           bias: Political
           geo_coordinates:
@@ -8629,6 +8970,7 @@ components:
           image_description: image_description
           eng_title: eng_title
           image_url: image_url
+          crawl_date: 2000-01-23T04:56:07.000+00:00
           article_url: https://openapi-generator.tech
           classification:
           - Classification
@@ -8742,6 +9084,7 @@ components:
             - videos
             - videos
           domain_url: domain_url
+          content_type: news
           full_text: full_text
           bias: Political
           geo_coordinates:
@@ -8765,6 +9108,7 @@ components:
           image_description: image_description
           eng_title: eng_title
           image_url: image_url
+          crawl_date: 2000-01-23T04:56:07.000+00:00
           article_url: https://openapi-generator.tech
           classification:
           - Classification
@@ -9088,6 +9432,7 @@ components:
             - videos
             - videos
           domain_url: domain_url
+          content_type: news
           full_text: full_text
           bias: Political
           geo_coordinates:
@@ -9111,6 +9456,7 @@ components:
           image_description: image_description
           eng_title: eng_title
           image_url: image_url
+          crawl_date: 2000-01-23T04:56:07.000+00:00
           article_url: https://openapi-generator.tech
           classification:
           - Classification
@@ -9224,6 +9570,7 @@ components:
             - videos
             - videos
           domain_url: domain_url
+          content_type: news
           full_text: full_text
           bias: Political
           geo_coordinates:
@@ -9247,6 +9594,7 @@ components:
           image_description: image_description
           eng_title: eng_title
           image_url: image_url
+          crawl_date: 2000-01-23T04:56:07.000+00:00
           article_url: https://openapi-generator.tech
           classification:
           - Classification
@@ -9549,8 +9897,8 @@ components:
           title: Identifier
           type: string
         model:
-          default: claude-sonnet-4-6
-          description: The model to use for the report. Defaults to claude-sonnet-4-6.
+          default: claude-sonnet-5
+          description: The model to use for the report. Defaults to claude-sonnet-5.
           enum:
           - gpt-5
           - gpt-4o
@@ -9563,7 +9911,13 @@ components:
           - claude-sonnet-4-5-20250929
           - claude-opus-4-5-20251101
           - claude-opus-4-6
+          - claude-fable-5
           - claude-sonnet-4-6
+          - claude-sonnet-5
+          - claude-opus-4-8
+          - claude-opus-5
+          - gpt-5.6-terra
+          - gpt-5.6-sol
           - meta-llama/Meta-Llama-3.1-405B-Instruct
           - meta-llama/Meta-Llama-3.3-70B-Instruct
           example: gpt-4o
@@ -9574,9 +9928,9 @@ components:
       example:
         models:
         - model: o1-mini
-          type: rich
+          type: standard
         - model: o1-mini
-          type: rich
+          type: standard
       properties:
         models:
           items:
@@ -9618,7 +9972,7 @@ components:
           title: Time Filter
           type: string
         offset:
-          $ref: '#/components/schemas/Offset_3'
+          $ref: '#/components/schemas/Offset_4'
         categories:
           default:
           - All
@@ -10127,6 +10481,7 @@ components:
           - key: ""
           title: title
           alert_type: AlwaysAlertWhen
+          api_key_id: api_key_id
           share_link: share_link
           expires_at: 2000-01-23T04:56:07.000+00:00
           updated_at: 2000-01-23T04:56:07.000+00:00
@@ -10150,6 +10505,7 @@ components:
           - key: ""
           title: title
           alert_type: AlwaysAlertWhen
+          api_key_id: api_key_id
           share_link: share_link
           expires_at: 2000-01-23T04:56:07.000+00:00
           updated_at: 2000-01-23T04:56:07.000+00:00
@@ -10282,6 +10638,7 @@ components:
         - owner: owner
           is_tollbit: false
           updated_at: 2000-01-23T04:56:07.000+00:00
+          full_text: true
           name: name
           publisher: false
           created_at: 2000-01-23T04:56:07.000+00:00
@@ -10289,6 +10646,7 @@ components:
         - owner: owner
           is_tollbit: false
           updated_at: 2000-01-23T04:56:07.000+00:00
+          full_text: true
           name: name
           publisher: false
           created_at: 2000-01-23T04:56:07.000+00:00
@@ -10350,15 +10708,21 @@ components:
       title: ProfileResponse
     RateLimitStatusResponse:
       example:
+        deepnews_concurrency_remaining: 7
         request_rate_capacity: 6.027456183070403
         request_rate_remaining: 1.4658129805029452
         concurrency_limit: 5
         concurrency_remaining: 2
+        deepnews_retry_after: 2.027123023002322
         retry_after: 5.962133916683182
+        deepnews_request_rate: 7.061401241503109
+        deepnews_concurrency_limit: 4
         request_rate: 0.8008281904610115
+        deepnews_request_rate_capacity: 9.301444243932576
+        deepnews_request_rate_remaining: 3.616076749251911
       properties:
         request_rate:
-          description: Configured tokens replenished per second
+          description: Configured requests replenished per second
           title: Request Rate
           type: number
         request_rate_capacity:
@@ -10366,7 +10730,7 @@ components:
           title: Request Rate Capacity
           type: number
         request_rate_remaining:
-          description: Effective available tokens right now (accounts for time elapsed
+          description: Effective available requests right now (accounts for time elapsed
             since last request)
           title: Request Rate Remaining
           type: number
@@ -10381,9 +10745,38 @@ components:
           description: Available concurrent request slots right now
           title: Concurrency Remaining
           type: integer
+        deepnews_request_rate:
+          description: Configured deepnews requests replenished per second
+          title: Deepnews Request Rate
+          type: number
+        deepnews_request_rate_capacity:
+          description: Maximum deepnews burst token capacity
+          title: Deepnews Request Rate Capacity
+          type: number
+        deepnews_request_rate_remaining:
+          description: Effective available deepnews requests right now (accounts for
+            time elapsed since last request)
+          title: Deepnews Request Rate Remaining
+          type: number
+        deepnews_retry_after:
+          nullable: true
+          type: number
+        deepnews_concurrency_limit:
+          description: Maximum allowed concurrent deepnews requests
+          title: Deepnews Concurrency Limit
+          type: integer
+        deepnews_concurrency_remaining:
+          description: Available concurrent deepnews request slots right now
+          title: Deepnews Concurrency Remaining
+          type: integer
       required:
       - concurrency_limit
       - concurrency_remaining
+      - deepnews_concurrency_limit
+      - deepnews_concurrency_remaining
+      - deepnews_request_rate
+      - deepnews_request_rate_capacity
+      - deepnews_request_rate_remaining
       - request_rate
       - request_rate_capacity
       - request_rate_remaining
@@ -10393,6 +10786,7 @@ components:
         owner: owner
         is_tollbit: false
         updated_at: 2000-01-23T04:56:07.000+00:00
+        full_text: true
         name: name
         publisher: false
         created_at: 2000-01-23T04:56:07.000+00:00
@@ -10415,6 +10809,10 @@ components:
         publisher:
           default: false
           title: Publisher
+          type: boolean
+        full_text:
+          default: true
+          title: Full Text
           type: boolean
         created_at:
           format: date-time
@@ -10900,6 +11298,7 @@ components:
       title: ScrapeItem
     ScrapedURLItem:
       example:
+        skip_dedupe: false
         metadata:
           key: ""
         data:
@@ -10922,6 +11321,10 @@ components:
           type: string
         data:
           $ref: '#/components/schemas/ScrapeDataItem'
+        skip_dedupe:
+          default: false
+          title: Skip Dedupe
+          type: boolean
         metadata:
           additionalProperties: true
           nullable: true
@@ -10937,6 +11340,8 @@ components:
       example:
         as_string: as_string
         offset: 7
+        usage:
+          credits: 9
         as_dicts:
         - continent: Africa
           country: country
@@ -10959,6 +11364,7 @@ components:
             - videos
             - videos
           domain_url: domain_url
+          content_type: news
           full_text: full_text
           bias: Political
           geo_coordinates:
@@ -10982,6 +11388,7 @@ components:
           image_description: image_description
           eng_title: eng_title
           image_url: image_url
+          crawl_date: 2000-01-23T04:56:07.000+00:00
           article_url: https://openapi-generator.tech
           classification:
           - Classification
@@ -11095,6 +11502,7 @@ components:
             - videos
             - videos
           domain_url: domain_url
+          content_type: news
           full_text: full_text
           bias: Political
           geo_coordinates:
@@ -11118,6 +11526,7 @@ components:
           image_description: image_description
           eng_title: eng_title
           image_url: image_url
+          crawl_date: 2000-01-23T04:56:07.000+00:00
           article_url: https://openapi-generator.tech
           classification:
           - Classification
@@ -11220,7 +11629,9 @@ components:
           nullable: true
           type: string
         offset:
-          $ref: '#/components/schemas/Offset_4'
+          $ref: '#/components/schemas/Offset_5'
+        usage:
+          $ref: '#/components/schemas/Usage'
       title: SearchResponse
     SearchResponseDictItem:
       example:
@@ -11245,6 +11656,7 @@ components:
           - videos
           - videos
         domain_url: domain_url
+        content_type: news
         full_text: full_text
         bias: Political
         geo_coordinates:
@@ -11268,6 +11680,7 @@ components:
         image_description: image_description
         eng_title: eng_title
         image_url: image_url
+        crawl_date: 2000-01-23T04:56:07.000+00:00
         article_url: https://openapi-generator.tech
         classification:
         - Classification
@@ -11498,6 +11911,28 @@ components:
           nullable: true
           type: string
         image_description:
+          nullable: true
+          type: string
+        crawl_date:
+          format: date-time
+          nullable: true
+          type: string
+        content_type:
+          enum:
+          - news
+          - opinion
+          - analysis
+          - review
+          - listicle
+          - guide
+          - interview
+          - profile
+          - forum
+          - liveblog
+          - fact-check
+          - press_release
+          - obituary
+          - data_journalism
           nullable: true
           type: string
         as_string_key:
@@ -11771,6 +12206,7 @@ components:
                 - videos
                 - videos
               domain_url: domain_url
+              content_type: news
               full_text: full_text
               bias: Political
               geo_coordinates:
@@ -11794,6 +12230,7 @@ components:
               image_description: image_description
               eng_title: eng_title
               image_url: image_url
+              crawl_date: 2000-01-23T04:56:07.000+00:00
               article_url: https://openapi-generator.tech
               classification:
               - Classification
@@ -11906,6 +12343,7 @@ components:
                 - videos
                 - videos
               domain_url: domain_url
+              content_type: news
               full_text: full_text
               bias: Political
               geo_coordinates:
@@ -11929,6 +12367,7 @@ components:
               image_description: image_description
               eng_title: eng_title
               image_url: image_url
+              crawl_date: 2000-01-23T04:56:07.000+00:00
               article_url: https://openapi-generator.tech
               classification:
               - Classification
@@ -12080,6 +12519,7 @@ components:
                 - videos
                 - videos
               domain_url: domain_url
+              content_type: news
               full_text: full_text
               bias: Political
               geo_coordinates:
@@ -12103,6 +12543,7 @@ components:
               image_description: image_description
               eng_title: eng_title
               image_url: image_url
+              crawl_date: 2000-01-23T04:56:07.000+00:00
               article_url: https://openapi-generator.tech
               classification:
               - Classification
@@ -12215,6 +12656,7 @@ components:
                 - videos
                 - videos
               domain_url: domain_url
+              content_type: news
               full_text: full_text
               bias: Political
               geo_coordinates:
@@ -12238,6 +12680,7 @@ components:
               image_description: image_description
               eng_title: eng_title
               image_url: image_url
+              crawl_date: 2000-01-23T04:56:07.000+00:00
               article_url: https://openapi-generator.tech
               classification:
               - Classification
@@ -12571,6 +13014,7 @@ components:
                 - videos
                 - videos
               domain_url: domain_url
+              content_type: news
               full_text: full_text
               bias: Political
               geo_coordinates:
@@ -12594,6 +13038,7 @@ components:
               image_description: image_description
               eng_title: eng_title
               image_url: image_url
+              crawl_date: 2000-01-23T04:56:07.000+00:00
               article_url: https://openapi-generator.tech
               classification:
               - Classification
@@ -12706,6 +13151,7 @@ components:
                 - videos
                 - videos
               domain_url: domain_url
+              content_type: news
               full_text: full_text
               bias: Political
               geo_coordinates:
@@ -12729,6 +13175,7 @@ components:
               image_description: image_description
               eng_title: eng_title
               image_url: image_url
+              crawl_date: 2000-01-23T04:56:07.000+00:00
               article_url: https://openapi-generator.tech
               classification:
               - Classification
@@ -12880,6 +13327,7 @@ components:
                 - videos
                 - videos
               domain_url: domain_url
+              content_type: news
               full_text: full_text
               bias: Political
               geo_coordinates:
@@ -12903,6 +13351,7 @@ components:
               image_description: image_description
               eng_title: eng_title
               image_url: image_url
+              crawl_date: 2000-01-23T04:56:07.000+00:00
               article_url: https://openapi-generator.tech
               classification:
               - Classification
@@ -13015,6 +13464,7 @@ components:
                 - videos
                 - videos
               domain_url: domain_url
+              content_type: news
               full_text: full_text
               bias: Political
               geo_coordinates:
@@ -13038,6 +13488,7 @@ components:
               image_description: image_description
               eng_title: eng_title
               image_url: image_url
+              crawl_date: 2000-01-23T04:56:07.000+00:00
               article_url: https://openapi-generator.tech
               classification:
               - Classification
@@ -13428,6 +13879,7 @@ components:
                 - videos
                 - videos
               domain_url: domain_url
+              content_type: news
               full_text: full_text
               bias: Political
               geo_coordinates:
@@ -13451,6 +13903,7 @@ components:
               image_description: image_description
               eng_title: eng_title
               image_url: image_url
+              crawl_date: 2000-01-23T04:56:07.000+00:00
               article_url: https://openapi-generator.tech
               classification:
               - Classification
@@ -13563,6 +14016,7 @@ components:
                 - videos
                 - videos
               domain_url: domain_url
+              content_type: news
               full_text: full_text
               bias: Political
               geo_coordinates:
@@ -13586,6 +14040,7 @@ components:
               image_description: image_description
               eng_title: eng_title
               image_url: image_url
+              crawl_date: 2000-01-23T04:56:07.000+00:00
               article_url: https://openapi-generator.tech
               classification:
               - Classification
@@ -13737,6 +14192,7 @@ components:
                 - videos
                 - videos
               domain_url: domain_url
+              content_type: news
               full_text: full_text
               bias: Political
               geo_coordinates:
@@ -13760,6 +14216,7 @@ components:
               image_description: image_description
               eng_title: eng_title
               image_url: image_url
+              crawl_date: 2000-01-23T04:56:07.000+00:00
               article_url: https://openapi-generator.tech
               classification:
               - Classification
@@ -13872,6 +14329,7 @@ components:
                 - videos
                 - videos
               domain_url: domain_url
+              content_type: news
               full_text: full_text
               bias: Political
               geo_coordinates:
@@ -13895,6 +14353,7 @@ components:
               image_description: image_description
               eng_title: eng_title
               image_url: image_url
+              crawl_date: 2000-01-23T04:56:07.000+00:00
               article_url: https://openapi-generator.tech
               classification:
               - Classification
@@ -14228,6 +14687,7 @@ components:
                 - videos
                 - videos
               domain_url: domain_url
+              content_type: news
               full_text: full_text
               bias: Political
               geo_coordinates:
@@ -14251,6 +14711,7 @@ components:
               image_description: image_description
               eng_title: eng_title
               image_url: image_url
+              crawl_date: 2000-01-23T04:56:07.000+00:00
               article_url: https://openapi-generator.tech
               classification:
               - Classification
@@ -14363,6 +14824,7 @@ components:
                 - videos
                 - videos
               domain_url: domain_url
+              content_type: news
               full_text: full_text
               bias: Political
               geo_coordinates:
@@ -14386,6 +14848,7 @@ components:
               image_description: image_description
               eng_title: eng_title
               image_url: image_url
+              crawl_date: 2000-01-23T04:56:07.000+00:00
               article_url: https://openapi-generator.tech
               classification:
               - Classification
@@ -14537,6 +15000,7 @@ components:
                 - videos
                 - videos
               domain_url: domain_url
+              content_type: news
               full_text: full_text
               bias: Political
               geo_coordinates:
@@ -14560,6 +15024,7 @@ components:
               image_description: image_description
               eng_title: eng_title
               image_url: image_url
+              crawl_date: 2000-01-23T04:56:07.000+00:00
               article_url: https://openapi-generator.tech
               classification:
               - Classification
@@ -14672,6 +15137,7 @@ components:
                 - videos
                 - videos
               domain_url: domain_url
+              content_type: news
               full_text: full_text
               bias: Political
               geo_coordinates:
@@ -14695,6 +15161,7 @@ components:
               image_description: image_description
               eng_title: eng_title
               image_url: image_url
+              crawl_date: 2000-01-23T04:56:07.000+00:00
               article_url: https://openapi-generator.tech
               classification:
               - Classification
@@ -15042,7 +15509,7 @@ components:
             $ref: '#/components/schemas/StoryResponse'
           type: array
         offset:
-          $ref: '#/components/schemas/Offset_5'
+          $ref: '#/components/schemas/Offset_6'
       required:
       - offset
       - stories
@@ -15099,6 +15566,7 @@ components:
               - videos
               - videos
             domain_url: domain_url
+            content_type: news
             full_text: full_text
             bias: Political
             geo_coordinates:
@@ -15122,6 +15590,7 @@ components:
             image_description: image_description
             eng_title: eng_title
             image_url: image_url
+            crawl_date: 2000-01-23T04:56:07.000+00:00
             article_url: https://openapi-generator.tech
             classification:
             - Classification
@@ -15234,6 +15703,7 @@ components:
               - videos
               - videos
             domain_url: domain_url
+            content_type: news
             full_text: full_text
             bias: Political
             geo_coordinates:
@@ -15257,6 +15727,7 @@ components:
             image_description: image_description
             eng_title: eng_title
             image_url: image_url
+            crawl_date: 2000-01-23T04:56:07.000+00:00
             article_url: https://openapi-generator.tech
             classification:
             - Classification
@@ -15408,6 +15879,7 @@ components:
               - videos
               - videos
             domain_url: domain_url
+            content_type: news
             full_text: full_text
             bias: Political
             geo_coordinates:
@@ -15431,6 +15903,7 @@ components:
             image_description: image_description
             eng_title: eng_title
             image_url: image_url
+            crawl_date: 2000-01-23T04:56:07.000+00:00
             article_url: https://openapi-generator.tech
             classification:
             - Classification
@@ -15543,6 +16016,7 @@ components:
               - videos
               - videos
             domain_url: domain_url
+            content_type: news
             full_text: full_text
             bias: Political
             geo_coordinates:
@@ -15566,6 +16040,7 @@ components:
             image_description: image_description
             eng_title: eng_title
             image_url: image_url
+            crawl_date: 2000-01-23T04:56:07.000+00:00
             article_url: https://openapi-generator.tech
             classification:
             - Classification
@@ -15899,6 +16374,7 @@ components:
               - videos
               - videos
             domain_url: domain_url
+            content_type: news
             full_text: full_text
             bias: Political
             geo_coordinates:
@@ -15922,6 +16398,7 @@ components:
             image_description: image_description
             eng_title: eng_title
             image_url: image_url
+            crawl_date: 2000-01-23T04:56:07.000+00:00
             article_url: https://openapi-generator.tech
             classification:
             - Classification
@@ -16034,6 +16511,7 @@ components:
               - videos
               - videos
             domain_url: domain_url
+            content_type: news
             full_text: full_text
             bias: Political
             geo_coordinates:
@@ -16057,6 +16535,7 @@ components:
             image_description: image_description
             eng_title: eng_title
             image_url: image_url
+            crawl_date: 2000-01-23T04:56:07.000+00:00
             article_url: https://openapi-generator.tech
             classification:
             - Classification
@@ -16208,6 +16687,7 @@ components:
               - videos
               - videos
             domain_url: domain_url
+            content_type: news
             full_text: full_text
             bias: Political
             geo_coordinates:
@@ -16231,6 +16711,7 @@ components:
             image_description: image_description
             eng_title: eng_title
             image_url: image_url
+            crawl_date: 2000-01-23T04:56:07.000+00:00
             article_url: https://openapi-generator.tech
             classification:
             - Classification
@@ -16343,6 +16824,7 @@ components:
               - videos
               - videos
             domain_url: domain_url
+            content_type: news
             full_text: full_text
             bias: Political
             geo_coordinates:
@@ -16366,6 +16848,7 @@ components:
             image_description: image_description
             eng_title: eng_title
             image_url: image_url
+            crawl_date: 2000-01-23T04:56:07.000+00:00
             article_url: https://openapi-generator.tech
             classification:
             - Classification
@@ -16874,6 +17357,7 @@ components:
             - videos
             - videos
           domain_url: domain_url
+          content_type: news
           full_text: full_text
           bias: Political
           geo_coordinates:
@@ -16897,6 +17381,7 @@ components:
           image_description: image_description
           eng_title: eng_title
           image_url: image_url
+          crawl_date: 2000-01-23T04:56:07.000+00:00
           article_url: https://openapi-generator.tech
           classification:
           - Classification
@@ -17009,6 +17494,7 @@ components:
             - videos
             - videos
           domain_url: domain_url
+          content_type: news
           full_text: full_text
           bias: Political
           geo_coordinates:
@@ -17032,6 +17518,7 @@ components:
           image_description: image_description
           eng_title: eng_title
           image_url: image_url
+          crawl_date: 2000-01-23T04:56:07.000+00:00
           article_url: https://openapi-generator.tech
           classification:
           - Classification
@@ -17183,6 +17670,7 @@ components:
             - videos
             - videos
           domain_url: domain_url
+          content_type: news
           full_text: full_text
           bias: Political
           geo_coordinates:
@@ -17206,6 +17694,7 @@ components:
           image_description: image_description
           eng_title: eng_title
           image_url: image_url
+          crawl_date: 2000-01-23T04:56:07.000+00:00
           article_url: https://openapi-generator.tech
           classification:
           - Classification
@@ -17318,6 +17807,7 @@ components:
             - videos
             - videos
           domain_url: domain_url
+          content_type: news
           full_text: full_text
           bias: Political
           geo_coordinates:
@@ -17341,6 +17831,7 @@ components:
           image_description: image_description
           eng_title: eng_title
           image_url: image_url
+          crawl_date: 2000-01-23T04:56:07.000+00:00
           article_url: https://openapi-generator.tech
           classification:
           - Classification
@@ -17863,12 +18354,14 @@ components:
       title: TopNArticlesByHitsItem
     TopNArticlesByHitsResponse:
       example:
+        next_page: 5
         data:
         - article_url: article_url
           hit_count: 0
         - article_url: article_url
           hit_count: 0
         total_count: 6
+        page: 1
       properties:
         data:
           items:
@@ -17876,6 +18369,13 @@ components:
           type: array
         total_count:
           title: Total Count
+          type: integer
+        page:
+          default: 1
+          title: Page
+          type: integer
+        next_page:
+          nullable: true
           type: integer
       required:
       - data
@@ -17902,6 +18402,7 @@ components:
       title: TopNArticlesForDomainItem
     TopNArticlesForDomainResponse:
       example:
+        next_page: 5
         data:
         - article_id: article_id
           article_url: article_url
@@ -17910,6 +18411,7 @@ components:
           article_url: article_url
           hit_count: 0
         total_count: 6
+        page: 1
       properties:
         data:
           items:
@@ -17917,6 +18419,13 @@ components:
           type: array
         total_count:
           title: Total Count
+          type: integer
+        page:
+          default: 1
+          title: Page
+          type: integer
+        next_page:
+          nullable: true
           type: integer
       required:
       - data
@@ -18045,7 +18554,8 @@ components:
       example:
         start_time: 2000-01-23T04:56:07.000+00:00
         urls:
-        - metadata:
+        - skip_dedupe: false
+          metadata:
             key: ""
           data:
             referrals:
@@ -18061,7 +18571,8 @@ components:
           url: url
           enrichments:
             key: ""
-        - metadata:
+        - skip_dedupe: false
+          metadata:
             key: ""
           data:
             referrals:
@@ -18279,6 +18790,7 @@ components:
           - gpt-4.1-2025-04-14
           - gpt-4.1-nano-2025-04-14
           - gpt-4.1-mini-2025-04-14
+          - claude-sonnet-5
           nullable: true
           type: string
         cron:
@@ -18313,22 +18825,6 @@ components:
           nullable: true
           type: string
       title: UpdateAlertRequest
-    UpdateDomainRequest:
-      example:
-        owner: owner
-        is_tollbit: true
-        publisher: publisher
-      properties:
-        owner:
-          nullable: true
-          type: string
-        is_tollbit:
-          nullable: true
-          type: boolean
-        publisher:
-          nullable: true
-          type: string
-      title: UpdateDomainRequest
     UpdateNewsletterRequest:
       example:
         cron: cron
@@ -18406,6 +18902,16 @@ components:
       required:
       - api_key
       title: UpsertApiKeyRequest
+    Usage:
+      example:
+        credits: 9
+      properties:
+        credits:
+          title: Credits
+          type: integer
+      required:
+      - credits
+      title: Usage
     UserProfile:
       example:
         organization:
@@ -18535,7 +19041,7 @@ components:
       title: ValidationErrorItem
     ValidationErrorModel:
       example:
-        code: 9
+        code: 3
         detail:
         - msg: msg
           loc:
@@ -18591,7 +19097,7 @@ components:
             $ref: '#/components/schemas/WebSearchResult'
           type: array
         offset:
-          $ref: '#/components/schemas/Offset_4'
+          $ref: '#/components/schemas/Offset_5'
       required:
       - as_dicts
       - as_string
@@ -18815,7 +19321,7 @@ components:
       title: WikiSearchResponse
     abc__APIErrorModel__1:
       example:
-        code: 3
+        code: 2
         detail: detail
       properties:
         code:
@@ -18830,7 +19336,7 @@ components:
       title: APIErrorModel
     abc__APIErrorModel__10:
       example:
-        code: 2
+        code: 4
         detail: detail
       properties:
         code:
@@ -18845,7 +19351,7 @@ components:
       title: APIErrorModel
     abc__APIErrorModel__100:
       example:
-        code: 7
+        code: 1
         detail: detail
       properties:
         code:
@@ -18860,7 +19366,7 @@ components:
       title: APIErrorModel
     abc__APIErrorModel__101:
       example:
-        code: 3
+        code: 2
         detail: detail
       properties:
         code:
@@ -18890,7 +19396,7 @@ components:
       title: APIErrorModel
     abc__APIErrorModel__103:
       example:
-        code: 4
+        code: 7
         detail: detail
       properties:
         code:
@@ -19053,6 +19559,66 @@ components:
       - code
       - detail
       title: APIErrorModel
+    abc__APIErrorModel__113:
+      example:
+        code: 0
+        detail: detail
+      properties:
+        code:
+          title: Code
+          type: integer
+        detail:
+          title: Detail
+          type: string
+      required:
+      - code
+      - detail
+      title: APIErrorModel
+    abc__APIErrorModel__114:
+      example:
+        code: 6
+        detail: detail
+      properties:
+        code:
+          title: Code
+          type: integer
+        detail:
+          title: Detail
+          type: string
+      required:
+      - code
+      - detail
+      title: APIErrorModel
+    abc__APIErrorModel__115:
+      example:
+        code: 1
+        detail: detail
+      properties:
+        code:
+          title: Code
+          type: integer
+        detail:
+          title: Detail
+          type: string
+      required:
+      - code
+      - detail
+      title: APIErrorModel
+    abc__APIErrorModel__116:
+      example:
+        code: 5
+        detail: detail
+      properties:
+        code:
+          title: Code
+          type: integer
+        detail:
+          title: Detail
+          type: string
+      required:
+      - code
+      - detail
+      title: APIErrorModel
     abc__APIErrorModel__12:
       example:
         code: 5
@@ -19175,7 +19741,7 @@ components:
       title: APIErrorModel
     abc__APIErrorModel__2:
       example:
-        code: 2
+        code: 4
         detail: detail
       properties:
         code:
@@ -19340,7 +19906,7 @@ components:
       title: APIErrorModel
     abc__APIErrorModel__3:
       example:
-        code: 4
+        code: 7
         detail: detail
       properties:
         code:
@@ -19505,7 +20071,7 @@ components:
       title: APIErrorModel
     abc__APIErrorModel__4:
       example:
-        code: 7
+        code: 1
         detail: detail
       properties:
         code:
@@ -21369,6 +21935,7 @@ components:
           - videos
           - videos
         domain_url: domain_url
+        content_type: news
         full_text: full_text
         bias: Political
         geo_coordinates:
@@ -21392,6 +21959,7 @@ components:
         image_description: image_description
         eng_title: eng_title
         image_url: image_url
+        crawl_date: 2000-01-23T04:56:07.000+00:00
         article_url: https://openapi-generator.tech
         classification:
         - Classification
@@ -21624,6 +22192,28 @@ components:
         image_description:
           nullable: true
           type: string
+        crawl_date:
+          format: date-time
+          nullable: true
+          type: string
+        content_type:
+          enum:
+          - news
+          - opinion
+          - analysis
+          - review
+          - listicle
+          - guide
+          - interview
+          - profile
+          - forum
+          - liveblog
+          - fact-check
+          - press_release
+          - obituary
+          - data_journalism
+          nullable: true
+          type: string
         as_string_key:
           title: As String Key
           type: string
@@ -21717,6 +22307,7 @@ components:
             - videos
             - videos
           domain_url: domain_url
+          content_type: news
           full_text: full_text
           bias: Political
           geo_coordinates:
@@ -21740,6 +22331,7 @@ components:
           image_description: image_description
           eng_title: eng_title
           image_url: image_url
+          crawl_date: 2000-01-23T04:56:07.000+00:00
           article_url: https://openapi-generator.tech
           classification:
           - Classification
@@ -21853,6 +22445,7 @@ components:
             - videos
             - videos
           domain_url: domain_url
+          content_type: news
           full_text: full_text
           bias: Political
           geo_coordinates:
@@ -21876,6 +22469,7 @@ components:
           image_description: image_description
           eng_title: eng_title
           image_url: image_url
+          crawl_date: 2000-01-23T04:56:07.000+00:00
           article_url: https://openapi-generator.tech
           classification:
           - Classification
@@ -22035,6 +22629,7 @@ components:
               - videos
               - videos
             domain_url: domain_url
+            content_type: news
             full_text: full_text
             bias: Political
             geo_coordinates:
@@ -22058,6 +22653,7 @@ components:
             image_description: image_description
             eng_title: eng_title
             image_url: image_url
+            crawl_date: 2000-01-23T04:56:07.000+00:00
             article_url: https://openapi-generator.tech
             classification:
             - Classification
@@ -22171,6 +22767,7 @@ components:
               - videos
               - videos
             domain_url: domain_url
+            content_type: news
             full_text: full_text
             bias: Political
             geo_coordinates:
@@ -22194,6 +22791,7 @@ components:
             image_description: image_description
             eng_title: eng_title
             image_url: image_url
+            crawl_date: 2000-01-23T04:56:07.000+00:00
             article_url: https://openapi-generator.tech
             classification:
             - Classification
@@ -22312,7 +22910,7 @@ components:
           tool_usage:
             key: 5
           total_tokens: 5
-        model: claude-sonnet-4-6
+        model: claude-sonnet-5
         id: id
         choices:
         - finish_reason: finish_reason
@@ -22344,7 +22942,7 @@ components:
           title: Object
           type: string
         model:
-          default: claude-sonnet-4-6
+          default: claude-sonnet-5
           title: Model
           type: string
         usage:
@@ -22904,6 +23502,32 @@ components:
                       - type: string
                       - type: "null"
                       title: Image Description
+                    crawl_date:
+                      anyOf:
+                      - type: string
+                        format: date-time
+                      - type: "null"
+                      title: Crawl Date
+                    content_type:
+                      anyOf:
+                      - type: string
+                        enum:
+                        - news
+                        - opinion
+                        - analysis
+                        - review
+                        - listicle
+                        - guide
+                        - interview
+                        - profile
+                        - forum
+                        - liveblog
+                        - fact-check
+                        - press_release
+                        - obituary
+                        - data_journalism
+                      - type: "null"
+                      title: Content Type
                     as_string_key:
                       type: string
                       title: As String Key
@@ -23587,6 +24211,32 @@ components:
               - type: string
               - type: "null"
               title: Image Description
+            crawl_date:
+              anyOf:
+              - type: string
+                format: date-time
+              - type: "null"
+              title: Crawl Date
+            content_type:
+              anyOf:
+              - type: string
+                enum:
+                - news
+                - opinion
+                - analysis
+                - review
+                - listicle
+                - guide
+                - interview
+                - profile
+                - forum
+                - liveblog
+                - fact-check
+                - press_release
+                - obituary
+                - data_journalism
+              - type: "null"
+              title: Content Type
             as_string_key:
               type: string
               title: As String Key
@@ -23697,7 +24347,7 @@ components:
           title: Object
           type: string
         model:
-          default: claude-sonnet-4-6
+          default: claude-sonnet-5
           title: Model
           type: string
         usage:
@@ -24002,7 +24652,7 @@ components:
           title: Object
           type: string
         model:
-          default: claude-sonnet-4-6
+          default: claude-sonnet-5
           title: Model
           type: string
         usage:
@@ -26204,6 +26854,32 @@ components:
                   - type: string
                   - type: "null"
                   title: Image Description
+                crawl_date:
+                  anyOf:
+                  - type: string
+                    format: date-time
+                  - type: "null"
+                  title: Crawl Date
+                content_type:
+                  anyOf:
+                  - type: string
+                    enum:
+                    - news
+                    - opinion
+                    - analysis
+                    - review
+                    - listicle
+                    - guide
+                    - interview
+                    - profile
+                    - forum
+                    - liveblog
+                    - fact-check
+                    - press_release
+                    - obituary
+                    - data_journalism
+                  - type: "null"
+                  title: Content Type
                 as_string_key:
                   type: string
                   title: As String Key
@@ -26892,6 +27568,32 @@ components:
               - type: string
               - type: "null"
               title: Image Description
+            crawl_date:
+              anyOf:
+              - type: string
+                format: date-time
+              - type: "null"
+              title: Crawl Date
+            content_type:
+              anyOf:
+              - type: string
+                enum:
+                - news
+                - opinion
+                - analysis
+                - review
+                - listicle
+                - guide
+                - interview
+                - profile
+                - forum
+                - liveblog
+                - fact-check
+                - press_release
+                - obituary
+                - data_journalism
+              - type: "null"
+              title: Content Type
             as_string_key:
               type: string
               title: As String Key
@@ -27096,6 +27798,18 @@ components:
       - $ref: '#/components/schemas/CreateDeepNewsResponseStreamChunk_1'
       - $ref: '#/components/schemas/CreateDeepNewsResponseStreamChunkV2_1'
       - $ref: '#/components/schemas/CreateDeepNewsResponseStreamSource_1'
+    Offset_1:
+      anyOf:
+      - nullable: true
+        type: integer
+      - nullable: true
+        type: string
+      default: 0
+      description: The number of results to offset for followup queries. Numeric for
+        regular websearch; X (Twitter) searches return an opaque cursor string in
+        response.offset â€” pass it back here to paginate.
+      nullable: true
+      title: Offset
     Continent:
       anyOf:
       - items:
@@ -27114,7 +27828,7 @@ components:
       description: Continents to filter by.
       nullable: true
       title: Continent
-    Offset_1:
+    Offset_2:
       anyOf:
       - nullable: true
         type: integer
@@ -27197,9 +27911,9 @@ components:
       anyOf:
       - $ref: '#/components/schemas/DeepNewsModel'
       - {}
-      default: claude-sonnet-4-6
-      description: The model to use for DeepNews research. Defaults to claude-sonnet-4-6.
-      example: claude-sonnet-4-6
+      default: claude-sonnet-5
+      description: The model to use for DeepNews research. Defaults to claude-sonnet-5.
+      example: claude-sonnet-5
     Filter_Params_1:
       anyOf:
       - additionalProperties: true
@@ -27220,6 +27934,7 @@ components:
         - charts
         - email
         - full_text_discovery
+        - podcasts
       - items:
           enum:
           - asknews
@@ -27231,10 +27946,11 @@ components:
           - charts
           - email
           - full_text_discovery
+          - podcasts
       default: asknews
       description: "Which data sources DeepNews should use. Can be a single source\
         \ or a list. Available sources are: asknews, google, graph, wiki, x, reddit,\
-        \ charts, email, full_text_discovery"
+        \ charts, email, full_text_discovery, podcasts"
       title: Sources
     Stop_1:
       anyOf:
@@ -27290,6 +28006,7 @@ components:
         - charts
         - email
         - full_text_discovery
+        - podcasts
         type: string
       - items:
           enum:
@@ -27302,6 +28019,7 @@ components:
           - charts
           - email
           - full_text_discovery
+          - podcasts
           type: string
         type: array
       default:
@@ -27311,10 +28029,10 @@ components:
       - x
       description: "Which data sources DeepNews should use. Can be a single source\
         \ or a list. Available sources are: asknews, google, graph, wiki, x, reddit,\
-        \ charts, email, full_text_discovery. Defaults to ['asknews', 'google', 'wiki',\
-        \ 'x']."
+        \ charts, email, full_text_discovery, podcasts. Defaults to ['asknews', 'google',\
+        \ 'wiki', 'x']."
       title: Sources
-    Offset_2:
+    Offset_3:
       anyOf:
       - type: integer
       - type: string
@@ -27398,7 +28116,7 @@ components:
       anyOf:
       - type: integer
       - type: number
-    Offset_3:
+    Offset_4:
       anyOf:
       - type: integer
       - type: string
@@ -27431,7 +28149,7 @@ components:
         \ list of strings"
       nullable: true
       title: Reply To
-    Offset_4:
+    Offset_5:
       anyOf:
       - type: integer
       - type: string
@@ -27452,7 +28170,7 @@ components:
       - $ref: '#/components/schemas/BlueskySource'
       - $ref: '#/components/schemas/WebSource'
       - $ref: '#/components/schemas/DeepNewsSource'
-    Offset_5:
+    Offset_6:
       anyOf:
       - type: integer
       - type: string

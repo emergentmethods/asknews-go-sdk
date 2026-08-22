@@ -9,6 +9,7 @@ Name | Type | Description | Notes
 **Owner** | Pointer to **NullableString** |  | [optional] 
 **IsTollbit** | Pointer to **bool** |  | [optional] [default to false]
 **Publisher** | Pointer to **bool** |  | [optional] [default to false]
+**FullText** | Pointer to **bool** |  | [optional] [default to true]
 **CreatedAt** | **time.Time** |  | 
 **UpdatedAt** | Pointer to **NullableTime** |  | [optional] 
 
@@ -155,6 +156,31 @@ SetPublisher sets Publisher field to given value.
 `func (o *ReadDomainResponse) HasPublisher() bool`
 
 HasPublisher returns a boolean if a field has been set.
+
+### GetFullText
+
+`func (o *ReadDomainResponse) GetFullText() bool`
+
+GetFullText returns the FullText field if non-nil, zero value otherwise.
+
+### GetFullTextOk
+
+`func (o *ReadDomainResponse) GetFullTextOk() (*bool, bool)`
+
+GetFullTextOk returns a tuple with the FullText field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetFullText
+
+`func (o *ReadDomainResponse) SetFullText(v bool)`
+
+SetFullText sets FullText field to given value.
+
+### HasFullText
+
+`func (o *ReadDomainResponse) HasFullText() bool`
+
+HasFullText returns a boolean if a field has been set.
 
 ### GetCreatedAt
 

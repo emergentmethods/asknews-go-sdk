@@ -38,7 +38,7 @@ func main() {
 	sortBy := "sortBy_example" // string | Which type of sorting to perform. published: Sort by published date. coverage: Sort by coverage. sentiment: Sort by sentiment. relevance: Sort by relevance of similarity score/ranking. (optional)
 	sortType := "sortType_example" // string | Whether to sort results in ascending or descending order. (optional)
 	continent := *openapiclient.NewContinent() // Continent | Continents to filter by. (optional)
-	offset := *openapiclient.NewOffset1() // Offset1 | Offset to use (optional) (default to 0)
+	offset := *openapiclient.NewOffset2() // Offset2 | Offset to use (optional) (default to 0)
 	limit := int32(56) // int32 | Limit to use (optional) (default to 10)
 	expandUpdates := true // bool | Whether to expand updates (optional) (default to false)
 	maxUpdates := int32(56) // int32 | Max updates to use (optional) (default to 2)
@@ -82,7 +82,7 @@ Name | Type | Description  | Notes
  **sortBy** | **string** | Which type of sorting to perform. published: Sort by published date. coverage: Sort by coverage. sentiment: Sort by sentiment. relevance: Sort by relevance of similarity score/ranking. | 
  **sortType** | **string** | Whether to sort results in ascending or descending order. | 
  **continent** | [**Continent**](Continent.md) | Continents to filter by. | 
- **offset** | [**Offset1**](Offset1.md) | Offset to use | [default to 0]
+ **offset** | [**Offset2**](Offset2.md) | Offset to use | [default to 0]
  **limit** | **int32** | Limit to use | [default to 10]
  **expandUpdates** | **bool** | Whether to expand updates | [default to false]
  **maxUpdates** | **int32** | Max updates to use | [default to 2]

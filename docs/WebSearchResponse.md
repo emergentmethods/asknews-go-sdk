@@ -6,7 +6,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **AsString** | **string** |  | 
 **AsDicts** | [**[]WebSearchResult**](WebSearchResult.md) |  | 
-**Offset** | Pointer to [**NullableOffset4**](Offset4.md) |  | [optional] 
+**Offset** | Pointer to [**NullableOffset5**](Offset5.md) |  | [optional] 
 
 ## Methods
 
@@ -69,20 +69,20 @@ SetAsDicts sets AsDicts field to given value.
 
 ### GetOffset
 
-`func (o *WebSearchResponse) GetOffset() Offset4`
+`func (o *WebSearchResponse) GetOffset() Offset5`
 
 GetOffset returns the Offset field if non-nil, zero value otherwise.
 
 ### GetOffsetOk
 
-`func (o *WebSearchResponse) GetOffsetOk() (*Offset4, bool)`
+`func (o *WebSearchResponse) GetOffsetOk() (*Offset5, bool)`
 
 GetOffsetOk returns a tuple with the Offset field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetOffset
 
-`func (o *WebSearchResponse) SetOffset(v Offset4)`
+`func (o *WebSearchResponse) SetOffset(v Offset5)`
 
 SetOffset sets Offset field to given value.
 

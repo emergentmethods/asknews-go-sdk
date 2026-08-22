@@ -36,6 +36,8 @@ Name | Type | Description | Notes
 **FullText** | Pointer to **NullableString** |  | [optional] 
 **OriginalLanguageSummary** | Pointer to **NullableString** |  | [optional] 
 **ImageDescription** | Pointer to **NullableString** |  | [optional] 
+**CrawlDate** | Pointer to **NullableTime** |  | [optional] 
+**ContentType** | Pointer to **NullableString** |  | [optional] 
 
 ## Methods
 
@@ -891,6 +893,76 @@ HasImageDescription returns a boolean if a field has been set.
 `func (o *Article) UnsetImageDescription()`
 
 UnsetImageDescription ensures that no value is present for ImageDescription, not even an explicit nil
+### GetCrawlDate
+
+`func (o *Article) GetCrawlDate() time.Time`
+
+GetCrawlDate returns the CrawlDate field if non-nil, zero value otherwise.
+
+### GetCrawlDateOk
+
+`func (o *Article) GetCrawlDateOk() (*time.Time, bool)`
+
+GetCrawlDateOk returns a tuple with the CrawlDate field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetCrawlDate
+
+`func (o *Article) SetCrawlDate(v time.Time)`
+
+SetCrawlDate sets CrawlDate field to given value.
+
+### HasCrawlDate
+
+`func (o *Article) HasCrawlDate() bool`
+
+HasCrawlDate returns a boolean if a field has been set.
+
+### SetCrawlDateNil
+
+`func (o *Article) SetCrawlDateNil(b bool)`
+
+ SetCrawlDateNil sets the value for CrawlDate to be an explicit nil
+
+### UnsetCrawlDate
+`func (o *Article) UnsetCrawlDate()`
+
+UnsetCrawlDate ensures that no value is present for CrawlDate, not even an explicit nil
+### GetContentType
+
+`func (o *Article) GetContentType() string`
+
+GetContentType returns the ContentType field if non-nil, zero value otherwise.
+
+### GetContentTypeOk
+
+`func (o *Article) GetContentTypeOk() (*string, bool)`
+
+GetContentTypeOk returns a tuple with the ContentType field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetContentType
+
+`func (o *Article) SetContentType(v string)`
+
+SetContentType sets ContentType field to given value.
+
+### HasContentType
+
+`func (o *Article) HasContentType() bool`
+
+HasContentType returns a boolean if a field has been set.
+
+### SetContentTypeNil
+
+`func (o *Article) SetContentTypeNil(b bool)`
+
+ SetContentTypeNil sets the value for ContentType to be an explicit nil
+
+### UnsetContentType
+`func (o *Article) UnsetContentType()`
+
+UnsetContentType ensures that no value is present for ContentType, not even an explicit nil
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

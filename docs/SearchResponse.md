@@ -6,7 +6,8 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **AsDicts** | Pointer to [**[]SearchResponseDictItem**](SearchResponseDictItem.md) |  | [optional] 
 **AsString** | Pointer to **NullableString** |  | [optional] 
-**Offset** | Pointer to [**NullableOffset4**](Offset4.md) |  | [optional] 
+**Offset** | Pointer to [**NullableOffset5**](Offset5.md) |  | [optional] 
+**Usage** | Pointer to [**NullableUsage**](Usage.md) |  | [optional] 
 
 ## Methods
 
@@ -99,20 +100,20 @@ HasAsString returns a boolean if a field has been set.
 UnsetAsString ensures that no value is present for AsString, not even an explicit nil
 ### GetOffset
 
-`func (o *SearchResponse) GetOffset() Offset4`
+`func (o *SearchResponse) GetOffset() Offset5`
 
 GetOffset returns the Offset field if non-nil, zero value otherwise.
 
 ### GetOffsetOk
 
-`func (o *SearchResponse) GetOffsetOk() (*Offset4, bool)`
+`func (o *SearchResponse) GetOffsetOk() (*Offset5, bool)`
 
 GetOffsetOk returns a tuple with the Offset field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetOffset
 
-`func (o *SearchResponse) SetOffset(v Offset4)`
+`func (o *SearchResponse) SetOffset(v Offset5)`
 
 SetOffset sets Offset field to given value.
 
@@ -132,6 +133,41 @@ HasOffset returns a boolean if a field has been set.
 `func (o *SearchResponse) UnsetOffset()`
 
 UnsetOffset ensures that no value is present for Offset, not even an explicit nil
+### GetUsage
+
+`func (o *SearchResponse) GetUsage() Usage`
+
+GetUsage returns the Usage field if non-nil, zero value otherwise.
+
+### GetUsageOk
+
+`func (o *SearchResponse) GetUsageOk() (*Usage, bool)`
+
+GetUsageOk returns a tuple with the Usage field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetUsage
+
+`func (o *SearchResponse) SetUsage(v Usage)`
+
+SetUsage sets Usage field to given value.
+
+### HasUsage
+
+`func (o *SearchResponse) HasUsage() bool`
+
+HasUsage returns a boolean if a field has been set.
+
+### SetUsageNil
+
+`func (o *SearchResponse) SetUsageNil(b bool)`
+
+ SetUsageNil sets the value for Usage to be an explicit nil
+
+### UnsetUsage
+`func (o *SearchResponse) UnsetUsage()`
+
+UnsetUsage ensures that no value is present for Usage, not even an explicit nil
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

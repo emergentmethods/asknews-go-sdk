@@ -7,7 +7,7 @@ Name | Type | Description | Notes
 **Id** | **string** |  | 
 **Created** | **int32** |  | 
 **Object** | Pointer to **string** |  | [optional] [default to "chat.completion.chunk"]
-**Model** | Pointer to **string** |  | [optional] [default to "claude-sonnet-4-6"]
+**Model** | Pointer to **string** |  | [optional] [default to "claude-sonnet-5"]
 **Usage** | [**CreateDeepNewsResponseUsage**](CreateDeepNewsResponseUsage.md) |  | 
 **Choices** | [**[]CreateDeepNewsResponseStreamChunkChoiceV2**](CreateDeepNewsResponseStreamChunkChoiceV2.md) |  | 
 

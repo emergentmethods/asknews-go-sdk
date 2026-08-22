@@ -9,7 +9,7 @@ Name | Type | Description | Notes
 **StartTimestamp** | Pointer to **NullableInt32** |  | [optional] 
 **EndTimestamp** | Pointer to **NullableInt32** |  | [optional] 
 **TimeFilter** | Pointer to **string** | Control which date type to filter on. &#39;crawl_date&#39; is the date the article was crawled, &#39;pub_date&#39; is the date the article was published. | [optional] [default to "crawl_date"]
-**Offset** | Pointer to [**Offset3**](Offset3.md) |  | [optional] [default to 0]
+**Offset** | Pointer to [**Offset4**](Offset4.md) |  | [optional] [default to 0]
 **Categories** | Pointer to **[]string** | Categories of news to filter on | [optional] [default to [All]]
 **Provocative** | Pointer to **string** | Filter articles based on how provocative they are deemed based on the use of provocative language and emotional vocabulary. | [optional] [default to "all"]
 **Authors** | Pointer to **[]string** |  | [optional] 
@@ -196,20 +196,20 @@ HasTimeFilter returns a boolean if a field has been set.
 
 ### GetOffset
 
-`func (o *MCPFilterParams) GetOffset() Offset3`
+`func (o *MCPFilterParams) GetOffset() Offset4`
 
 GetOffset returns the Offset field if non-nil, zero value otherwise.
 
 ### GetOffsetOk
 
-`func (o *MCPFilterParams) GetOffsetOk() (*Offset3, bool)`
+`func (o *MCPFilterParams) GetOffsetOk() (*Offset4, bool)`
 
 GetOffsetOk returns a tuple with the Offset field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetOffset
 
-`func (o *MCPFilterParams) SetOffset(v Offset3)`
+`func (o *MCPFilterParams) SetOffset(v Offset4)`
 
 SetOffset sets Offset field to given value.
 

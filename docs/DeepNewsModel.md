@@ -43,7 +43,19 @@
 
 * `CLAUDE_SONNET_4_6` (value: `"claude-sonnet-4-6"`)
 
+* `CLAUDE_SONNET_5` (value: `"claude-sonnet-5"`)
+
+* `CLAUDE_OPUS_4_8` (value: `"claude-opus-4-8"`)
+
+* `CLAUDE_OPUS_5` (value: `"claude-opus-5"`)
+
 * `CLAUDE_OPUS_4_6` (value: `"claude-opus-4-6"`)
+
+* `CLAUDE_FABLE_5` (value: `"claude-fable-5"`)
+
+* `GPT_5_6_TERRA` (value: `"gpt-5.6-terra"`)
+
+* `GPT_5_6_SOL` (value: `"gpt-5.6-sol"`)
 
 * `DEEPSEEK` (value: `"deepseek"`)
 
@@ -70,6 +82,10 @@
 * `GEMINI_3_1_PRO` (value: `"gemini-3.1-pro"`)
 
 * `GEMINI_3_FLASH` (value: `"gemini-3-flash"`)
+
+* `GEMINI_3_5_FLASH` (value: `"gemini-3.5-flash"`)
+
+* `GEMINI_3_6_FLASH` (value: `"gemini-3.6-flash"`)
 
 * `OPEN_SOURCE_BEST` (value: `"open-source-best"`)
 

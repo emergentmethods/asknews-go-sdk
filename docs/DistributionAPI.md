@@ -10,12 +10,13 @@ Method | HTTP request | Description
 [**GetDomain**](DistributionAPI.md#GetDomain) | **Get** /v1/distribution/domains/{name} | Get a domain by name
 [**GetDomainHitsSurface**](DistributionAPI.md#GetDomainHitsSurface) | **Get** /v1/distribution/articles/domain_hits_surface | Get total hits and surfaced articles for domains
 [**GetDomainHitsSurfaceTimewindow**](DistributionAPI.md#GetDomainHitsSurfaceTimewindow) | **Get** /v1/distribution/articles/domain_hits_surface_timewindow | Get hits and surfaced articles per day for domains
+[**GetDomainMetrics**](DistributionAPI.md#GetDomainMetrics) | **Get** /v1/distribution/stats/metrics | Get raw publisher metric event counts for domains
+[**GetDomainMetricsTimeseries**](DistributionAPI.md#GetDomainMetricsTimeseries) | **Get** /v1/distribution/stats/metrics_timeseries | Get raw publisher metric event counts per day for domains
 [**GetDomainQueries**](DistributionAPI.md#GetDomainQueries) | **Get** /v1/distribution/articles/domain_queries | Get queries that surfaced domain articles
 [**TopNArticlesByHits**](DistributionAPI.md#TopNArticlesByHits) | **Get** /v1/distribution/articles/top_n | Get the top N articles by hits
 [**TopNArticlesForDomainTimeseries**](DistributionAPI.md#TopNArticlesForDomainTimeseries) | **Get** /v1/distribution/articles/top_n_for_domain_timeseries | Get the top N articles by hits for domain with daily breakdown
 [**TopNArticlesForDomains**](DistributionAPI.md#TopNArticlesForDomains) | **Get** /v1/distribution/articles/top_n_for_domains | Get the top N articles by hits for domains
 [**TopNDomainsByHits**](DistributionAPI.md#TopNDomainsByHits) | **Get** /v1/distribution/domains/top_n | Get the top N domains by hits
-[**UpdateDomain**](DistributionAPI.md#UpdateDomain) | **Put** /v1/distribution/domains/{name} | Update an existing domain
 
 
 
@@ -93,7 +94,7 @@ Name | Type | Description  | Notes
 
 ## FindDomains
 
-> PaginatedResponseReadDomainResponse FindDomains(ctx).Page(page).PerPage(perPage).Names(names).IsTollbit(isTollbit).Publisher(publisher).Execute()
+> PaginatedResponseReadDomainResponse FindDomains(ctx).Page(page).PerPage(perPage).Names(names).IsTollbit(isTollbit).Publisher(publisher).FullText(fullText).Execute()
 
 Find domains
 
@@ -117,10 +118,11 @@ func main() {
 	names := []string{"Inner_example"} // []string | List of domain names to filter by (optional)
 	isTollbit := true // bool | Filter by tollbit status (optional)
 	publisher := true // bool | Filter by publisher status (optional)
+	fullText := true // bool | Filter by full-text opt-in status (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.DistributionAPI.FindDomains(context.Background()).Page(page).PerPage(perPage).Names(names).IsTollbit(isTollbit).Publisher(publisher).Execute()
+	resp, r, err := apiClient.DistributionAPI.FindDomains(context.Background()).Page(page).PerPage(perPage).Names(names).IsTollbit(isTollbit).Publisher(publisher).FullText(fullText).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `DistributionAPI.FindDomains``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -146,6 +148,7 @@ Name | Type | Description  | Notes
  **names** | **[]string** | List of domain names to filter by | 
  **isTollbit** | **bool** | Filter by tollbit status | 
  **publisher** | **bool** | Filter by publisher status | 
+ **fullText** | **bool** | Filter by full-text opt-in status | 
 
 ### Return type
 
@@ -445,6 +448,146 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
+## GetDomainMetrics
+
+> DomainMetricsResponse GetDomainMetrics(ctx).DomainNames(domainNames).StartDate(startDate).EndDate(endDate).Execute()
+
+Get raw publisher metric event counts for domains
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/emergentmethods/asknews-go-sdk"
+)
+
+func main() {
+	domainNames := []string{"Inner_example"} // []string | Domain names to filter by
+	startDate := int32(56) // int32 | Start date to filter by (timestamp in seconds since epoch) (optional)
+	endDate := int32(56) // int32 | End date to filter by (timestamp in seconds since epoch) (optional)
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.DistributionAPI.GetDomainMetrics(context.Background()).DomainNames(domainNames).StartDate(startDate).EndDate(endDate).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `DistributionAPI.GetDomainMetrics``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `GetDomainMetrics`: DomainMetricsResponse
+	fmt.Fprintf(os.Stdout, "Response from `DistributionAPI.GetDomainMetrics`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetDomainMetricsRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **domainNames** | **[]string** | Domain names to filter by | 
+ **startDate** | **int32** | Start date to filter by (timestamp in seconds since epoch) | 
+ **endDate** | **int32** | End date to filter by (timestamp in seconds since epoch) | 
+
+### Return type
+
+[**DomainMetricsResponse**](DomainMetricsResponse.md)
+
+### Authorization
+
+[APIKey](../README.md#APIKey)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## GetDomainMetricsTimeseries
+
+> DomainMetricsTimeWindowResponse GetDomainMetricsTimeseries(ctx).DomainNames(domainNames).StartDate(startDate).EndDate(endDate).Execute()
+
+Get raw publisher metric event counts per day for domains
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/emergentmethods/asknews-go-sdk"
+)
+
+func main() {
+	domainNames := []string{"Inner_example"} // []string | Domain names to filter by
+	startDate := int32(56) // int32 | Start date to filter by (timestamp in seconds since epoch) (optional)
+	endDate := int32(56) // int32 | End date to filter by (timestamp in seconds since epoch) (optional)
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.DistributionAPI.GetDomainMetricsTimeseries(context.Background()).DomainNames(domainNames).StartDate(startDate).EndDate(endDate).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `DistributionAPI.GetDomainMetricsTimeseries``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `GetDomainMetricsTimeseries`: DomainMetricsTimeWindowResponse
+	fmt.Fprintf(os.Stdout, "Response from `DistributionAPI.GetDomainMetricsTimeseries`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetDomainMetricsTimeseriesRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **domainNames** | **[]string** | Domain names to filter by | 
+ **startDate** | **int32** | Start date to filter by (timestamp in seconds since epoch) | 
+ **endDate** | **int32** | End date to filter by (timestamp in seconds since epoch) | 
+
+### Return type
+
+[**DomainMetricsTimeWindowResponse**](DomainMetricsTimeWindowResponse.md)
+
+### Authorization
+
+[APIKey](../README.md#APIKey)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
 ## GetDomainQueries
 
 > DomainQueriesResponse GetDomainQueries(ctx).DomainNames(domainNames).Limit(limit).StartDate(startDate).EndDate(endDate).Execute()
@@ -519,7 +662,7 @@ Name | Type | Description  | Notes
 
 ## TopNArticlesByHits
 
-> TopNArticlesByHitsResponse TopNArticlesByHits(ctx).Limit(limit).StartDate(startDate).EndDate(endDate).DomainNames(domainNames).Execute()
+> TopNArticlesByHitsResponse TopNArticlesByHits(ctx).Limit(limit).Page(page).StartDate(startDate).EndDate(endDate).DomainNames(domainNames).Execute()
 
 Get the top N articles by hits
 
@@ -538,14 +681,15 @@ import (
 )
 
 func main() {
-	limit := int32(56) // int32 | Number of top domains to return (optional) (default to 10)
+	limit := int32(56) // int32 | Number of top articles to return (page size) (optional) (default to 10)
+	page := int32(56) // int32 | Page number (1-based; page size = limit) (optional) (default to 1)
 	startDate := int32(56) // int32 | Start date to filter by (timestamp in seconds since epoch) (optional)
 	endDate := int32(56) // int32 | End date to filter by (timestamp in seconds since epoch) (optional)
 	domainNames := []string{"Inner_example"} // []string | List of domain names to filter by (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.DistributionAPI.TopNArticlesByHits(context.Background()).Limit(limit).StartDate(startDate).EndDate(endDate).DomainNames(domainNames).Execute()
+	resp, r, err := apiClient.DistributionAPI.TopNArticlesByHits(context.Background()).Limit(limit).Page(page).StartDate(startDate).EndDate(endDate).DomainNames(domainNames).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `DistributionAPI.TopNArticlesByHits``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -566,7 +710,8 @@ Other parameters are passed through a pointer to a apiTopNArticlesByHitsRequest 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **limit** | **int32** | Number of top domains to return | [default to 10]
+ **limit** | **int32** | Number of top articles to return (page size) | [default to 10]
+ **page** | **int32** | Page number (1-based; page size &#x3D; limit) | [default to 1]
  **startDate** | **int32** | Start date to filter by (timestamp in seconds since epoch) | 
  **endDate** | **int32** | End date to filter by (timestamp in seconds since epoch) | 
  **domainNames** | **[]string** | List of domain names to filter by | 
@@ -663,7 +808,7 @@ Name | Type | Description  | Notes
 
 ## TopNArticlesForDomains
 
-> TopNArticlesForDomainResponse TopNArticlesForDomains(ctx).DomainNames(domainNames).Limit(limit).StartDate(startDate).EndDate(endDate).Execute()
+> TopNArticlesForDomainResponse TopNArticlesForDomains(ctx).DomainNames(domainNames).Limit(limit).Page(page).StartDate(startDate).EndDate(endDate).Execute()
 
 Get the top N articles by hits for domains
 
@@ -683,13 +828,14 @@ import (
 
 func main() {
 	domainNames := []*string{"Inner_example"} // []*string | Domain names to filter by
-	limit := int32(56) // int32 | Number of top domain articles to return (optional) (default to 10)
+	limit := int32(56) // int32 | Number of top domain articles to return (page size) (optional) (default to 10)
+	page := int32(56) // int32 | Page number (1-based; page size = limit) (optional) (default to 1)
 	startDate := int32(56) // int32 | Start date to filter by (timestamp in seconds since epoch) (optional)
 	endDate := int32(56) // int32 | End date to filter by (timestamp in seconds since epoch) (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.DistributionAPI.TopNArticlesForDomains(context.Background()).DomainNames(domainNames).Limit(limit).StartDate(startDate).EndDate(endDate).Execute()
+	resp, r, err := apiClient.DistributionAPI.TopNArticlesForDomains(context.Background()).DomainNames(domainNames).Limit(limit).Page(page).StartDate(startDate).EndDate(endDate).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `DistributionAPI.TopNArticlesForDomains``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -711,7 +857,8 @@ Other parameters are passed through a pointer to a apiTopNArticlesForDomainsRequ
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **domainNames** | **[]string** | Domain names to filter by | 
- **limit** | **int32** | Number of top domain articles to return | [default to 10]
+ **limit** | **int32** | Number of top domain articles to return (page size) | [default to 10]
+ **page** | **int32** | Page number (1-based; page size &#x3D; limit) | [default to 1]
  **startDate** | **int32** | Start date to filter by (timestamp in seconds since epoch) | 
  **endDate** | **int32** | End date to filter by (timestamp in seconds since epoch) | 
 
@@ -798,78 +945,6 @@ Name | Type | Description  | Notes
 ### HTTP request headers
 
 - **Content-Type**: Not defined
-- **Accept**: application/json
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
-[[Back to README]](../README.md)
-
-
-## UpdateDomain
-
-> ReadDomainResponse UpdateDomain(ctx, name).UpdateDomainRequest(updateDomainRequest).Execute()
-
-Update an existing domain
-
-
-
-### Example
-
-```go
-package main
-
-import (
-	"context"
-	"fmt"
-	"os"
-	openapiclient "github.com/emergentmethods/asknews-go-sdk"
-)
-
-func main() {
-	name := "name_example" // string | 
-	updateDomainRequest := *openapiclient.NewUpdateDomainRequest() // UpdateDomainRequest | 
-
-	configuration := openapiclient.NewConfiguration()
-	apiClient := openapiclient.NewAPIClient(configuration)
-	resp, r, err := apiClient.DistributionAPI.UpdateDomain(context.Background(), name).UpdateDomainRequest(updateDomainRequest).Execute()
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `DistributionAPI.UpdateDomain``: %v\n", err)
-		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
-	}
-	// response from `UpdateDomain`: ReadDomainResponse
-	fmt.Fprintf(os.Stdout, "Response from `DistributionAPI.UpdateDomain`: %v\n", resp)
-}
-```
-
-### Path Parameters
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
-**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**name** | **string** |  | 
-
-### Other Parameters
-
-Other parameters are passed through a pointer to a apiUpdateDomainRequest struct via the builder pattern
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
-
- **updateDomainRequest** | [**UpdateDomainRequest**](UpdateDomainRequest.md) |  | 
-
-### Return type
-
-[**ReadDomainResponse**](ReadDomainResponse.md)
-
-### Authorization
-
-[APIKey](../README.md#APIKey)
-
-### HTTP request headers
-
-- **Content-Type**: application/json
 - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)

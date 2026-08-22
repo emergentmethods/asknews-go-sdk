@@ -4,18 +4,24 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**RequestRate** | **float32** | Configured tokens replenished per second | 
+**RequestRate** | **float32** | Configured requests replenished per second | 
 **RequestRateCapacity** | **float32** | Maximum burst token capacity | 
-**RequestRateRemaining** | **float32** | Effective available tokens right now (accounts for time elapsed since last request) | 
+**RequestRateRemaining** | **float32** | Effective available requests right now (accounts for time elapsed since last request) | 
 **RetryAfter** | Pointer to **NullableFloat32** |  | [optional] 
 **ConcurrencyLimit** | **int32** | Maximum allowed concurrent requests | 
 **ConcurrencyRemaining** | **int32** | Available concurrent request slots right now | 
+**DeepnewsRequestRate** | **float32** | Configured deepnews requests replenished per second | 
+**DeepnewsRequestRateCapacity** | **float32** | Maximum deepnews burst token capacity | 
+**DeepnewsRequestRateRemaining** | **float32** | Effective available deepnews requests right now (accounts for time elapsed since last request) | 
+**DeepnewsRetryAfter** | Pointer to **NullableFloat32** |  | [optional] 
+**DeepnewsConcurrencyLimit** | **int32** | Maximum allowed concurrent deepnews requests | 
+**DeepnewsConcurrencyRemaining** | **int32** | Available concurrent deepnews request slots right now | 
 
 ## Methods
 
 ### NewRateLimitStatusResponse
 
-`func NewRateLimitStatusResponse(requestRate float32, requestRateCapacity float32, requestRateRemaining float32, concurrencyLimit int32, concurrencyRemaining int32, ) *RateLimitStatusResponse`
+`func NewRateLimitStatusResponse(requestRate float32, requestRateCapacity float32, requestRateRemaining float32, concurrencyLimit int32, concurrencyRemaining int32, deepnewsRequestRate float32, deepnewsRequestRateCapacity float32, deepnewsRequestRateRemaining float32, deepnewsConcurrencyLimit int32, deepnewsConcurrencyRemaining int32, ) *RateLimitStatusResponse`
 
 NewRateLimitStatusResponse instantiates a new RateLimitStatusResponse object
 This constructor will assign default values to properties that have it defined,
@@ -163,6 +169,141 @@ and a boolean to check if the value has been set.
 `func (o *RateLimitStatusResponse) SetConcurrencyRemaining(v int32)`
 
 SetConcurrencyRemaining sets ConcurrencyRemaining field to given value.
+
+
+### GetDeepnewsRequestRate
+
+`func (o *RateLimitStatusResponse) GetDeepnewsRequestRate() float32`
+
+GetDeepnewsRequestRate returns the DeepnewsRequestRate field if non-nil, zero value otherwise.
+
+### GetDeepnewsRequestRateOk
+
+`func (o *RateLimitStatusResponse) GetDeepnewsRequestRateOk() (*float32, bool)`
+
+GetDeepnewsRequestRateOk returns a tuple with the DeepnewsRequestRate field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetDeepnewsRequestRate
+
+`func (o *RateLimitStatusResponse) SetDeepnewsRequestRate(v float32)`
+
+SetDeepnewsRequestRate sets DeepnewsRequestRate field to given value.
+
+
+### GetDeepnewsRequestRateCapacity
+
+`func (o *RateLimitStatusResponse) GetDeepnewsRequestRateCapacity() float32`
+
+GetDeepnewsRequestRateCapacity returns the DeepnewsRequestRateCapacity field if non-nil, zero value otherwise.
+
+### GetDeepnewsRequestRateCapacityOk
+
+`func (o *RateLimitStatusResponse) GetDeepnewsRequestRateCapacityOk() (*float32, bool)`
+
+GetDeepnewsRequestRateCapacityOk returns a tuple with the DeepnewsRequestRateCapacity field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetDeepnewsRequestRateCapacity
+
+`func (o *RateLimitStatusResponse) SetDeepnewsRequestRateCapacity(v float32)`
+
+SetDeepnewsRequestRateCapacity sets DeepnewsRequestRateCapacity field to given value.
+
+
+### GetDeepnewsRequestRateRemaining
+
+`func (o *RateLimitStatusResponse) GetDeepnewsRequestRateRemaining() float32`
+
+GetDeepnewsRequestRateRemaining returns the DeepnewsRequestRateRemaining field if non-nil, zero value otherwise.
+
+### GetDeepnewsRequestRateRemainingOk
+
+`func (o *RateLimitStatusResponse) GetDeepnewsRequestRateRemainingOk() (*float32, bool)`
+
+GetDeepnewsRequestRateRemainingOk returns a tuple with the DeepnewsRequestRateRemaining field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetDeepnewsRequestRateRemaining
+
+`func (o *RateLimitStatusResponse) SetDeepnewsRequestRateRemaining(v float32)`
+
+SetDeepnewsRequestRateRemaining sets DeepnewsRequestRateRemaining field to given value.
+
+
+### GetDeepnewsRetryAfter
+
+`func (o *RateLimitStatusResponse) GetDeepnewsRetryAfter() float32`
+
+GetDeepnewsRetryAfter returns the DeepnewsRetryAfter field if non-nil, zero value otherwise.
+
+### GetDeepnewsRetryAfterOk
+
+`func (o *RateLimitStatusResponse) GetDeepnewsRetryAfterOk() (*float32, bool)`
+
+GetDeepnewsRetryAfterOk returns a tuple with the DeepnewsRetryAfter field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetDeepnewsRetryAfter
+
+`func (o *RateLimitStatusResponse) SetDeepnewsRetryAfter(v float32)`
+
+SetDeepnewsRetryAfter sets DeepnewsRetryAfter field to given value.
+
+### HasDeepnewsRetryAfter
+
+`func (o *RateLimitStatusResponse) HasDeepnewsRetryAfter() bool`
+
+HasDeepnewsRetryAfter returns a boolean if a field has been set.
+
+### SetDeepnewsRetryAfterNil
+
+`func (o *RateLimitStatusResponse) SetDeepnewsRetryAfterNil(b bool)`
+
+ SetDeepnewsRetryAfterNil sets the value for DeepnewsRetryAfter to be an explicit nil
+
+### UnsetDeepnewsRetryAfter
+`func (o *RateLimitStatusResponse) UnsetDeepnewsRetryAfter()`
+
+UnsetDeepnewsRetryAfter ensures that no value is present for DeepnewsRetryAfter, not even an explicit nil
+### GetDeepnewsConcurrencyLimit
+
+`func (o *RateLimitStatusResponse) GetDeepnewsConcurrencyLimit() int32`
+
+GetDeepnewsConcurrencyLimit returns the DeepnewsConcurrencyLimit field if non-nil, zero value otherwise.
+
+### GetDeepnewsConcurrencyLimitOk
+
+`func (o *RateLimitStatusResponse) GetDeepnewsConcurrencyLimitOk() (*int32, bool)`
+
+GetDeepnewsConcurrencyLimitOk returns a tuple with the DeepnewsConcurrencyLimit field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetDeepnewsConcurrencyLimit
+
+`func (o *RateLimitStatusResponse) SetDeepnewsConcurrencyLimit(v int32)`
+
+SetDeepnewsConcurrencyLimit sets DeepnewsConcurrencyLimit field to given value.
+
+
+### GetDeepnewsConcurrencyRemaining
+
+`func (o *RateLimitStatusResponse) GetDeepnewsConcurrencyRemaining() int32`
+
+GetDeepnewsConcurrencyRemaining returns the DeepnewsConcurrencyRemaining field if non-nil, zero value otherwise.
+
+### GetDeepnewsConcurrencyRemainingOk
+
+`func (o *RateLimitStatusResponse) GetDeepnewsConcurrencyRemainingOk() (*int32, bool)`
+
+GetDeepnewsConcurrencyRemainingOk returns a tuple with the DeepnewsConcurrencyRemaining field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetDeepnewsConcurrencyRemaining
+
+`func (o *RateLimitStatusResponse) SetDeepnewsConcurrencyRemaining(v int32)`
+
+SetDeepnewsConcurrencyRemaining sets DeepnewsConcurrencyRemaining field to given value.
 
 
 
