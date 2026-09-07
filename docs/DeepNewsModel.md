@@ -57,6 +57,8 @@
 
 * `GPT_5_6_SOL` (value: `"gpt-5.6-sol"`)
 
+* `GPT_6_ASTRA` (value: `"gpt-6-astra"`)
+
 * `DEEPSEEK` (value: `"deepseek"`)
 
 * `DEEPSEEK_BASIC` (value: `"deepseek-basic"`)

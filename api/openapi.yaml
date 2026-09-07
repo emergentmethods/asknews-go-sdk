@@ -7592,6 +7592,7 @@ components:
       - claude-fable-5
       - gpt-5.6-terra
       - gpt-5.6-sol
+      - gpt-6-astra
       - deepseek
       - deepseek-basic
       - deepseek-r1-0528

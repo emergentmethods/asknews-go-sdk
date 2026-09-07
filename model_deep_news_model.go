@@ -47,6 +47,7 @@ const (
 	CLAUDE_FABLE_5 DeepNewsModel = "claude-fable-5"
 	GPT_5_6_TERRA DeepNewsModel = "gpt-5.6-terra"
 	GPT_5_6_SOL DeepNewsModel = "gpt-5.6-sol"
+	GPT_6_ASTRA DeepNewsModel = "gpt-6-astra"
 	DEEPSEEK DeepNewsModel = "deepseek"
 	DEEPSEEK_BASIC DeepNewsModel = "deepseek-basic"
 	DEEPSEEK_R1_0528 DeepNewsModel = "deepseek-r1-0528"
@@ -95,6 +96,7 @@ var AllowedDeepNewsModelEnumValues = []DeepNewsModel{
 	"claude-fable-5",
 	"gpt-5.6-terra",
 	"gpt-5.6-sol",
+	"gpt-6-astra",
 	"deepseek",
 	"deepseek-basic",
 	"deepseek-r1-0528",
