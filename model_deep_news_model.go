@@ -43,10 +43,12 @@ const (
 	CLAUDE_SONNET_5 DeepNewsModel = "claude-sonnet-5"
 	CLAUDE_OPUS_4_8 DeepNewsModel = "claude-opus-4-8"
 	CLAUDE_OPUS_5 DeepNewsModel = "claude-opus-5"
+	CLAUDE_OPUS_5_5 DeepNewsModel = "claude-opus-5-5"
 	CLAUDE_OPUS_4_6 DeepNewsModel = "claude-opus-4-6"
 	CLAUDE_FABLE_5 DeepNewsModel = "claude-fable-5"
 	GPT_5_6_TERRA DeepNewsModel = "gpt-5.6-terra"
 	GPT_5_6_SOL DeepNewsModel = "gpt-5.6-sol"
+	GPT_6_SOL DeepNewsModel = "gpt-6-sol"
 	GPT_6_ASTRA DeepNewsModel = "gpt-6-astra"
 	DEEPSEEK DeepNewsModel = "deepseek"
 	DEEPSEEK_BASIC DeepNewsModel = "deepseek-basic"
@@ -92,10 +94,12 @@ var AllowedDeepNewsModelEnumValues = []DeepNewsModel{
 	"claude-sonnet-5",
 	"claude-opus-4-8",
 	"claude-opus-5",
+	"claude-opus-5-5",
 	"claude-opus-4-6",
 	"claude-fable-5",
 	"gpt-5.6-terra",
 	"gpt-5.6-sol",
+	"gpt-6-sol",
 	"gpt-6-astra",
 	"deepseek",
 	"deepseek-basic",

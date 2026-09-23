@@ -49,6 +49,8 @@
 
 * `CLAUDE_OPUS_5` (value: `"claude-opus-5"`)
 
+* `CLAUDE_OPUS_5_5` (value: `"claude-opus-5-5"`)
+
 * `CLAUDE_OPUS_4_6` (value: `"claude-opus-4-6"`)
 
 * `CLAUDE_FABLE_5` (value: `"claude-fable-5"`)
@@ -56,6 +58,8 @@
 * `GPT_5_6_TERRA` (value: `"gpt-5.6-terra"`)
 
 * `GPT_5_6_SOL` (value: `"gpt-5.6-sol"`)
+
+* `GPT_6_SOL` (value: `"gpt-6-sol"`)
 
 * `GPT_6_ASTRA` (value: `"gpt-6-astra"`)
 
